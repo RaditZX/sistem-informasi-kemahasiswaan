@@ -7,7 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/{pathMatch}', function () {
-    return view('welcome');
+    return view('index');
 })->where('pathMatch', ".*");
