@@ -19,3 +19,7 @@ Route::get('/home', function () {
 Route::get('/tables', function () {
     return view('tables');
 });
+
+Route::get('/detail-beasiswa', function () {
+    return view('pages.Beasiswa.detail-beasiswa');
+});
