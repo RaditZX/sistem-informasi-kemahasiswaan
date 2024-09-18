@@ -7,6 +7,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/{pathMatch}', function () {
+// Route::get('/{pathMatch}', function () {
+//     return view('index');
+// })->where('pathMatch', ".*");
+
+Route::get('/home', function () {
     return view('index');
-})->where('pathMatch', ".*");
+});
+
+
+Route::get('/tables', function () {
+    return view('tables');
+});
