@@ -8,7 +8,7 @@
             <nav>
                 <ul class="flex">
                     <li>
-                        <a href="#profil" class="px-4 py-2 text-gray-600 active:text-black focus:font-bold">Profil</a>
+                        <a href="#profil" class="px-4 py-2 text-gray-600 active:text-black focus:font-bold active">Profil</a>
                     </li>
                     <li>
                         <a href="#notifikasi" class="px-4 py-2 text-gray-600 active:text-black focus:font-bold">Notifikasi</a>
@@ -17,18 +17,20 @@
                 <hr class="h-px my-4 shadow-md bg-gray-600 border-5 dark:bg-gray-700">
             </nav>
             <section id="profil">
-                <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md flex space-x-10">
+                <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md flex space-x-5">
                     <!-- Profile Picture and Upload Button -->
-                    <div class="w-1/4 text-center">
+
+                    <div class="mx-l-19 w-1/4 text-center">
                         <img class="w-24 h-24 rounded-full mx-auto" src="https://via.placeholder.com/100" alt="Avatar">
                         <h2 class="mt-4 text-lg font-bold">Khusan Akhmedov</h2>
                         <p class="text-gray-600">Staff Kemahasiswaan</p>
-                        <button class="mt-4 bg-green-600 text-white px-4 py-2 rounded">Upload new avatar</button>
+                        <button class="mt-4 bg-[#6B705C] text-white px-4 py-2 rounded">Upload new avatar</button>
                     </div>
-
+                    <div class="px-5 inline-block h-[250px] min-h-[1em] w-0.5 self-stretch bg-gray-400 dark:bg-white/10"></div>
                     <!-- Profile Information Form -->
                     <div class="w-3/4">
                         <h3 class="text-xl font-semibold mb-4">Informasi Umum</h3>
+                        <hr class="h-px my-4 shadow-md bg-gray-600 border-5">
                         <form>
                             <div class="grid grid-cols-2 gap-4">
                                 <!-- Nama Awal -->
@@ -56,13 +58,7 @@
                             <div class="mt-4">
                                 <label class="block text-sm font-medium text-gray-700" for="description">Deskripsi Singkat</label>
                                 <textarea id="description" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Saya adalah..."></textarea>
-                            </div>
-
-                            <!-- Buttons -->
-                            <div class="flex justify-end space-x-4 mt-6">
-                                <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded">CANCEL</button>
-                                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">SAVE</button>
-                            </div>
+                            </div>  
                         </form>
                     </div>
                 </div>
