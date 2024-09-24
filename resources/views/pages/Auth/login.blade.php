@@ -4,9 +4,9 @@
 <main class="flex items-center justify-center h-screen bg-gray-100">
     <section class="relative flex flex-col lg:flex-row w-full max-w-4xl h-auto lg:h-[30rem] rounded-3xl overflow-hidden shadow-lg">
         <!-- First Column (App Name + Background Image + Overlay) -->
-        <div class="relative lg:w-1/2 w-full h-64 lg:h-full bg-cover bg-center flex items-center justify-center" style="background-image: url('{{ asset('assets/img/login/login-bg.png') }}');">
+        <div class="relative lg:w-1/2 w-full h-64 lg:h-full bg-cover bg-center flex items-start justify-center" style="background-image: url('{{ asset('assets/img/login/login-bg.png') }}');">
             <div class="absolute inset-0 bg-black opacity-30"></div>
-            <div class="relative z-10 p-8 text-center">
+            <div class="relative z-10 p-8">
                 <h1 class="text-3xl font-bold text-white">
                     Sistem Informasi Kemahasiswaan Polban
                 </h1>
@@ -22,17 +22,17 @@
                 </div>
                 <div class="space-y-5"> 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <label for="email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
                         <input type="email" id="email" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="example@polban.ac.id" aria-label="Email">
                     </div>
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <label for="password" class="block pb-3 text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="********" aria-label="Password">
                         <span class="pt-2 block">Lupa password? <a href="#" id="forgotPasswordLink" class="text-blue-500"><strong>Klik disini</strong></a></span>
                     </div>
                 </div>
                 <div class="mt-6">
-                    <button type="submit" aria-label="Login to your account" class="inline-block w-full px-6 py-3 font-bold text-white uppercase transition-all bg-orange-500 hover:bg-orange-600 rounded-lg shadow-md hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-orange-400 focus:outline-none">
+                    <button type="submit" aria-label="Login to your account" class="inline-block w-full px-6 py-3 font-bold text-white uppercase transition-all bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-orange-400 focus:outline-none">
                         Login
                     </button>                    
                 </div>
@@ -45,12 +45,30 @@
                 </div>
                 <div class="space-y-5"> 
                     <div>
-                        <label for="reset-email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <label for="reset-email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
                         <input type="email" id="reset-email" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="example@polban.ac.id" aria-label="Email for password reset">
+                    </div>
+                    <!-- Authentication Code Section -->
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <!-- Input Field -->
+                            <input type="text" placeholder="Kode Autentikasi" 
+                                class="border border-gray-300 rounded-lg w-3/5 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+
+                            <!-- Button -->
+                            <button class="bg-indigo-500 w-2/5 text-white rounded-lg px-4 py-2 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                Kirim Kode
+                            </button>
+                        </div>
+
+                        <!-- Description text below -->
+                        <p class="text-gray-500 text-sm mt-2">
+                            Kode akan dikirim ke email terkait
+                        </p>
                     </div>
                 </div>
                 <div class="mt-6">
-                    <button type="submit" aria-label="Send password reset link" class="inline-block w-full px-6 py-3 font-bold text-white uppercase transition-all bg-gradient-to-tl from-blue-600 to-cyan-400 rounded-lg shadow-md hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                    <button type="submit" id="reset-btn" aria-label="Send password reset link" class="reset-btn inline-block w-full px-6 py-3 font-bold text-white uppercase transition-all bg-gradient-to-tl bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-orange-400 focus:outline-none">
                         Send Reset Link
                     </button>
                 </div>
@@ -99,7 +117,7 @@
     });
 
     // Mock form submission for demo - Show Success Message
-    document.querySelector('#forgotPasswordForm button').addEventListener('click', function (event) {
+    document.querySelector('#forgotPasswordForm #reset-btn').addEventListener('click', function (event) {
         event.preventDefault();
         
         // Hide Forgot Password form and show the resetSuccess message
