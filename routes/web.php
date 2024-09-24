@@ -23,3 +23,11 @@ Route::get('/tables', function () {
 Route::get('/detail-beasiswa', function () {
     return view('pages.Beasiswa.detail-beasiswa');
 });
+
+Route::get('/form-beasiswa', function () {
+    return view('pages.Beasiswa.form-beasiswa');
+});
+
+Route::get('/pengaturan-profil', function () {
+    return view('pages.Pengaturan.pengaturan');
+});
