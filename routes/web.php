@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\userController;
 
@@ -10,6 +11,17 @@ Route::get('/', function () {
 // Route::get('/{pathMatch}', function () {
 //     return view('index');
 // })->where('pathMatch', ".*");
+
+
+/*
+===============================================================
+> Authentication Routes
+===============================================================
+*/
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/login', 'index');
+});
+
 
 Route::get('/home', function () {
     return view('index');
