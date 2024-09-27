@@ -2,6 +2,12 @@
 <html>
 
 <head>
+    <style>
+        /* Additional styles for better visuals */
+        .notification-popup {
+            transition: all 0.3s ease;
+        }
+    </style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
@@ -18,11 +24,158 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <!-- Main Styling -->
     <link href="./assets/css/soft-ui-dashboard-tailwind.css?v=1.0.5" rel="stylesheet" />
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
     <!-- Nepcha Analytics (nepcha.com) -->
     <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
     <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {{-- Filter --}}
+    <script>
+        function showPopup() {
+            document.getElementById('popup').classList.remove('hidden');
+        }
+
+        function hidePopup() {
+            document.getElementById('popup').classList.add('hidden');
+        }
+    </script>
+    {{-- notification --}}
+    <script>
+        // Sample notifications data
+        const notifications = [
+            {
+                message: "Daffa Al Ghifari mengajukan beasiswa pada 17 Agustus...",
+                timestamp: "2024-08-17T21:00:00",
+                read: false
+            },
+            {
+                message: "Notification 2: Example message...",
+                timestamp: "2024-08-18T12:00:00",
+                read: true
+            },
+            {
+                message: "Notification 3: Another example...",
+                timestamp: "2024-08-19T14:00:00",
+                read: false
+            }
+        ];
+
+        let currentNotifications = notifications; // Store current notifications to show
+
+        function renderNotifications() {
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = ""; // Clear existing notifications
+            let unreadCount = 0;
+
+            currentNotifications.forEach((notification, index) => {
+                const date = new Date(notification.timestamp);
+                const dateString = date.toLocaleString('id-ID', { 
+                    year: 'numeric', month: 'long', day: 'numeric', 
+                    hour: 'numeric', minute: 'numeric', hour12: false 
+                });
+
+                // Create notification item
+                const notificationItem = document.createElement('div');
+                notificationItem.className = 'notification-item p-2 rounded-md cursor-pointer transition-colors duration-200';
+                notificationItem.style.backgroundColor = notification.read ? '#f7fafc' : '#ffffff'; // Light gray for read
+
+                // Construct the inner HTML of the notification item
+                notificationItem.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gray-300 rounded-lg mr-2"></div>
+                        <div class="flex-1">
+                            <p class="font-medium text-sm">${notification.message}</p>
+                            <p class="text-xs text-gray-500">${dateString}</p>
+                        </div>
+                        <span class="w-2 h-2 ${notification.read ? 'invisible' : 'bg-red-500'} rounded-full"></span>
+                    </div>
+                    <div class="description hidden mt-2 text-sm text-gray-600">
+                        Deskripsi lengkap mengenai ${notification.message}
+                    </div>
+                `;
+
+                // Append click event to toggle description and mark as read if necessary
+                notificationItem.onclick = () => {
+                    toggleDetails(notificationItem.querySelector('.description'));
+                    if (!notification.read) {
+                        notification.read = true; // Mark as read
+                        unreadCount--; // Decrement unread count
+                        renderNotifications(); // Re-render notifications
+                    }
+                };
+
+                // Append notification item to the list
+                notificationList.appendChild(notificationItem);
+
+                if (!notification.read) {
+                    unreadCount++;
+                }
+            });
+
+            // Update the unread count and animate the text
+            const unreadText = document.getElementById('unreadText');
+            unreadText.innerText = `Belum Dibaca (${unreadCount})`;
+            if (unreadCount > 0) {
+                unreadText.style.color = '#38a169'; // Green color for unread text
+                unreadText.style.transform = 'translateX(4px)'; // Animate the text
+            } else {
+                unreadText.style.color = ''; // Reset color
+                unreadText.style.transform = ''; // Reset transform
+            }
+        }
+
+        function toggleDetails(descriptionElement) {
+            descriptionElement.classList.toggle('hidden'); // Toggle visibility of the description
+        }
+
+        function markAllAsRead() {
+            notifications.forEach(notification => {
+                notification.read = true; // Mark all as read
+            });
+            renderNotifications();
+        }
+
+        function showAll() {
+            currentNotifications = notifications; // Set to all notifications
+            renderNotifications(); // Re-render notifications
+            updateActiveButton('showAllButton');
+        }
+
+        function showUnread() {
+            currentNotifications = notifications.filter(notification => !notification.read); // Set to unread notifications
+            renderNotifications(); // Re-render notifications
+            updateActiveButton('unreadCount');
+        }
+
+        function updateActiveButton(activeButtonId) {
+            const showAllButton = document.getElementById('showAllButton');
+            const unreadCountButton = document.getElementById('unreadCount');
+
+            if (activeButtonId === 'showAllButton') {
+                showAllButton.style.color = '#38a169';
+                showAllButton.style.borderBottom = '2px solid #38a169';
+                unreadCountButton.style.color = '#6b7280'; // Reset color
+                unreadCountButton.style.borderBottom = 'none'; // Remove underline
+            } else {
+                unreadCountButton.style.color = '#38a169';
+                unreadCountButton.style.borderBottom = '2px solid #38a169';
+                showAllButton.style.color = '#6b7280'; // Reset color
+                showAllButton.style.borderBottom = 'none'; // Remove underline
+            }
+        }
+
+        function togglePopup() {
+            const popup = document.getElementById('notificationPopup');
+            popup.classList.toggle('hidden');
+            renderNotifications(); // Render notifications when popup is shown
+        }
+
+        // Initial render of notifications
+        renderNotifications();
+    </script>
+</body>
+</html>
+
 </head>
 
 <body>
