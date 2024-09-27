@@ -125,6 +125,28 @@
                     <button onclick="runFilter()" class="mt-4 bg-green-500 text-white py-2 px-4 rounded">Filter</button>
                 </div>
             </div>
-    
+            <div class="hidden absolute top-12 right-5 w-96 bg-white shadow-lg rounded-lg p-5" id="notificationPopup">
+                <h3 class="text-xl font-semibold mb-1">Notifikasi</h3>
+                <p class="text-sm text-gray-500 mb-4">Tetap update dengan notifikasi terbaru</p>
+                
+                <!-- Tabs for notification types -->
+                <div class="flex flex-row justify-between items-center border-b mb-4">
+                    <div>
+                        <button class="text-xs text-green-600 font-semibold border-b-2 border-green-600 pb-1 active" id="showAllButton" onclick="showAll()" style="color: #38a169; border-bottom: 2px solid #38a169;">Semua</button>
+                        
+                    </div>
+                    <button class="text-gray-500 relative" id="unreadCount" onclick="showUnread()">
+                        <span class=" text-xs animate-text" id="unreadText" style="transition: transform 0.3s ease;">Belum Dibaca (0)</span>
+                    </button>
+                    <button class="text-xs text-gray-500 flex items-center" onclick="markAllAsRead()">
+                        <i class="fa fa-check-circle"></i> Tandai semua telah dibaca
+                    </button>
+                </div>
+                
+                <!-- Notifications using Grid -->
+                <div class="grid grid-cols-1 gap-4" id="notificationList">
+                    <!-- Placeholder for notifications -->
+                </div>
+            </div>
 
 @endsection
