@@ -11,7 +11,7 @@ Route::get('/', function () {
 //     return view('index');
 // })->where('pathMatch', ".*");
 
-Route::get('/home', function () {
+Route::get('/Dashboard', function () {
     return view('index');
 });
 
