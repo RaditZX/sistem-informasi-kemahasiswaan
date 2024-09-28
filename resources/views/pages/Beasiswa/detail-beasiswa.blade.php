@@ -8,20 +8,11 @@
                     alt="">
             </div>
             <div class="p-8 basis-3/4">
-                <h1 class="text-2xl font-semibold">Beasiswa LKPD</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero obcaecati suscipit consequatur sint dolore,
-                    natus veniam commodi modi ea nihil beatae asperiores consequuntur possimus non enim, accusantium numquam
-                    aperiam fugit.
-                    In, explicabo nulla! Suscipit necessitatibus, porro excepturi sapiente expedita natus est magnam
-                    commodi, officiis neque impedit quia accusamus! Vero praesentium sequi laudantium deserunt saepe
-                    incidunt molestias consectetur impedit nesciunt placeat?
-                    Nostrum illum neque aliquam, maiores voluptates quod rerum fugiat necessitatibus quia ipsam fuga
-                    delectus ipsum ipsa. Voluptates placeat optio harum officiis asperiores ratione, eum totam,
-                    exercitationem voluptas hic neque obcaecati.
-                    Quia, impedit.</p>
+                <h1 class="text-2xl font-semibold">{{ $beasiswa->nama_beasiswa }}</h1>
+                <p>{{ $beasiswa->deskripsi}}</p>
                 <div class=" rounded-3xl p-3 bg-yellow-400 inline-block mt-4">
                     <div class="flex gap-7">
-                        <h4 class="font-medium text-black">Apply Now</h4>
+                        <h4 class="font-medium text-base text-black">Apply Now</h4>
                         <div class="bg-black rounded-xl inline-block p-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
                                 class="bi bi-arrow-right" viewBox="0 0 16 16">
@@ -40,7 +31,8 @@
         <div class="mt-5">
             <h1 class="text-2xl font-semibold text-yellow-400">Benefit</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
-            @include('component.slider')
+            @include('component.slider', ['beasiswa' => $beasiswa])
+
 
         </div>
 
