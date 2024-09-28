@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\userController;
+use App\Http\Controllers\BeasiswaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +32,8 @@ Route::get('/home', function () {
 Route::get('/tables', function () {
     return view('tables');
 });
+
+Route::resource('beasiswa', BeasiswaController::class);
 
 Route::get('/detail-beasiswa', function () {
     return view('pages.Beasiswa.detail-beasiswa');
