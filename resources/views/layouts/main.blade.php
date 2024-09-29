@@ -54,6 +54,7 @@
     }
 
     </script>
+<<<<<<< Updated upstream
     {{-- notification --}}
     <script>
         // Sample notifications data
@@ -191,6 +192,9 @@
 </body>
 </html>
 
+=======
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+>>>>>>> Stashed changes
 </head>
 
 <body>
