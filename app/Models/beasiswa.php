@@ -13,7 +13,7 @@ class Beasiswa extends Model
     protected $table = 'beasiswa';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['nama_beasiswa', 'deskripsi', 'jenis_beasiswa', 'tanggal_mulai', 'tanggal_berakhir'];
+    protected $fillable = ['nama_beasiswa', 'deskripsi','sumber','kuota','tipe_beasiswa', 'jenis_beasiswa', 'tanggal_mulai', 'tanggal_berakhir'];
 
     // Relasi satu ke banyak dengan SyaratBeasiswa
     public function syaratBeasiswa()

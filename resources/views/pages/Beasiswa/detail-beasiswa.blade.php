@@ -31,7 +31,7 @@
         <div class="mt-5">
             <h1 class="text-2xl font-semibold text-yellow-400">Benefit</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
-            @include('component.slider', ['beasiswa' => $beasiswa])
+            @include('component.slider', ['beasiswa' => $beasiswa],['isBenefit'=>true])
 
 
         </div>
@@ -84,12 +84,12 @@
         </div>
 
         <div class="mt-10">
-            <h1 class="text-2xl font-semibold text-yellow-400">Dokumen</h1>
+            <h1 class="text-2xl font-semibold text-yellow-400">Syarat Dokumen</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
             <div class="flex p-10 ">
                 <div class="basis-1/2 flex flex-col justify-center items-center">
                     <div class="">
-                        <h1 class="text-2xl font-semibold">Beasiswa LKPD</h1>
+                        <h1 class="text-2xl font-semibold slide-text" id="slide-text">Beasiswa LKPD</h1>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero obcaecati suscipit consequatur sint
                             dolore,
                             natus veniam commodi modi ea nihil beatae asperiores consequuntur possimus non enim, accusantium
@@ -99,32 +99,31 @@
                     </div>
                 </div>
                 <div class="basis-1/2 flex justify-center">
-                    <div id="carouselExampleSlidesOnly" class="relative" data-twe-carousel-init data-twe-ride="carousel">
-                        <!--Carousel items-->
-                        <div class="relative w-full overflow-hidden after:clear-both after:block after:content-['']">
-                            <!--First item-->
-                            <div class="relative float-left -mr-[100%] w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
-                                data-twe-carousel-item data-twe-carousel-active>
-                                <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="block w-full"
-                                    alt="Wild Landscape" />
-                            </div>
-                            <!--Second item-->
-                            <div class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
-                                data-twe-carousel-item>
-                                <img src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp" class="block w-full"
-                                    alt="Camera" />
-                            </div>
-                            <!--Third item-->
-                            <div class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
-                                data-twe-carousel-item>
-                                <img src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp" class="block w-full"
-                                    alt="Exotic Fruits" />
-                            </div>
-                        </div>
-                    </div>
+                    @include('component.document-slider', ['beasiswa' => $beasiswa],['isBenefit' => false])
                 </div>
             </div>
 
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {    
+            if (window.swiperInstance) {
+                const slideTexts = [
+                    @foreach ($beasiswa->benefitBeasiswa as $syarat)
+                        "{{ $syarat->benefit }}", // Store benefit text in an array
+                    @endforeach
+                ];
+    
+
+                document.getElementById('slide-text').innerText = slideTexts[window.swiperInstance.realIndex];
+
+                window.swiperInstance.on('slideChange', function () {
+                    const currentIndex = window.swiperInstance.realIndex; 
+                    document.getElementById('slide-text').innerText = slideTexts[currentIndex];
+                });
+            } else {
+                console.error("Swiper instance not found.");
+            }
+        });
+    </script>
 @endsection

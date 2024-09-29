@@ -36,7 +36,7 @@ class BeasiswaController extends Controller
      */
     public function show(string $id)
     {
-        $beasiswa = Beasiswa::findOrFail($id); // Mengambil data beasiswa berdasarkan ID
+        $beasiswa = Beasiswa::findOrFail($id); 
         return view('pages.Beasiswa.detail-beasiswa', compact('beasiswa'));
     }
 
