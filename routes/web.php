@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\userController;
+use App\Http\Controllers\BeasiswaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -11,6 +13,18 @@ Route::get('/', function () {
 //     return view('index');
 // })->where('pathMatch', ".*");
 
+
+/*
+===============================================================
+> Authentication Routes
+===============================================================
+*/
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/login', 'index')->name('login');
+    Route::post('/login', 'login')->name('login.submit');
+    Route::post('/logout', 'logout')->name('logout');
+});
+
 Route::get('/home', function () {
     return view('index');
 });
@@ -19,6 +33,8 @@ Route::get('/home', function () {
 Route::get('/tables', function () {
     return view('tables');
 });
+
+Route::resource('beasiswa', BeasiswaController::class);
 
 Route::get('/detail-beasiswa', function () {
     return view('pages.Beasiswa.detail-beasiswa');

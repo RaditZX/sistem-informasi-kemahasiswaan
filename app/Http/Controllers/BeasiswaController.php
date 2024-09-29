@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Beasiswa;
 use Illuminate\Http\Request;
 
 class BeasiswaController extends Controller
@@ -39,7 +40,8 @@ class BeasiswaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $beasiswa = Beasiswa::findOrFail($id); 
+        return view('pages.Beasiswa.detail-beasiswa', compact('beasiswa'));
     }
 
     /**
