@@ -28,7 +28,17 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Beasiswa::create([
+            'nama_beasiswa' => $request->nama_beasiswa,
+            'deskripsi' => $request->deskripsi,
+            'jenis_beasiswa' => $request->jenis_beasiswa,
+            'kuota' => $request->kuota_beasiswa,
+            'sumber' => $request->sumber_beasiswa,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_berakhir' => $request->tanggal_berakhir
+        ]);
+
+        return redirect('/form-beasiswa');
     }
 
     /**

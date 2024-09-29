@@ -24,6 +24,8 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 
+Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
+
 Route::get('/home', function () {
     return view('index');
 });

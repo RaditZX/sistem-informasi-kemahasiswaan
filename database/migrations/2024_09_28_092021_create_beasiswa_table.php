@@ -52,6 +52,16 @@ return new class extends Migration
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
+
+        // Table untuk jenjang_pendidikan (pivot table)
+        Schema::create('jenjang_pendidikan', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('beasiswa_id');
+            $table->string('jenjang');
+            $table->timestamps();
+
+            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+        });
     }
 
     /**
@@ -63,5 +73,6 @@ return new class extends Migration
         Schema::dropIfExists('benefit_beasiswa');
         Schema::dropIfExists('syarat_beasiswa');
         Schema::dropIfExists('beasiswa');
+        Schema::dropIfExists('jenjang_pendidikan');
     }
 };
