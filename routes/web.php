@@ -20,9 +20,10 @@ Route::get('/', function () {
 ===============================================================
 */
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'index');
+    Route::get('/login', 'index')->name('login');
+    Route::post('/login', 'login')->name('login.submit');
+    Route::post('/logout', 'logout')->name('logout');
 });
-
 
 Route::get('/home', function () {
     return view('index');

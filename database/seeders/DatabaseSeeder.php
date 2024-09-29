@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         // Panggil BeasiswaSeeder
         $this->call(BeasiswaSeeder::class);
+        $this->call(UsersTableSeeder::class);
     }
 }
