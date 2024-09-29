@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama_beasiswa');
             $table->text('deskripsi');
+            $table->enum('jenis_waktu_beasiswa',['current','upcoming','last']);
+            $table->enum('tipe_beasiswa',['ekonomi','prestasi','external']);
             $table->enum('jenis_beasiswa', ['full', 'setengah']); // enum jenis_beasiswa
             $table->integer('kuota');
             $table->string('sumber');
@@ -38,6 +40,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('benefit');
+            $table->text('deskripsi_benefit');
             $table->timestamps();
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
@@ -48,6 +51,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('dokumen');
+            $table->text('deskripsi_dokumen');
             $table->timestamps();
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
