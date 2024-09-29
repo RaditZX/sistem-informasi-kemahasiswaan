@@ -13,10 +13,17 @@ class BeasiswaController extends Controller
     public function index()
     {
         // Fetch all records from the 'beasiswa' table
+<<<<<<< Updated upstream
         $beasiswas = Beasiswa::all();
 
         // Pass the data to the view
         return view('pages.Beasiswa.list-beasiswa', ['beasiswas' => $beasiswas]);
+=======
+        $beasiswa = Beasiswa::all();
+
+        // Pass the data to the view
+        return view('pages.Beasiswa.list-beasiswa', ['beasiswas' => $beasiswa]);
+>>>>>>> Stashed changes
     }
 
     /**
