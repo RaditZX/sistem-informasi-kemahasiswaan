@@ -139,6 +139,7 @@ class BeasiswaSeeder extends Seeder
             SyaratBeasiswa::create([
                 'beasiswa_id' => $beasiswaEntry->id,
                 'syarat' => 'Memiliki ijazah S1 yang diakui.',
+                
             ]);
             SyaratBeasiswa::create([
                 'beasiswa_id' => $beasiswaEntry->id,
@@ -149,21 +150,26 @@ class BeasiswaSeeder extends Seeder
             BenefitBeasiswa::create([
                 'beasiswa_id' => $beasiswaEntry->id,
                 'benefit' => 'Biaya pendidikan penuh.',
+                'deskripsi_benefit' => 'Menanggung seluruh biaya kuliah selama masa studi hingga selesai.',
             ]);
             BenefitBeasiswa::create([
                 'beasiswa_id' => $beasiswaEntry->id,
                 'benefit' => 'Biaya hidup selama masa studi.',
+                'deskripsi_benefit' => 'Menanggung biaya akomodasi, makanan, dan kebutuhan hidup sehari-hari.',
             ]);
 
             // Data untuk tabel syarat_dokumen
             SyaratDokumen::create([
                 'beasiswa_id' => $beasiswaEntry->id,
                 'dokumen' => 'Fotokopi ijazah terakhir.',
+                'deskripsi_dokumen' => 'Ijazah yang dilegalisir oleh lembaga pendidikan terkait.',
             ]);
             SyaratDokumen::create([
                 'beasiswa_id' => $beasiswaEntry->id,
                 'dokumen' => 'Surat rekomendasi.',
+                'deskripsi_dokumen' => 'Surat rekomendasi dari dosen atau atasan sebagai pendukung aplikasi beasiswa.',
             ]);
+
         }
     }
 }

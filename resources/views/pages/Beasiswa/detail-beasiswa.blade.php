@@ -84,7 +84,7 @@
         </div>
 
         <div class="mt-10">
-            <h1 class="text-2xl font-semibold text-yellow-400">Dokumen</h1>
+            <h1 class="text-2xl font-semibold text-yellow-400">Syarat Dokumen</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
             <div class="flex p-10 ">
                 <div class="basis-1/2 flex flex-col justify-center items-center">
