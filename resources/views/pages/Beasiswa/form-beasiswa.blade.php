@@ -61,13 +61,6 @@
                     </div>
                     
                 </div>
-                <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
-                <div class="mb-4">  
-                    <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <i class="fa-duotone fa-solid fa-paperclip"></i>
-                    <input type="file" id="poster_beasiswa" name="poster_beasiswa"class="hidden" disabled>
-                    </label>
-                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <!-- Tanggal Mulai -->
                     <div>
@@ -83,11 +76,11 @@
                         <label for="tanggal_berakhir" class="block text-sm font-medium text-gray-700">Tanggal Berakhir</label>
                         <div class="relative mt-1">
                             <input type="date" id="tanggal_berakhir" name="tanggal_berakhir"
-                                class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Kuota Beasiswa -->
                 <div>
                     <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
@@ -95,6 +88,84 @@
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
                 </div>
                 <br>
+
+                <h2 class="text-lg font-bold mb-4 block">Syarat-Syarat Beasiswa</h2>
+                <div class="grid grid-cols-2 gap-10">
+                    <!-- Syarat-Syarat Beasiswa -->
+                    <div>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>IPK</label>
+                                <input type="text" id="IPK_min" name="IPK_min" class="ml-2 w-16 border rounded p-1 text-center">
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="transkrip_nilai" name="transkrip_nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Transkrip Nilai</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="proposal" name="proposal" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Proposal</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="esai" name="esai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Esai</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="sertifikat_prestasi" name="sertifikat_prestasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Sertifikat Prestasi</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="suket_penghasilan" name="suket_penghasilan" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Surat Keterangan Penghasilan Orangtua</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="suket_tidakmampu" name="suket_tidakmampu" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Surat Keterangan Tidak Mampu</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="suket_rekomendasi" name="suket_rekomendasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Surat Rekomendasi</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benefit Beasiswa -->
+                    <div>
+                        <h2 class="text-lg font-bold mb-4">Benefit Beasiswa</h2>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox"  class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Biaya Kuliah Penuh</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Tunjangan Biaya Hidup</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Buku dan Perlengkapan Akademik</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <label>Internship</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
+                <div class="mb-4">  
+                    <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <i class="fa-duotone fa-solid fa-paperclip"></i>
+                    <input type="file" id="poster_beasiswa" name="poster_beasiswa"class="hidden" disabled>
+                    </label>
+                </div>
                 <div>
                     <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                 </div>
