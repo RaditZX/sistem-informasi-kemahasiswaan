@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'name' => 'John Doe',
-                'email' => 'john.doe@example.com',
+                'email' => 'john.doe@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
                 'role_id' => 'mahasiswa',
@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Jane Smith',
-                'email' => 'jane.smith@example.com',
+                'email' => 'jane.smith@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
                 'role_id' => 'staff_kemahasiswaan',
@@ -37,7 +37,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'James Johnson',
-                'email' => 'james.johnson@example.com',
+                'email' => 'james.johnson@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
                 'role_id' => 'ketua_jurusan',
@@ -47,7 +47,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Alice Williams',
-                'email' => 'alice.williams@example.com',
+                'email' => 'alice.williams@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
                 'role_id' => 'wd-3',
