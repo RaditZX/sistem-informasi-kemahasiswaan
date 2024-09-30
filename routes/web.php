@@ -7,15 +7,16 @@ use App\Http\Controllers\BeasiswaController;
 // ========================================================================================
 // AUTHENTICATION ROUTES ==================================================================
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'index')->name('login'); // Login page
-    Route::post('/login', 'login')->name('login.submit'); // Handle login form submission
-    
-    // Redirect GET /logout to a proper page to prevent method error
-    Route::get('/logout', function () {
-        return redirect()->route('login');
-    });
-    
-    Route::post('/logout', 'logout')->name('logout'); // Handle logout via POST request
+    Route::get('/login', 'index')->name('login');
+    Route::post('/login', 'login')->name('login.submit');
+
+    // Forgot password process
+    Route::post('/forgot-password', 'forgotPassword')->name('password.forgot');
+    Route::post('/verify-code', 'verifyCode')->name('password.verifyCode');
+    Route::get('/reset-password', 'showResetPasswordForm')->name('password.reset');
+    Route::post('/reset-password', 'resetPassword')->name('password.update');
+
+    Route::post('/logout', 'logout')->name('logout');
 });
 // ========================================================================================
 
