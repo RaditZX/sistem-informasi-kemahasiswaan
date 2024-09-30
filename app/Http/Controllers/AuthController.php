@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -14,9 +12,19 @@ class AuthController extends Controller
      */
     public function index()
     {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // Redirect authenticated user to the beasiswa page
+            return redirect()->route('beasiswa.index');
+        }
+
+        // Return login view for unauthenticated users
         return view('pages.Auth.login');
     }
 
+    /**
+     * Handle login request.
+     */
     public function login(Request $request)
     {
         // Validate form data
@@ -25,27 +33,30 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        // Login process
+        // Attempt login
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            // Authentication passed
+            // Regenerate session to prevent fixation attacks
             $request->session()->regenerate();
 
-            return redirect()->intended('/home');
+            return redirect()->intended('/beasiswa');
         }
 
-        // Authentication failed
+        // Login failed, redirect back with error
         return back()->withErrors([
-            'email' => 'Email anda tidak dapat ditemukan!',
+            'email' => 'Email or password is incorrect.',
         ])->onlyInput('email');
     }
 
+    /**
+     * Logout the user.
+     */
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }
