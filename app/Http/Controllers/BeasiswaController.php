@@ -7,7 +7,7 @@ use App\Models\SyaratBeasiswa;
 use App\Models\SyaratDokumen;
 use App\Models\BenefitBeasiswa;
 use App\Models\JenjangPendidikan;
-use Illuminate\Http\Request;
+
 
 class BeasiswaController extends Controller
 {
@@ -16,7 +16,12 @@ class BeasiswaController extends Controller
      */
     public function index()
     {
-        return view('pages.Beasiswa.list-beasiswa');
+        $user = Auth::user();
+        $name = $user->name; 
+        $email = $user->email;
+        $role_id = $user->role_id;
+
+        return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id'));
     }
 
     /**
@@ -102,7 +107,7 @@ class BeasiswaController extends Controller
      */
     public function show(string $id)
     {
-        $beasiswa = Beasiswa::findOrFail($id); // Mengambil data beasiswa berdasarkan ID
+        $beasiswa = Beasiswa::findOrFail($id); 
         return view('pages.Beasiswa.detail-beasiswa', compact('beasiswa'));
     }
 

@@ -13,75 +13,95 @@
             </div>
         </div>        
 
-        <!-- Second Column (Login and Forgot Password Forms) -->
+        <!-- Second Column (Login, Forgot Password, and Reset Password Forms) -->
         <div class="w-full lg:w-1/2 flex flex-col p-10 bg-white relative">
-            <!-- Login Form (Default) -->
+            <!-- Login Form -->
             <div id="loginForm" class="absolute inset-0 transition-transform duration-700 ease-in-out flex flex-col justify-between p-10 bg-white">
                 <div class="title mb-6">
                     <h1 class="text-2xl font-bold">Login</h1>
                 </div>
-                <div class="space-y-5"> 
-                    <div>
-                        <label for="email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="example@polban.ac.id" aria-label="Email">
+                <form method="POST" action="{{ route('login.submit') }}">
+                    @csrf
+                    <div class="space-y-5">
+                        <div>
+                            <label for="email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" name="email" id="email" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="example@polban.ac.id">
+                            @error('email')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="password" class="block pb-3 text-sm font-medium text-gray-700">Password</label>
+                            <input type="password" name="password" id="password" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="********">
+                            @error('password')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
+                            <span class="pt-2 block">Forgot your password? <a href="#" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
+                        </div>
                     </div>
-                    <div>
-                        <label for="password" class="block pb-3 text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" id="password" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="********" aria-label="Password">
-                        <span class="pt-2 block">Lupa password? <a href="#" id="forgotPasswordLink" class="text-blue-500"><strong>Klik disini</strong></a></span>
+                    <div class="mt-6">
+                        <button type="submit" class="inline-block w-full px-6 py-3 font-bold text-white uppercase transition-all bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-orange-400 focus:outline-none">
+                            Login
+                        </button>
                     </div>
-                </div>
-                <div class="mt-6">
-                    <button type="submit" aria-label="Login to your account" class="inline-block w-full px-6 py-3 font-bold text-white uppercase transition-all bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-orange-400 focus:outline-none">
-                        Login
-                    </button>                    
-                </div>
+                </form>
             </div>
 
-            <!-- Forgot Password Form (Hidden initially) -->
+            <!-- Forgot Password Form -->
             <div id="forgotPasswordForm" class="absolute inset-0 transform translate-x-full transition-transform duration-700 ease-in-out flex flex-col justify-between p-10 bg-white">
                 <div class="title mb-6">
                     <h1 class="text-2xl font-bold">Forgot Password</h1>
                 </div>
-                <div class="space-y-5"> 
-                    <div>
-                        <label for="reset-email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="reset-email" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:border-fuchsia-300 focus:outline-none transition-shadow" placeholder="example@polban.ac.id" aria-label="Email for password reset">
-                    </div>
-                    <!-- Authentication Code Section -->
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <!-- Input Field -->
-                            <input type="text" placeholder="Kode Autentikasi" 
-                                class="border border-gray-300 rounded-lg w-3/5 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-
-                            <!-- Button -->
-                            <button class="bg-indigo-500 w-2/5 text-white rounded-lg px-4 py-2 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                Kirim Kode
-                            </button>
+                <form id="forgotPasswordFormSubmit">
+                    @csrf
+                    <div class="space-y-5"> 
+                        <div>
+                            <label for="reset-email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" name="email" id="reset-email" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700" placeholder="example@polban.ac.id" required>
                         </div>
-
-                        <!-- Description text below -->
-                        <p class="text-gray-500 text-sm mt-2">
-                            Kode akan dikirim ke email terkait
-                        </p>
+                        <div>
+                            <label for="auth_code" class="block pb-3 text-sm font-medium text-gray-700">Kode Autentikasi</label>
+                            <input type="text" name="auth_code" id="auth_code" class="border border-gray-300 rounded-lg w-full px-4 py-2" placeholder="123456" required>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-6">
-                    <button type="submit" id="reset-btn" aria-label="Send password reset link" class="reset-btn inline-block w-full px-6 py-3 font-bold text-white uppercase transition-all bg-gradient-to-tl bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md hover:scale-105 hover:shadow-lg focus:ring-2 focus:ring-orange-400 focus:outline-none">
-                        Send Reset Link
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <a href="#" id="backToLogin" class="text-blue-500"><strong>Back to Login</strong></a>
-                </div>
+                    <div class="mt-6">
+                        <button type="submit" class="inline-block w-full px-6 py-3 font-bold text-white uppercase bg-orange-500 hover:bg-orange-700 rounded-lg">
+                            Verify Code
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <!-- Success Message (Initially Hidden) -->
+            <!-- Reset Password Form -->
+            <div id="resetPasswordForm" class="absolute inset-0 transform translate-x-full transition-transform duration-700 ease-in-out flex flex-col justify-between p-10 bg-white hidden">
+                <div class="title mb-6">
+                    <h1 class="text-2xl font-bold">Reset Password</h1>
+                </div>
+                <form id="resetPasswordFormSubmit">
+                    @csrf
+                    <div class="space-y-5">
+                        <div>
+                            <label for="password" class="block pb-3 text-sm font-medium text-gray-700">Password Baru</label>
+                            <input type="password" name="password" id="password" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2" required>
+                        </div>
+                        <div>
+                            <label for="password_confirmation" class="block pb-3 text-sm font-medium text-gray-700">Konfirmasi Password</label>
+                            <input type="password" name="password_confirmation" id="password_confirmation" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2" required>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" class="inline-block w-full px-6 py-3 font-bold text-white uppercase bg-orange-500 hover:bg-orange-700 rounded-lg">
+                            Reset Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Success Message -->
             <div id="resetSuccess" class="absolute inset-0 hidden flex flex-col justify-center items-center p-10 text-center">
-                <h1 class="text-2xl font-bold mb-4">Lupa Password</h1>
-                <p class="text-lg text-gray-700 mb-8">Password akun-mu berhasil diganti!</p>
-                <a href="#" id="backToLoginAfterSuccess" class="text-blue-500"><strong>Kembali ke Login</strong></a>
+                <h1 class="text-2xl font-bold mb-4">Password Changed Successfully</h1>
+                <p class="text-lg text-gray-700 mb-8">Your password has been successfully updated!</p>
+                <a href="#" id="backToLoginAfterSuccess" class="text-blue-500"><strong>Back to Login</strong></a>
             </div>
         </div>
     </section>
@@ -92,47 +112,78 @@
     const backToLogin = document.getElementById('backToLogin');
     const loginForm = document.getElementById('loginForm');
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
     const resetSuccess = document.getElementById('resetSuccess');
     const backToLoginAfterSuccess = document.getElementById('backToLoginAfterSuccess');
 
-    // Slide in Forgot Password form
+    // Transition to Forgot Password Form
     forgotPasswordLink.addEventListener('click', function (event) {
         event.preventDefault();
-
-        // Ensure the Forgot Password form is visible (not hidden)
         forgotPasswordForm.classList.remove('hidden');
-        
-        // Add a small delay before removing 'translate-x-full' to trigger the animation
         setTimeout(() => {
             loginForm.classList.add('translate-x-full');
             forgotPasswordForm.classList.remove('translate-x-full');
-        }, 50);  // 50ms delay to allow the transition to apply
+        }, 50);
     });
 
-    // Slide back to Login form from Forgot Password
-    backToLogin.addEventListener('click', function (event) {
+    // Handle Forgot Password Form Submission
+    document.getElementById('forgotPasswordFormSubmit').addEventListener('submit', function(event) {
         event.preventDefault();
-        loginForm.classList.remove('translate-x-full');
-        forgotPasswordForm.classList.add('translate-x-full');
+        const email = document.getElementById('reset-email').value;
+        const authCode = document.getElementById('auth_code').value;
+
+        fetch('{{ route('password.forgot') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ email, auth_code: authCode })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Verified!') {
+                forgotPasswordForm.classList.add('hidden');
+                resetPasswordForm.classList.remove('hidden');
+                resetPasswordForm.classList.remove('translate-x-full');
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 
-    // Mock form submission for demo - Show Success Message
-    document.querySelector('#forgotPasswordForm #reset-btn').addEventListener('click', function (event) {
+    // Handle Reset Password Form Submission
+    document.getElementById('resetPasswordFormSubmit').addEventListener('submit', function(event) {
         event.preventDefault();
-        
-        // Hide Forgot Password form and show the resetSuccess message
-        forgotPasswordForm.classList.add('hidden');
-        resetSuccess.classList.remove('hidden');
+        const password = document.getElementById('password').value;
+        const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+        fetch('{{ route('password.update') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ password, password_confirmation: passwordConfirmation })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Password updated successfully!') {
+                resetPasswordForm.classList.add('hidden');
+                resetSuccess.classList.remove('hidden');
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 
-    // Back to Login from Success Message
+    // Back to Login from Success
     backToLoginAfterSuccess.addEventListener('click', function (event) {
         event.preventDefault();
-        
-        // Hide the success message and reset forms to initial states
         resetSuccess.classList.add('hidden');
-        forgotPasswordForm.classList.add('translate-x-full');  // Reset Forgot Password form state
-        loginForm.classList.remove('translate-x-full');  // Show login form
+        loginForm.classList.remove('translate-x-full');
     });
 </script>
 
