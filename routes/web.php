@@ -2,48 +2,38 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\userController;
 use App\Http\Controllers\BeasiswaController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Route::get('/{pathMatch}', function () {
-//     return view('index');
-// })->where('pathMatch', ".*");
-
-
-/*
-===============================================================
-> Authentication Routes
-===============================================================
-*/
+// ========================================================================================
+// AUTHENTICATION ROUTES ==================================================================
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'index')->name('login');
-    Route::post('/login', 'login')->name('login.submit');
-    Route::post('/logout', 'logout')->name('logout');
+    Route::get('/login', 'index')->name('login'); // Login page
+    Route::post('/login', 'login')->name('login.submit'); // Handle login form submission
+    
+    // Redirect GET /logout to a proper page to prevent method error
+    Route::get('/logout', function () {
+        return redirect()->route('login');
+    });
+    
+    Route::post('/logout', 'logout')->name('logout'); // Handle logout via POST request
 });
+// ========================================================================================
 
-Route::get('/home', function () {
+
+// ========================================================================================
+// BEASISWA ROUTES ========================================================================
+
+Route::get('/dashboard',function(){
     return view('index');
 });
 
-
-Route::get('/tables', function () {
-    return view('tables');
+Route::middleware('auth')->group(function () {
+    Route::resource('beasiswa', BeasiswaController::class);
+    Route::get('/detail-beasiswa', function () {
+        return view('pages.Beasiswa.detail-beasiswa');
+    });
+    Route::get('/form-beasiswa', function () {
+        return view('pages.Beasiswa.form-beasiswa');
+    });
 });
-
-Route::resource('beasiswa', BeasiswaController::class);
-
-Route::get('/detail-beasiswa', function () {
-    return view('pages.Beasiswa.detail-beasiswa');
-});
-
-Route::get('/form-beasiswa', function () {
-    return view('pages.Beasiswa.form-beasiswa');
-});
-
-Route::get('/pengaturan-profil', function () {
-    return view('pages.Pengaturan.pengaturan');
-});
+// ========================================================================================
