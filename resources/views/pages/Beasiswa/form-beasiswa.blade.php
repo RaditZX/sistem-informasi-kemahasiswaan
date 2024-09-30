@@ -54,12 +54,32 @@
                         </div>
                         <div class="mb-4">
                             <label for="half" class="flex items-center space-x-3">
-                                <input type="radio" id="half" name="jenis_beasiswa" value="half" class="form-radio h-5 w-5 text-blue-500 rounded-full border-gray-300 focus:ring-blue-500">
+                                <input type="radio" id="half" name="jenis_beasiswa" value="setengah" class="form-radio h-5 w-5 text-blue-500 rounded-full border-gray-300 focus:ring-blue-500">
                                 <span class="text-gray-600">Half</span>
                             </label>
                         </div>
                     </div>
-                    
+                </div>
+                <p class="block text-sm font-medium text-gray-700">Tipe Beasiswa</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="mb-4">
+                        <label for="prestasi" class="flex items-center space-x-3">
+                            <input type="radio" id="prestasi" name="tipe_beasiswa" value="prestasi" class="form-radio h-5 w-5 text-blue-500 rounded-full border-gray-300 focus:ring-blue-500">
+                            <span class="text-gray-600">Prestasi</span>
+                        </label>
+                    </div>
+                    <div class="mb-4">
+                        <label for="ekonomi" class="flex items-center space-x-3">
+                            <input type="radio" id="ekonomi" name="tipe_beasiswa" value="ekonomi" class="form-radio h-5 w-5 text-blue-500 rounded-full border-gray-300 focus:ring-blue-500">
+                            <span class="text-gray-600">Ekonomi</span>
+                        </label>
+                    </div>
+                    <div class="mb-4">
+                        <label for="eksternal" class="flex items-center space-x-3">
+                            <input type="radio" id="eksternal" name="tipe_beasiswa" value="eksternal" class="form-radio h-5 w-5 text-blue-500 rounded-full border-gray-300 focus:ring-blue-500">
+                            <span class="text-gray-600">Eksternal</span>
+                        </label>
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <!-- Tanggal Mulai -->
@@ -97,18 +117,18 @@
                             <div class="flex items-center space-x-3">
                                 <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>IPK</label>
-                                <input type="text" id="IPK_min" name="IPK_min" class="ml-2 w-16 border rounded p-1 text-center">
+                                <input type="text" id="IPK_min" name="syarat_beasiswa[]" class="ml-2 w-16 border rounded p-1 text-center">
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="transkrip_nilai" name="transkrip_nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" id="transkrip_nilai" name="syarat_beasiswa[]" value="Transkrip Nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Transkrip Nilai</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="proposal" name="proposal" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" id="proposal" name="syarat_beasiswa[]" value="Proposal" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Proposal</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="esai" name="esai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" id="esai" name="syarat_beasiswa[]" value="Esai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Esai</label>
                             </div>
                         </div>
@@ -117,19 +137,19 @@
                     <div>
                         <div class="space-y-2">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="sertifikat_prestasi" name="sertifikat_prestasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" id="sertifikat_prestasi" name="syarat_beasiswa[]" value="Sertifikat Prestasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Sertifikat Prestasi</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="suket_penghasilan" name="suket_penghasilan" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" id="suket_penghasilan" name="syarat_beasiswa[]" value="Surat Keterangan Penghasilan Orangtua" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Surat Keterangan Penghasilan Orangtua</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="suket_tidakmampu" name="suket_tidakmampu" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" id="suket_tidakmampu" name="syarat_beasiswa[]" value="Surat Keterangan Tidak Mampu" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Surat Keterangan Tidak Mampu</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="suket_rekomendasi" name="suket_rekomendasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" id="suket_rekomendasi" name="syarat_beasiswa[]" value="Surat Rekomendasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Surat Rekomendasi</label>
                             </div>
                         </div>
@@ -140,19 +160,19 @@
                         <h2 class="text-lg font-bold mb-4">Benefit Beasiswa</h2>
                         <div class="space-y-2">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox"  class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Biaya Kuliah Penuh" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Biaya Kuliah Penuh</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Tunjangan Biaya Hidup" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Tunjangan Biaya Hidup</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Buku dan Perlengkapan Akademik" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Buku dan Perlengkapan Akademik</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Internship" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                 <label>Internship</label>
                             </div>
                         </div>
