@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Beasiswa;
-use Illuminate\Container\Attributes\Auth;
+// use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Types\Relations\Role;
 
 class BeasiswaController extends Controller
 {
@@ -14,9 +15,12 @@ class BeasiswaController extends Controller
      */
     public function index()
     {
-        $email = session('name', FacadesAuth::user()->name); // Get email from session or logged-in user
+        $user = Auth::user();
+        $name = $user->name; 
+        $email = $user->email;
+        $role_id = $user->role_id;
 
-        return view('pages.Beasiswa.list-beasiswa', compact('email'));
+        return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id'));
     }
 
     /**

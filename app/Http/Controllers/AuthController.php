@@ -29,8 +29,14 @@ class AuthController extends Controller
     {
         // Validate form data
         $request->validate([
-            'email' => 'required|email',
+            'email' => [
+                'required',
+                'email',
+                'regex:/^[a-zA-Z0-9._%+-]+@polban\.ac\.id$/',
+            ],
             'password' => 'required|min:6',
+        ], [
+            'email.regex' => 'Gunakan email polban!',
         ]);
 
         // Attempt login
