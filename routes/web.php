@@ -22,6 +22,12 @@ Route::controller(AuthController::class)->group(function () {
 
 // ========================================================================================
 // BEASISWA ROUTES ========================================================================
+
+
+Route::get('/dashboard',function(){
+    return view('index');
+});
+
 Route::middleware('auth')->group(function () {
     Route::resource('beasiswa', BeasiswaController::class);
     Route::get('/detail-beasiswa', function () {
@@ -32,3 +38,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 // ========================================================================================
+
