@@ -3,7 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Beasiswa;
+<<<<<<< Updated upstream
 use Illuminate\Http\Request;
+=======
+use App\Models\SyaratBeasiswa;
+use App\Models\SyaratDokumen;
+use App\Models\BenefitBeasiswa;
+use App\Models\JenjangPendidikan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+
+>>>>>>> Stashed changes
 
 class BeasiswaController extends Controller
 {
@@ -12,6 +23,7 @@ class BeasiswaController extends Controller
      */
     public function index()
     {
+<<<<<<< Updated upstream
         // Fetch all records from the 'beasiswa' table
 <<<<<<< Updated upstream
         $beasiswas = Beasiswa::all();
@@ -23,6 +35,15 @@ class BeasiswaController extends Controller
 
         // Pass the data to the view
         return view('pages.Beasiswa.list-beasiswa', ['beasiswas' => $beasiswa]);
+>>>>>>> Stashed changes
+=======
+        $user = Auth::user();
+        $name = $user->name; 
+        $email = $user->email;
+        $role_id = $user->role_id;
+        $beasiswa = beasiswa::All();
+
+        return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa'));
 >>>>>>> Stashed changes
     }
 
