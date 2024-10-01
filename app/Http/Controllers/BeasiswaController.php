@@ -21,10 +21,6 @@ class BeasiswaController extends Controller
     public function index()
     {
         $beasiswa = Beasiswa::all();
-
-        // Pass the data to the view
-        return view('pages.Beasiswa.list-beasiswa', ['beasiswas' => $beasiswa]);
-
         $user = Auth::user();
         $name = $user->name; 
         $email = $user->email;
