@@ -159,6 +159,15 @@ class BeasiswaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+      
+        // Find the item by ID
+        $item = Beasiswa::findOrFail($id);
+        
+        // Delete the item
+        $item->delete();
+        
+        // Redirect back with a success message
+        return redirect()->route('beasiswa.index')->with('success', 'Item deleted successfully!');
+    
     }
 }

@@ -4,6 +4,13 @@
 @section('content')
     @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
 
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+
+
     {{-- Filter Button dan Kolom Pencarian --}}
     <div class="p-2">
         <div class="flex flex-auto justify-center">
