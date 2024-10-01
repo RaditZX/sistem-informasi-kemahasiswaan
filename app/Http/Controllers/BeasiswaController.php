@@ -36,7 +36,7 @@ class BeasiswaController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -143,7 +143,7 @@ class BeasiswaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
     }
 
     /**
