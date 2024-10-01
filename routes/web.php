@@ -16,22 +16,19 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/reset-password', 'showResetPasswordForm')->name('password.reset');
     Route::post('/reset-password', 'resetPassword')->name('password.update');
 
+    // Logout route should be outside the '/home' route
+    Route::post('/logout', 'logout')->name('logout');
+});
 
+// ========================================================================================
+// BEASISWA ROUTES ========================================================================
 Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
 
 Route::get('/home', function () {
     return view('index');
-
-    Route::post('/logout', 'logout')->name('logout');
 });
-// ========================================================================================
 
-
-// ========================================================================================
-// BEASISWA ROUTES ========================================================================
-
-
-Route::get('/dashboard',function(){
+Route::get('/dashboard', function () {
     return view('index');
 });
 
@@ -44,5 +41,3 @@ Route::middleware('auth')->group(function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
 });
-// ========================================================================================
-

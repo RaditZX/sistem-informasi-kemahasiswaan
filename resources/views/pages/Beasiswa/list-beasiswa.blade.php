@@ -2,7 +2,7 @@
 @extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar')
+    @include('component.navbar',['path'=>"List Beasiswa",'id'=>null])
     
     {{-- Filter Button dan Kolom Pencarian --}}
     <div class="p-2">
