@@ -45,9 +45,9 @@ class BeasiswaController extends Controller
     public function store(Request $request)
     {
         // jenis_waktu_beasiswa
-        $tgl_mulai = $request->tanggal_mulai;
-        $tgl_akhir = $request->tanggal_berakhir;
-        $tgl_skrg = date('m/d/Y h:i:s a', time());
+        $tgl_mulai = strtotime($request->tanggal_mulai);
+        $tgl_akhir = strtotime($request->tanggal_berakhir);
+        $tgl_skrg = date( time());
 
         // current = tgl_mulai <= tgl_skrg <= tgl_akhir
         // upcoming = tgl_skrg < tgl_mulai
