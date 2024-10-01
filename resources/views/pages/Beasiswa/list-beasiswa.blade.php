@@ -30,8 +30,8 @@
                 <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">D4</div>
                 <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">FULL</div>
             </div>
-            <p class="font-bold text-justify mb-1">Beasiswa LPDP {{ $email }}</p> {{-- GET DATA FROM SESSION HERE, FOR TESTING!!! --}}
-            <p class="text-xs text-justify mb-2">"Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nobis omnis, quaerat aliquam magni laborum repellat libero fuga. Numquam dolore consequatur perspiciatis dolor pariatur est assumenda sapiente aliquam, fugiat doloremque."</p>
+            <p class="font-bold text-justify mb-1">Beasiswa LPDP {{ $name }}</p> {{-- GET DATA FROM SESSION HERE, FOR TESTING!!! --}}
+            <p class="text-xs text-justify mb-2">"{{ $email }}Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam nobis omnis, quaerat aliquam magni laborum repellat libero fuga. Numquam dolore consequatur perspiciatis dolor pariatur est assumenda sapiente aliquam, fugiat doloremque."</p>
             <div class="flex flex-auto justify-left gap-3">
                 <img src="https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2" class="w-5 h-5 rounded-full" alt="KEMENDIKBUD">
                 <p class="text-xs font-bold ">KEMENDIKBUD</p>

@@ -7,23 +7,28 @@ use App\Http\Controllers\BeasiswaController;
 // ========================================================================================
 // AUTHENTICATION ROUTES ==================================================================
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'index')->name('login'); // Login page
-    Route::post('/login', 'login')->name('login.submit'); // Handle login form submission
-    
-    // Redirect GET /logout to a proper page to prevent method error
-    Route::get('/logout', function () {
-        return redirect()->route('login');
-    });
-    
-    Route::post('/logout', 'logout')->name('logout'); // Handle logout via POST request
-});
-// ========================================================================================
+    Route::get('/login', 'index')->name('login');
+    Route::post('/login', 'login')->name('login.submit');
 
+    // Forgot password process
+    Route::post('/forgot-password', 'forgotPassword')->name('password.forgot');
+    Route::post('/verify-code', 'verifyCode')->name('password.verifyCode');
+    Route::get('/reset-password', 'showResetPasswordForm')->name('password.reset');
+    Route::post('/reset-password', 'resetPassword')->name('password.update');
+
+    // Logout route should be outside the '/home' route
+    Route::post('/logout', 'logout')->name('logout');
+});
 
 // ========================================================================================
 // BEASISWA ROUTES ========================================================================
+Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
 
-Route::get('/dashboard',function(){
+Route::get('/home', function () {
+    return view('index');
+});
+
+Route::get('/dashboard', function () {
     return view('index');
 });
 
@@ -36,4 +41,3 @@ Route::middleware('auth')->group(function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
 });
-// ========================================================================================
