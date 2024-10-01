@@ -8,7 +8,6 @@
                     alt="">
             </div>
             <div class="p-8 basis-3/4">
-
                 <h1 class="text-2xl font-semibold">{{ $beasiswa->nama_beasiswa }}</h1>
                 <div class="flex mb-3 gap-3">
                     <div class=" rounded-xl p-1 px-3 bg-orange-400 inline-block mt-4">
@@ -51,45 +50,12 @@
             <h1 class="text-2xl font-semibold text-yellow-400">Syarat</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
             <div class="grid grid-cols-4 gap-5 py-5">
+                @foreach($beasiswa->syaratBeasiswa as $syarat)
                 <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
+                    <p class="text-m font-medium">{{$syarat->syarat}}</p>
                 </div>
-                <!-- ... -->
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-                <!-- ... -->
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
+                @endforeach
+                
             </div>
         </div>
 
