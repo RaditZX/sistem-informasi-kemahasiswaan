@@ -70,7 +70,7 @@
     <div class="swiper swiper-syarat p-0 m-0">
         <div class="swiper-wrapper p-0 m-0">
             <!-- Slide 1 -->
-            @foreach ($beasiswa->syaratBeasiswa as $syarat)
+            @foreach ($beasiswa->benefitBeasiswa as $bf)
                 <div class="swiper-slide p-10 bg-white">
                     <div class="rounded flex items-center bg-white-100 shadow-xl h-80">
                         <div class="basis-1/4 h-full overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg">
@@ -79,12 +79,8 @@
                                 alt="Image 1">
                         </div>
                         <div class="p-6 basis-3/4">
-                            <h2 class="text-xl font-bold">{{ $syarat->syarat }}</h2>
-                            <p class="mt-2">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam sit
-                                reprehenderit perferendis dolorem architecto earum fugit et ad exercitationem autem
-                                itaque.
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam sit reprehenderit
-                                perferendis dolorem architecto earum fugit et ad exercitationem autem itaque</p>
+                            <h2 class="text-xl font-bold">{{ $bf->benefit }}</h2>
+                            <p class="mt-2">{{$bf->deskripsi_benefit}}</p>
                         </div>
                     </div>
                 </div>

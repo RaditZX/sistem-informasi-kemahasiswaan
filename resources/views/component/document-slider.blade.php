@@ -71,10 +71,10 @@
 <div class="swiper swiper-1 p-0 m-0">
     <div class="swiper-wrapper p-0 m-0">
         @foreach ($beasiswa->benefitBeasiswa as $syarat)
-            <div class="swiper-slide ">
+            <div class="swiper-slide flex justify-center ">
                 <div>
-                    <div>
-                        <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="max-w-full"
+                    <div class="max-w-60">
+                        <img src="https://th.bing.com/th/id/OIP.1BCK9JuP0oN4CjMJx2urnQAAAA?rs=1&pid=ImgDetMain" class="max-w-full"
                             alt="Wild Landscape" />
                     </div>
                 </div>
