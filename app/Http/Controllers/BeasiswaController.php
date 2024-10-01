@@ -11,7 +11,6 @@ use App\Models\JenjangPendidikan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
 
 class BeasiswaController extends Controller
 {
