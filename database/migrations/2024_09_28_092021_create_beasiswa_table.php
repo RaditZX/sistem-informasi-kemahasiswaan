@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->enum('jenis_waktu_beasiswa',['current','upcoming','last']);
             $table->enum('jenis_beasiswa', ['full', 'setengah']); // enum jenis_beasiswa
-            $table->enum('tipe_beasiswa', ['prestasi', 'ekonomi', 'eksternal']); // enum jenis_beasiswa
             $table->integer('kuota');
             $table->string('sumber');
             $table->date('tanggal_mulai');

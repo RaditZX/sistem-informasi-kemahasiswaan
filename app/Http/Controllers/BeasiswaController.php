@@ -11,6 +11,7 @@ use App\Models\JenjangPendidikan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 class BeasiswaController extends Controller
 {
@@ -48,10 +49,28 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
+        // jenis_waktu_beasiswa
+        $tgl_mulai = $request->tanggal_mulai;
+        $tgl_akhir = $request->tanggal_berakhir;
+        $tgl_skrg = date('m/d/Y h:i:s a', time());
+
+        // current = tgl_mulai <= tgl_skrg <= tgl_akhir
+        // upcoming = tgl_skrg < tgl_mulai
+        // last = tgl_skrg > tgl_akhir
+        if ($tgl_skrg < $tgl_mulai){
+            $jenis_waktu = 'upcoming';
+        } elseif ($tgl_mulai <= $tgl_skrg && $tgl_skrg <= $tgl_akhir){
+            $jenis_waktu = 'current';
+        } else {
+            $jenis_waktu = 'last';
+        }
+        
+        
         // Simpan data beasiswa ke database dan dapatkan objek Beasiswa
         $beasiswa_id = Beasiswa::create([
             'nama_beasiswa' => $request->nama_beasiswa,
             'deskripsi' => $request->deskripsi,
+            'jenis_waktu_beasiswa' => $jenis_waktu,
             'jenis_beasiswa' => $request->jenis_beasiswa,
             'tipe_beasiswa' => $request->tipe_beasiswa,
             'kuota' => $request->kuota_beasiswa,
@@ -84,7 +103,8 @@ class BeasiswaController extends Controller
             foreach ($benefit_beasiswa as $benefit) {
                 BenefitBeasiswa::create([
                     'beasiswa_id' => $beasiswa_id,
-                    'benefit' => $benefit
+                    'benefit' => $benefit,
+                    'deskripsi_benefit' => $benefit
                 ]);
             }
         }
@@ -95,7 +115,8 @@ class BeasiswaController extends Controller
                 if ($syarat == $dokumen) {
                     SyaratDokumen::create([
                         'beasiswa_id' => $beasiswa_id,
-                        'dokumen' => $dokumen
+                        'dokumen' => $dokumen,
+                        'deskripsi_dokumen' => $dokumen
                     ]);
                 }
             } 

@@ -76,7 +76,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="eksternal" class="flex items-center space-x-3">
-                            <input type="radio" id="eksternal" name="tipe_beasiswa" value="eksternal" class="form-radio h-5 w-5 text-blue-500 rounded-full border-gray-300 focus:ring-blue-500">
+                            <input type="radio" id="eksternal" name="tipe_beasiswa" value="external" class="form-radio h-5 w-5 text-blue-500 rounded-full border-gray-300 focus:ring-blue-500">
                             <span class="text-gray-600">Eksternal</span>
                         </label>
                     </div>
