@@ -22,6 +22,7 @@ class BeasiswaFactory extends Factory
             'sumber' => 'KEMENDIKBUD',
             'kuota' => $this->faker->numberBetween(1, 100),
             'jenis_beasiswa' => $this->faker->randomElement(['full', 'setengah']),
+            'tipe_beasiswa' => $this->faker->randomElement(['prestasi', 'ekonomi', 'eksternal']),
             'tanggal_mulai' => $this->faker->date(),
             'tanggal_berakhir' => $this->faker->date(),
         ];

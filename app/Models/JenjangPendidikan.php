@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SyaratDokumen extends Model
+class JenjangPendidikan extends Model
 {
     use HasFactory;
 
-    protected $table = 'syarat_dokumen';
+    protected $table = 'jenjang_pendidikan';
 
-    protected $fillable = ['beasiswa_id', 'dokumen', 'deskripsi_dokumen'];
+    protected $fillable = ['beasiswa_id', 'jenjang'];
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()
