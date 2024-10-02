@@ -39,3 +39,6 @@ Route::middleware('auth')->group(function () {
 });
 // ========================================================================================
 
+Route::get('/pengajuan',function(){
+    return view('pages.Beasiswa.pengajuan');
+});
