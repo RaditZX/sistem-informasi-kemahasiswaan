@@ -37,4 +37,8 @@ class Beasiswa extends Model
     {
         return $this->hasMany(jenjangPendidikan::class);
     }
+    public function pengajuanBeasiswa()
+    {
+        return $this->hasMany(PengajuanBeasiswa::class);
+    }
 }
