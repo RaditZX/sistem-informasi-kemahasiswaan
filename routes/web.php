@@ -44,3 +44,8 @@ Route::middleware('auth')->group(function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
 });
+
+Route::get('/pengajuan',function(){
+    return view('pages.Beasiswa.pengajuan');
+});
+
