@@ -37,6 +37,7 @@
         };
     </script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+    @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 
 <body>
