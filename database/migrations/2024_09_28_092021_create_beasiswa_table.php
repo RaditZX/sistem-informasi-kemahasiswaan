@@ -27,32 +27,32 @@ return new class extends Migration
 
         // Table untuk syarat_beasiswa (pivot table)
         Schema::create('syarat_beasiswa', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('syarat');
             $table->timestamps();
+            $table->primary(['beasiswa_id', 'syarat']);
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
 
         // Table untuk benefit_beasiswa (pivot table)
         Schema::create('benefit_beasiswa', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('benefit');
             $table->text('deskripsi_benefit');
             $table->timestamps();
+            $table->primary(['beasiswa_id', 'benefit']);
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
 
         // Table untuk syarat_dokumen (pivot table)
         Schema::create('syarat_dokumen', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('dokumen');
             $table->text('deskripsi_dokumen');
             $table->timestamps();
+            $table->primary(['beasiswa_id', 'dokumen']);
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
@@ -76,7 +76,7 @@ return new class extends Migration
         Schema::dropIfExists('syarat_dokumen');
         Schema::dropIfExists('benefit_beasiswa');
         Schema::dropIfExists('syarat_beasiswa');
-        Schema::dropIfExists('beasiswa');
         Schema::dropIfExists('jenjang_pendidikan');
+        Schema::dropIfExists('beasiswa');
     }
 };

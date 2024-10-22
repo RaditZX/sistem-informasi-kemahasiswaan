@@ -19,8 +19,8 @@ class UsersTableSeeder extends Seeder
                 'name' => 'John Doe',
                 'email' => 'john.doe@polban.ac.id',
                 'email_verified_at' => now(),
+                'jenis_kelamin' => 'Pria',
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'mahasiswa',
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -30,8 +30,8 @@ class UsersTableSeeder extends Seeder
                 'email' => 'jane.smith@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'staff_kemahasiswaan',
                 'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -40,8 +40,8 @@ class UsersTableSeeder extends Seeder
                 'email' => 'james.johnson@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'ketua_jurusan',
                 'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -50,8 +50,8 @@ class UsersTableSeeder extends Seeder
                 'email' => 'alice.williams@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'wd-3',
                 'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
