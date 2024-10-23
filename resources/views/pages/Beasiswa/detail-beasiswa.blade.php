@@ -10,11 +10,11 @@
             <div class="p-8 basis-3/4">
                 <h1 class="text-2xl font-semibold">{{ $beasiswa->nama_beasiswa }}</h1>
                 <div class="flex mb-3 gap-3">
-                    <div class=" rounded-xl p-1 px-3 bg-orange-400 inline-block mt-4">
-                        <h5 class="font-medium text-base text-white">{{ $beasiswa->tipe_beasiswa }}</h5>
+                    <div class=" border border-orange-500 rounded-xl p-1 px-3 bg-white inline-block mt-4">
+                        <h5 class="font-medium text-base text-orange-500">{{ $beasiswa->tipe_beasiswa }}</h5>
                     </div>
-                    <div class=" rounded-xl p-1 px-3 bg-orange-400 inline-block mt-4">
-                        <h5 class="font-medium text-base text-white">{{ $beasiswa->jenis_waktu_beasiswa }}</h5>
+                    <div class=" border border-orange-500 rounded-xl p-1 px-3 bg-white inline-block mt-4">
+                        <h5 class="font-medium text-base text-orange-500">{{ $beasiswa->jenis_waktu_beasiswa }}</h5>
                     </div>
                 </div>
                 <p>{{ $beasiswa->deskripsi }}</p>

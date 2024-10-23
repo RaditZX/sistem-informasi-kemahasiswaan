@@ -31,6 +31,20 @@ class BeasiswaController extends Controller
 
     }
 
+    public function getListBeasiswaForStaff()
+    {
+
+        return view('pages.Beasiswa.list-beasiswa-staff');
+
+    }
+
+    public function getPengumumanBeasiswa()
+    {
+
+        return view('pages.Beasiswa.pengumuman-beasiswa');
+
+    }
+
     /**
      * Show the form for creating a new resource.
      */
