@@ -6,7 +6,8 @@
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <div class="bg-white rounded-lg p-6">
-            <form action="{{ route('beasiswa.store') }}" method="POST">
+            <form action="{{ url("beasiswa/$beasiswa->id") }}" method="POST">
+                    @method('PATCH')
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <!-- Nama Beasiswa -->
@@ -233,6 +234,9 @@
                             <label for="nama_beasiswa" class="block text-sm font-medium text-gray-700">Nama Beasiswa</label>
                             <input type="text" id="nama_beasiswa" name="nama_beasiswa" placeholder="Nama Beasiswa"
                                 class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
+                            @error('nama_beasiswa')
+                                <div class="text-danger"{{$message}}></div>
+                            @enderror
                         </div>
 
                         <!-- Sumber Beasiswa -->
@@ -339,7 +343,7 @@
                                     <label>
                                     <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md border-gray-300 focus:ring-blue-500" checked>
                                     IPK
-                                    <input type="text" id="IPK_min" name="syarat_beasiswa[]" class="ml-2 w-16 border rounded p-1 text-center">
+                                    <input type="text" id="IPK_min" name="ipk_min" class="ml-2 w-16 border rounded p-1 text-center">
                                     </label>
                                 </div>
                                 <div class="flex items-center space-x-3">
