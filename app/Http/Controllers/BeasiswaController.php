@@ -36,7 +36,8 @@ class BeasiswaController extends Controller
      */
     public function create()
     {
-        
+        $beasiswa = null;
+        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa'));
     }
 
     /**
@@ -73,19 +74,12 @@ class BeasiswaController extends Controller
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_berakhir' => $request->tanggal_berakhir
         ])->id;
-    
-        // // Cek jika penyimpanan beasiswa berhasil
-        // if (!$beasiswa) {
-        //     return redirect('/form-beasiswa')->with('error', 'Gagal menyimpan data beasiswa.');
-        // }
-    
-        // Ambil ID dari objek Beasiswa
-        
 
         // Simpan syarat-syarat beasiswa, jika ada
         $syarat_beasiswa = $request->input('syarat_beasiswa');
         if ($syarat_beasiswa) {
             foreach ($syarat_beasiswa as $syarat) {
+                
                 SyaratBeasiswa::create([
                     'beasiswa_id' => $beasiswa_id,
                     'syarat' => $syarat
@@ -124,8 +118,7 @@ class BeasiswaController extends Controller
                 'jenjang' => $jenjang
             ]);
         }
-    
-        return redirect('/form-beasiswa')->with('success', 'Beasiswa berhasil ditambahkan');
+        return redirect('/beasiswa')->with('success', 'Beasiswa berhasil ditambahkan');
     }
     
 
@@ -143,7 +136,15 @@ class BeasiswaController extends Controller
      */
     public function edit(string $id)
     {
-        
+        // Ambil data dari database berdasarkan ID
+        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen'])->find($id);
+        $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
+        $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
+        $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
+        $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
+
+        // Kirim data ke view
+        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'jenjang', 'dokumen', 'benefit'));
     }
 
     /**
