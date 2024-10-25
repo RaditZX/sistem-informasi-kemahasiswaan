@@ -1,14 +1,14 @@
 @extends('layouts.main')
 
 @section('content')
-    @include('component.navbar')
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
 
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="px-4 py-6 sm:px-0">
+        <div class="container px-4 py-6 sm:px-0">
             <h2 class="text-3xl font-bold mb-6">Data Pribadi Mahasiswa</h2>
 
             <!-- Profile Card -->
-            <div class="bg-white p-6 rounded-lg border border-gray-300 mb-6">
+            <div class="bg-white p-6 border-2 border-t-0 border-r-0 border-l-0 border-orange-300 mb-6">
                 <div class="flex items-center">
                 <div class="w-20 h-20 rounded-full bg-gray-300 mr-6"></div> 
                 <div>
@@ -20,7 +20,7 @@
             </div>
 
             <!-- Student Information -->
-            <div class="bg-white p-6 rounded-lg border border-gray-300 mb-6">
+            <div class="container p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700">Nama Depan</label>
@@ -58,13 +58,11 @@
             <h2 class="text-3xl font-bold mb-6">Lampiran Dokumen</h2>
 
             <!-- Document Fields -->
-            <div class="bg-white p-6 rounded-lg border border-gray-300">
+            <div class="container">
                 <!-- Kartu Tanda Mahasiswa -->
                 <div class="group">
-                    <div class="flex items-center p-4 border border-black rounded-lg relative cursor-pointer mx-6 mt-12" onclick="toggleUpload(1)">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                    <div class="flex items-center border p-4 bg-white rounded-lg drop-shadow-lg relative cursor-pointer" onclick="toggleUpload(1)">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAodJREFUWEftlkuojVEUx383Bt4GJl55pZDERKSUDIiBgfI2MpPE0GPgMfAaYaCQEgojYYBSpJQBE+UtRSTd65VIUey/1lfL7uzzfft+hy6dVaf2/vZae//OWmuvtTvoYdLRw3hoA5VFpO2h/9pDfYDpwHhgJNCr7N+69e/APeA+8KiZXZUcmgbsAhZkADRTfQosB+40UioDOgSsbRFIvM1G4ED8MQU0GLgCzIgMnjjXf8sEHRDCtQIY7uwWhjMu+X1SQDeA2U7xIrAeeJ4JEasPCkBHgGW28AaYBLwvFBsBbbacKXT2AptqgsTmt5z3NwAHU0D9gBfAEFM4Y24u9EfYXO7PkeuAfoXMBy7b5DSwMgW0Bjhmi2+BscAnm68GDgOCzpUdwWC7M1LoPtpcDhidAhK16CVbgN02ngXczKVw+jHQUOC1rb+yuvZrGueQknaUKU4Irnxs42vB5XNs/A444f5hFc44ZIuA82aoC6N5Q6Afbve+IZm/2tx/1614WIWiic5dYIqt7wS2pYAUV8VX0h/4YuMPgGqTpA6Q9jgaatkSt6/AXqaAHgATbXGy9R5NVSTn2fcu4DjwOcNLvUOYx1nYhzm7xcA5v0+cQ6eAVaaw1dUjFUkVy1ZKpdahpqe6IOm0a194QmuqsgNrUj2zSn270T6xh/TEUDdWAZT8VrSsD80NIRsDKAxVRX1Pzw+lRPbzQwXwpDtpD6B28lck1VzPhoRe6gguhBCu87fhT9GlgHTlr4Z+MzM6WIWyePnpFVhV4sKYtCt7oO0PTwN147oSt45uA8lwamio+1wd6g5cS4EKAHVkXX21lFxpWchyD66tX5ZDtQ/I3aANVOaxtof+OQ/9BMebaiVc4cz0AAAAAElFTkSuQmCC" class="h-6 w-6 mr-4" alt="Upload Icon" />
                         <p class="text-gray-700">Kartu Tanda Mahasiswa (KTM)</p>
                     </div>
 
@@ -80,17 +78,25 @@
                                     <p class="mt-1 text-xs text-gray-500">Ukuran maksimum file: 10 MB</p>
                                 </label>
                             </div>
-                            <input id="file-upload-1" name="file-upload-1" type="file" accept=".pdf" class="hidden" onchange="checkDocumentsUploaded()">
+                            <input id="file-upload-1" name="file-upload-1" type="file" accept=".pdf" class="hidden" onchange="uploadFile(1)">
                         </div>
                     </div>
+
+                    <!-- Progress Bar -->
+                    <div class="flex">
+                        <div class="progress-bar" id="progress-bar-1" style="display: none; width: 100%; background-color: #f3f4f6; height: 10px; margin: 10px 6px;">
+                            <div class="progress h-full bg-gradient-to-r from-blue-500 to-orange-500" id="progress-1" style="width: 0%; height: 100%; background-color: #3B3BBD; border-radius: 5px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Files Container -->
+                    <div id="uploaded-files-1"></div>
                 </div>
 
                 <!-- Curriculum Vitae -->
                 <div class="group">
-                    <div class="flex items-center p-4 border border-black rounded-lg relative cursor-pointer mx-6 mt-12" onclick="toggleUpload(2)">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                    <div class="flex items-center border p-4 bg-white rounded-lg drop-shadow-lg relative cursor-pointer mt-8" onclick="toggleUpload(2)">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAodJREFUWEftlkuojVEUx383Bt4GJl55pZDERKSUDIiBgfI2MpPE0GPgMfAaYaCQEgojYYBSpJQBE+UtRSTd65VIUey/1lfL7uzzfft+hy6dVaf2/vZae//OWmuvtTvoYdLRw3hoA5VFpO2h/9pDfYDpwHhgJNCr7N+69e/APeA+8KiZXZUcmgbsAhZkADRTfQosB+40UioDOgSsbRFIvM1G4ED8MQU0GLgCzIgMnjjXf8sEHRDCtQIY7uwWhjMu+X1SQDeA2U7xIrAeeJ4JEasPCkBHgGW28AaYBLwvFBsBbbacKXT2AptqgsTmt5z3NwAHU0D9gBfAEFM4Y24u9EfYXO7PkeuAfoXMBy7b5DSwMgW0Bjhmi2+BscAnm68GDgOCzpUdwWC7M1LoPtpcDhidAhK16CVbgN02ngXczKVw+jHQUOC1rb+yuvZrGueQknaUKU4Irnxs42vB5XNs/A444f5hFc44ZIuA82aoC6N5Q6Afbve+IZm/2tx/1614WIWiic5dYIqt7wS2pYAUV8VX0h/4YuMPgGqTpA6Q9jgaatkSt6/AXqaAHgATbXGy9R5NVSTn2fcu4DjwOcNLvUOYx1nYhzm7xcA5v0+cQ6eAVaaw1dUjFUkVy1ZKpdahpqe6IOm0a194QmuqsgNrUj2zSn270T6xh/TEUDdWAZT8VrSsD80NIRsDKAxVRX1Pzw+lRPbzQwXwpDtpD6B28lck1VzPhoRe6gguhBCu87fhT9GlgHTlr4Z+MzM6WIWyePnpFVhV4sKYtCt7oO0PTwN147oSt45uA8lwamio+1wd6g5cS4EKAHVkXX21lFxpWchyD66tX5ZDtQ/I3aANVOaxtof+OQ/9BMebaiVc4cz0AAAAAElFTkSuQmCC" class="h-6 w-6 mr-4" alt="Upload Icon" />
                         <p class="text-gray-700">Curriculum Vitae</p>
                     </div>
 
@@ -106,17 +112,25 @@
                                     <p class="mt-1 text-xs text-gray-500">Ukuran maksimum file: 10 MB</p>
                                 </label>
                             </div>
-                            <input id="file-upload-2" name="file-upload-2" type="file" accept=".pdf" class="hidden" onchange="checkDocumentsUploaded()">
+                            <input id="file-upload-2" name="file-upload-2" type="file" accept=".pdf" class="hidden" onchange="uploadFile(2)">
                         </div>
                     </div>
+
+                    <!-- Progress Bar -->
+                    <div class="flex">
+                        <div class="progress-bar" id="progress-bar-2" style="display: none; width: 100%; background-color: #f3f4f6; height: 10px; margin: 10px 6px;">
+                            <div class="progress h-full bg-gradient-to-r from-blue-500 to-orange-500" id="progress-2" style="width: 0%; height: 100%; background-color: #3B3BBD; border-radius: 5px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Files Container -->
+                    <div id="uploaded-files-2"></div>
                 </div>
 
                 <!-- Transkrip Nilai -->
                 <div class="group">
-                    <div class="flex items-center p-4 border border-black rounded-lg relative cursor-pointer mx-6 mt-12" onclick="toggleUpload(3)">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                    <div class="flex items-center border p-4 bg-white rounded-lg drop-shadow-lg relative cursor-pointer mt-8" onclick="toggleUpload(3)">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAodJREFUWEftlkuojVEUx383Bt4GJl55pZDERKSUDIiBgfI2MpPE0GPgMfAaYaCQEgojYYBSpJQBE+UtRSTd65VIUey/1lfL7uzzfft+hy6dVaf2/vZae//OWmuvtTvoYdLRw3hoA5VFpO2h/9pDfYDpwHhgJNCr7N+69e/APeA+8KiZXZUcmgbsAhZkADRTfQosB+40UioDOgSsbRFIvM1G4ED8MQU0GLgCzIgMnjjXf8sEHRDCtQIY7uwWhjMu+X1SQDeA2U7xIrAeeJ4JEasPCkBHgGW28AaYBLwvFBsBbbacKXT2AptqgsTmt5z3NwAHU0D9gBfAEFM4Y24u9EfYXO7PkeuAfoXMBy7b5DSwMgW0Bjhmi2+BscAnm68GDgOCzpUdwWC7M1LoPtpcDhidAhK16CVbgN02ngXczKVw+jHQUOC1rb+yuvZrGueQknaUKU4Irnxs42vB5XNs/A444f5hFc44ZIuA82aoC6N5Q6Afbve+IZm/2tx/1614WIWiic5dYIqt7wS2pYAUV8VX0h/4YuMPgGqTpA6Q9jgaatkSt6/AXqaAHgATbXGy9R5NVSTn2fcu4DjwOcNLvUOYx1nYhzm7xcA5v0+cQ6eAVaaw1dUjFUkVy1ZKpdahpqe6IOm0a194QmuqsgNrUj2zSn270T6xh/TEUDdWAZT8VrSsD80NIRsDKAxVRX1Pzw+lRPbzQwXwpDtpD6B28lck1VzPhoRe6gguhBCu87fhT9GlgHTlr4Z+MzM6WIWyePnpFVhV4sKYtCt7oO0PTwN147oSt45uA8lwamio+1wd6g5cS4EKAHVkXX21lFxpWchyD66tX5ZDtQ/I3aANVOaxtof+OQ/9BMebaiVc4cz0AAAAAElFTkSuQmCC" class="h-6 w-6 mr-4" alt="Upload Icon" />
                         <p class="text-gray-700">Transkrip Nilai</p>
                     </div>
 
@@ -132,17 +146,25 @@
                                     <p class="mt-1 text-xs text-gray-500">Ukuran maksimum file: 10 MB</p>
                                 </label>
                             </div>
-                            <input id="file-upload-3" name="file-upload-3" type="file" accept=".pdf" class="hidden" onchange="checkDocumentsUploaded()">
+                            <input id="file-upload-3" name="file-upload-3" type="file" accept=".pdf" class="hidden" onchange="uploadFile(3)">
                         </div>
                     </div>
+
+                    <!-- Progress Bar -->
+                    <div class="flex">
+                        <div class="progress-bar" id="progress-bar-3" style="display: none; width: 100%; background-color: #f3f4f6; height: 10px; margin: 10px 6px;">
+                            <div class="progress h-full bg-gradient-to-r from-blue-500 to-orange-500" id="progress-3" style="width: 0%; height: 100%; background-color: #3B3BBD; border-radius: 5px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Files Container -->
+                    <div id="uploaded-files-3"></div>
                 </div>
 
                 <!-- Surat Berperilaku Baik -->
                 <div class="group">
-                    <div class="flex items-center p-4 border border-black rounded-lg relative cursor-pointer mx-6 mt-12" onclick="toggleUpload(4)">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                    <div class="flex items-center border p-4 bg-white rounded-lg drop-shadow-lg relative cursor-pointer mt-8" onclick="toggleUpload(4)">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAodJREFUWEftlkuojVEUx383Bt4GJl55pZDERKSUDIiBgfI2MpPE0GPgMfAaYaCQEgojYYBSpJQBE+UtRSTd65VIUey/1lfL7uzzfft+hy6dVaf2/vZae//OWmuvtTvoYdLRw3hoA5VFpO2h/9pDfYDpwHhgJNCr7N+69e/APeA+8KiZXZUcmgbsAhZkADRTfQosB+40UioDOgSsbRFIvM1G4ED8MQU0GLgCzIgMnjjXf8sEHRDCtQIY7uwWhjMu+X1SQDeA2U7xIrAeeJ4JEasPCkBHgGW28AaYBLwvFBsBbbacKXT2AptqgsTmt5z3NwAHU0D9gBfAEFM4Y24u9EfYXO7PkeuAfoXMBy7b5DSwMgW0Bjhmi2+BscAnm68GDgOCzpUdwWC7M1LoPtpcDhidAhK16CVbgN02ngXczKVw+jHQUOC1rb+yuvZrGueQknaUKU4Irnxs42vB5XNs/A444f5hFc44ZIuA82aoC6N5Q6Afbve+IZm/2tx/1614WIWiic5dYIqt7wS2pYAUV8VX0h/4YuMPgGqTpA6Q9jgaatkSt6/AXqaAHgATbXGy9R5NVSTn2fcu4DjwOcNLvUOYx1nYhzm7xcA5v0+cQ6eAVaaw1dUjFUkVy1ZKpdahpqe6IOm0a194QmuqsgNrUj2zSn270T6xh/TEUDdWAZT8VrSsD80NIRsDKAxVRX1Pzw+lRPbzQwXwpDtpD6B28lck1VzPhoRe6gguhBCu87fhT9GlgHTlr4Z+MzM6WIWyePnpFVhV4sKYtCt7oO0PTwN147oSt45uA8lwamio+1wd6g5cS4EKAHVkXX21lFxpWchyD66tX5ZDtQ/I3aANVOaxtof+OQ/9BMebaiVc4cz0AAAAAElFTkSuQmCC" class="h-6 w-6 mr-4" alt="Upload Icon" />
                         <p class="text-gray-700">Surat Berperilaku Baik</p>
                     </div>
 
@@ -158,17 +180,25 @@
                                     <p class="mt-1 text-xs text-gray-500">Ukuran maksimum file: 10 MB</p>
                                 </label>
                             </div>
-                            <input id="file-upload-4" name="file-upload-4" type="file" accept=".pdf" class="hidden" onchange="checkDocumentsUploaded()">
+                            <input id="file-upload-4" name="file-upload-4" type="file" accept=".pdf" class="hidden" onchange="uploadFile(4)">
                         </div>
                     </div>
+
+                    <!-- Progress Bar -->
+                    <div class="flex">
+                        <div class="progress-bar" id="progress-bar-4" style="display: none; width: 100%; background-color: #f3f4f6; height: 10px; margin: 10px 6px;">
+                            <div class="progress h-full bg-gradient-to-r from-blue-500 to-orange-500" id="progress-4" style="width: 0%; height: 100%; background-color: #3B3BBD; border-radius: 5px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Files Container -->
+                    <div id="uploaded-files-4"></div>
                 </div>
 
                 <!-- Surat Pernyataan -->
                 <div class="group">
-                    <div class="flex items-center p-4 border border-black rounded-lg relative cursor-pointer mx-6 mt-12" onclick="toggleUpload(5)">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                    <div class="flex items-center border p-4 bg-white rounded-lg drop-shadow-lg relative cursor-pointer mt-8" onclick="toggleUpload(5)">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAodJREFUWEftlkuojVEUx383Bt4GJl55pZDERKSUDIiBgfI2MpPE0GPgMfAaYaCQEgojYYBSpJQBE+UtRSTd65VIUey/1lfL7uzzfft+hy6dVaf2/vZae//OWmuvtTvoYdLRw3hoA5VFpO2h/9pDfYDpwHhgJNCr7N+69e/APeA+8KiZXZUcmgbsAhZkADRTfQosB+40UioDOgSsbRFIvM1G4ED8MQU0GLgCzIgMnjjXf8sEHRDCtQIY7uwWhjMu+X1SQDeA2U7xIrAeeJ4JEasPCkBHgGW28AaYBLwvFBsBbbacKXT2AptqgsTmt5z3NwAHU0D9gBfAEFM4Y24u9EfYXO7PkeuAfoXMBy7b5DSwMgW0Bjhmi2+BscAnm68GDgOCzpUdwWC7M1LoPtpcDhidAhK16CVbgN02ngXczKVw+jHQUOC1rb+yuvZrGueQknaUKU4Irnxs42vB5XNs/A444f5hFc44ZIuA82aoC6N5Q6Afbve+IZm/2tx/1614WIWiic5dYIqt7wS2pYAUV8VX0h/4YuMPgGqTpA6Q9jgaatkSt6/AXqaAHgATbXGy9R5NVSTn2fcu4DjwOcNLvUOYx1nYhzm7xcA5v0+cQ6eAVaaw1dUjFUkVy1ZKpdahpqe6IOm0a194QmuqsgNrUj2zSn270T6xh/TEUDdWAZT8VrSsD80NIRsDKAxVRX1Pzw+lRPbzQwXwpDtpD6B28lck1VzPhoRe6gguhBCu87fhT9GlgHTlr4Z+MzM6WIWyePnpFVhV4sKYtCt7oO0PTwN147oSt45uA8lwamio+1wd6g5cS4EKAHVkXX21lFxpWchyD66tX5ZDtQ/I3aANVOaxtof+OQ/9BMebaiVc4cz0AAAAAElFTkSuQmCC" class="h-6 w-6 mr-4" alt="Upload Icon" />
                         <p class="text-gray-700">Surat Pernyataan</p>
                     </div>
 
@@ -184,109 +214,103 @@
                                     <p class="mt-1 text-xs text-gray-500">Ukuran maksimum file: 10 MB</p>
                                 </label>
                             </div>
-                            <input id="file-upload-5" name="file-upload-5" type="file" accept=".pdf" class="hidden" onchange="checkDocumentsUploaded()">
+                            <input id="file-upload-5" name="file-upload-5" type="file" accept=".pdf" class="hidden" onchange="uploadFile(5)">
                         </div>
                     </div>
 
-                    <div class="progress-bar" id="progress-bar-1" style="display: none;">
-                        <div class="progress" id="progress-1"></div>
+                    <!-- Progress Bar -->
+                    <div class="flex">
+                        <div class="progress-bar" id="progress-bar-5" style="display: none; width: 100%; background-color: #f3f4f6; height: 10px; margin: 10px 6px;">
+                            <div class="progress h-full bg-gradient-to-r from-blue-500 to-orange-500" id="progress-5" style="width: 0%; height: 100%; background-color: #3B3BBD; border-radius: 5px;"></div>
+                        </div>
                     </div>
+
+                    <!-- Uploaded Files Container -->
+                    <div id="uploaded-files-5"></div>
                 </div>
+
 
                 
 
 
                 <!-- Submit Button -->
-                <div class="flex justify-center pt-36 p-6">
-                    <button type="submit" id="submit-btn" class="w-full bg-gray-500 text-white px-4 py-2 rounded-lg opacity-50 cursor-not-allowed" disabled>Submit</button>
+                <div class="flex justify-center pt-20 p-3">
+                    <button type="submit" id="submit-btn" class="h-10 w-full bg-gray-500 text-white px-4 rounded-lg opacity-50 cursor-not-allowed" disabled>Submit</button>
                 </div>
             </div>
         </div>
     </div>
 
-            <style>
-                .upload-section {
-                    border: 2px dashed #ccc;
-                    padding: 20px;
-                    text-align: center;
-                    margin: 10px 0;
-                }
+    <script>
+        function toggleUpload(sectionId) {
+            var uploadSection = document.getElementById('upload-section-' + sectionId);
+            if (uploadSection.classList.contains('hidden')) {
+                uploadSection.classList.remove('hidden');
+            } else {
+                uploadSection.classList.add('hidden');
+            }
+        }
 
-                .progress-bar {
-                    width: 100%;
-                    background-color: #f3f3f3;
-                    border: 1px solid #ccc;
-                }
+        function uploadFile(sectionId) {
+            var fileInput = document.getElementById('file-upload-' + sectionId);
+            var files = fileInput.files;
 
-                .progress {
-                    height: 20px;
-                    background-color: #4caf50;
-                    width: 0;
-                }
-            </style>
+            if (files.length > 0) {
+                var formData = new FormData();
+                Array.from(files).forEach(file => formData.append('files[]', file));
 
-            <script>
-                function toggleUpload(sectionNumber) {
-                    const uploadSection = document.getElementById(`upload-section-${sectionNumber}`);
-                    const progressBarContainer = document.getElementById(`progress-bar-container-${sectionNumber}`);
-                    uploadSection.classList.toggle('hidden');
-                    progressBarContainer.classList.add('hidden'); // Hide progress bar by default
-                }
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'upload.php', true);
 
-                function checkDocumentsUploaded() {
-                    const fileInputs = document.querySelectorAll('input[type="file"]');
-                    
-                    fileInputs.forEach((input, index) => {
-                        if (input.files.length > 0) {
-                            const progressBarContainer = document.getElementById(`progress-bar-container-${index + 1}`);
-                            progressBarContainer.classList.remove('hidden'); // Show progress bar
-
-                            const file = input.files[0];
-                            const formData = new FormData();
-                            formData.append('file', file);
-
-                            const xhr = new XMLHttpRequest();
-                            xhr.open('POST', '/upload-endpoint'); // Update with your upload endpoint
-
-                            xhr.upload.addEventListener('progress', (event) => {
-                                if (event.lengthComputable) {
-                                    const percentComplete = (event.loaded / event.total) * 100;
-                                    const progressBar = document.getElementById(`progress-${index + 1}`);
-                                    const progressText = document.getElementById(`progress-text-${index + 1}`);
-
-                                    progressBar.style.width = percentComplete + '%';
-                                    progressText.innerText = Math.round(percentComplete) + '%';
-                                }
-                            });
-
-                            xhr.onload = () => {
-                                if (xhr.status === 200) {
-                                    // Handle success response
-                                    alert('File uploaded successfully!');
-                                } else {
-                                    // Handle error response
-                                    alert('File upload failed.');
-                                }
-                            };
-
-                            xhr.send(formData);
-                        }
-                    });
-                }
-
-                document.getElementById('file-upload-1').addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-
-                    if (file && file.type === 'application/pdf') {
-                        const uploadSection = document.getElementById('upload-section-1');
-                        uploadSection.style.display = 'none'; // Hide upload section
-                        checkDocumentsUploaded(); // Call to check documents uploaded
-                    } else {
-                        alert('Harap pilih file PDF.');
+                // Update progress bar during file upload
+                xhr.upload.onprogress = function (e) {
+                    if (e.lengthComputable) {
+                        var percentage = (e.loaded / e.total) * 100;
+                        var progressBar = document.getElementById('progress-' + sectionId);
+                        progressBar.style.width = percentage + '%';
                     }
-                });
+                };
 
-            </script>
+                // Show progress bar
+                document.getElementById('progress-bar-' + sectionId).style.display = 'block';
+
+                // File upload completed
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // Hide the upload section after successful upload
+                        document.getElementById('upload-section-' + sectionId).style.display = 'none';
+
+                        // Display uploaded files
+                        var uploadedFilesContainer = document.getElementById('uploaded-files-' + sectionId);
+                        Array.from(files).forEach(file => {
+                            var uploadedFileDisplay = document.createElement('div');
+                            uploadedFileDisplay.className = 'flex items-center p-4 mx-6 mt-2 border border-gray-300 rounded-lg';
+                            uploadedFileDisplay.innerHTML = `
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 mr-4" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14v-4h-2v4H7v-4H5v-2h2v-2h2v2h2v2H9v4h2zm4 0h-2v-6h-2V8h4v8z"/>
+                                </svg>
+                                <p class="text-gray-700">${file.name}</p>
+                            `;
+                            uploadedFilesContainer.appendChild(uploadedFileDisplay);
+                        });
+
+                        // Reset progress bar
+                        var progressBar = document.getElementById('progress-' + sectionId);
+                        progressBar.style.width = '0%';
+                        document.getElementById('progress-bar-' + sectionId).style.display = 'none';
+
+                    } else {
+                        alert('Error while uploading the file.');
+                    }
+                };
+
+                // Send the file via AJAX
+                xhr.send(formData);
+            } else {
+                alert('Please select at least one file to upload.');
+            }
+        }
+    </script>
 
 
 @endsection
