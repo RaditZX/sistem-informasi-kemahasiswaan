@@ -11,6 +11,7 @@ class PengajuanDokumen extends Model
 
     // Tentukan nama tabel jika berbeda dengan konvensi Laravel
     protected $table = 'pengajuan_dokumen';
+    protected $primaryKey = 'dokumen_id';
 
     // Tentukan kolom yang bisa diisi secara massal
     protected $fillable = ['pengajuan_beasiswa_id','nama_dokumen','link_dokumen'];

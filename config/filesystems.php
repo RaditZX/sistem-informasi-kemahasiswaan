@@ -64,6 +64,12 @@ return [
             'path_prefix' => null, // optional: folder inside the bucket
             'storage_api_uri' => null, // optional: for custom domain
         ],
+        // 'firebase' => [
+        //     'driver' => 'firebase',  // This should match the driver you plan to use
+        //     'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
+        //     'key_file' => env('GOOGLE_CLOUD_KEY_FILE_PATH'), // Path to your Firebase JSON file
+        //     'bucket' => env('GOOGLE_CLOUD_STORAGE_BUCKET'),
+        // ],
 
     ],
 

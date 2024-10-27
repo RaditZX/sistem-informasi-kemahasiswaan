@@ -49,6 +49,7 @@ return new class extends Migration
             $table->unsignedBigInteger('jurusan_id');
             $table->foreign('jurusan_id')->references('id')->on('jurusan')->onDelete('cascade');
             $table->timestamps();
+
         });
 
         Schema::create('mahasiswa', function (Blueprint $table) {
@@ -56,13 +57,11 @@ return new class extends Migration
             $table->string('nim',9)->primary();
             $table->tinyInteger('semester');
             $table->date('tgl_lahir');
-            $table->unsignedBigInteger('jurusan_id');
             $table->unsignedBigInteger('prodi_id');
             $table->year('angkatan');
 
             // Foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('jurusan_id')->references('id')->on('jurusan')->onDelete('cascade');
             $table->foreign('prodi_id')->references('id')->on('prodi')->onDelete('cascade');
 
             $table->timestamps();

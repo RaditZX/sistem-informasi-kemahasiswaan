@@ -27,6 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger("pengajuan_beasiswa_id");
             $table->string("nama_dokumen");
             $table->text("link_dokumen");
+            $table->timestamps();
             $table->foreign('pengajuan_beasiswa_id')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
     }

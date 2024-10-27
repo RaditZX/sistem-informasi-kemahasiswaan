@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeasiswaController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\PengajuanBeasiswaController;
 
 // ========================================================================================
@@ -36,6 +37,8 @@ Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::post('/pengajuan/store', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
 });
 
+Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
+
 Route::middleware('auth')->group(function () {
     Route::resource('beasiswa', BeasiswaController::class);
     Route::get('/detail-beasiswa', function () {
@@ -49,4 +52,11 @@ Route::middleware('auth')->group(function () {
 Route::get('/pengajuan',function(){
     return view('pages.Beasiswa.pengajuan');
 });
+
+
+
+
+
+
+
 

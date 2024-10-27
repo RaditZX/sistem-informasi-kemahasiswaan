@@ -4,7 +4,7 @@
     <div class="p-2 pl-10">
         <div class=" flex flex-auto">
             <div class="basis-1/4 flex justify-center  border-4 rounded-xl shadow  p-5">
-                <img src="https://th.bing.com/th/id/OIP.Hm3Ll_0FLV3Se-jBtxSmQAHaKe?w=202&h=286&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+                <img src={{ $beasiswa->link_poster_1 }}
                     alt="">
             </div>
             <div class="p-8 basis-3/4">
@@ -35,7 +35,7 @@
                 <form action="{{ route('beasiswa.destroy', $beasiswa->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
                     @csrf
                     @method('DELETE')
-                    
+
                     <button type="submit" class="inline-block mt-4">
                         <div class="rounded-3xl p-3 bg-red-500">
                             <div class="flex gap-3">
@@ -49,7 +49,7 @@
                         </div>
                     </button>
                 </form>
-                
+
             </div>
 
         </div>
@@ -73,7 +73,7 @@
                     <p class="text-m font-medium">{{$syarat->syarat}}</p>
                 </div>
                 @endforeach
-                
+
             </div>
         </div>
 

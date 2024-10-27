@@ -29,11 +29,10 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role_id' => $this->faker->randomElement([
-               'mahasiswa', 'staff_kemahasiswaan', 'ketua_jurusan', 'wd-3'
-            ]),
+            'jenis_kelamin' => fake()->randomElement(['Pria', 'Wanita']) // Use randomElement to select from an array
         ];
     }
+
 
     /**
      * Indicate that the model's email address should be unverified.
