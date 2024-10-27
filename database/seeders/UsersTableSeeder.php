@@ -16,6 +16,7 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
+                'id'=>1,
                 'name' => 'John Doe',
                 'email' => 'john.doe@polban.ac.id',
                 'email_verified_at' => now(),
@@ -26,6 +27,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'id'=>2,
                 'name' => 'Jane Smith',
                 'email' => 'jane.smith@polban.ac.id',
                 'email_verified_at' => now(),
@@ -36,6 +38,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'id'=>3,
                 'name' => 'James Johnson',
                 'email' => 'james.johnson@polban.ac.id',
                 'email_verified_at' => now(),
@@ -46,6 +49,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'id'=>4,
                 'name' => 'Alice Williams',
                 'email' => 'alice.williams@polban.ac.id',
                 'email_verified_at' => now(),

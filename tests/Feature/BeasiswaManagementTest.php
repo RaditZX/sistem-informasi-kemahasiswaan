@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\Beasiswa;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 use App\Models\User;
 
 class BeasiswaManagementTest extends TestCase
@@ -15,7 +17,7 @@ class BeasiswaManagementTest extends TestCase
     public function it_can_list_all_beasiswa()
     {
         // Create a user
-        $user = User::factory()->create();
+        $user = User::factory()->create(); // Ensure this returns a User instance
 
         // Create some Beasiswa records
         Beasiswa::factory(5)->create();
@@ -30,36 +32,76 @@ class BeasiswaManagementTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('beasiswa');
     }
-        /** @test */
-    public function it_can_create_a_beasiswa()
+
+    /** @test */
+    /** @test */
+    public function it_can_store_a_new_scholarship()
     {
-        // Create a user
+        // Create a user and act as the user
         $user = User::factory()->create();
+        $this->actingAs($user); // Ensure the user is authenticated
 
-        // Act as the user
-        $this->actingAs($user);
+        $file = UploadedFile::fake()->image('poster1.jpg');
 
-        // Post request to store beasiswa
-        $response = $this->post(route('beasiswa.store'), [
-            'nama_beasiswa' => 'Test Beasiswa',
-            'deskripsi' => 'This is a test beasiswa.',
+        // Prepare the test data
+        $data = [
+            'nama_beasiswa' => 'Test Scholarship',
+            'deskripsi' => 'A description for the test scholarship.',
             'jenis_beasiswa' => 'full',
             'tipe_beasiswa' => 'prestasi',
-            'kuota_beasiswa' => 50,
-            'sumber_beasiswa' => 'Government',
-            'tanggal_mulai' => '2024-01-01',
-            'tanggal_berakhir' => '2024-12-31',
-            'syarat_beasiswa' => ['Essay', 'Transcript'],
-            'benefit_beasiswa' => ['Tuition Fee', 'Monthly Allowance'],
-            'jenjang_pendidikan' => ['Undergraduate', 'Postgraduate'],
-        ]);
+            'kuota_beasiswa' => 100,
+            'sumber_beasiswa' => 'Test Source',
+            'tanggal_mulai' => now()->addDays(10)->toDateString(), // 10 days in the future
+            'tanggal_berakhir' => now()->addDays(20)->toDateString(), // 20 days in the future
+            'file_1' => UploadedFile::fake()->image('poster1.jpg'),
+            'file_2' => UploadedFile::fake()->image('poster2.jpg'),
+            'file_3' => UploadedFile::fake()->image('poster3.jpg'),
+            'syarat_beasiswa' => ['Esai', 'Transkrip Nilai'],
+            'benefit_beasiswa' => ['Scholarship Fund', 'Networking Opportunities'],
+            'jenjang_pendidikan' => ['Undergraduate'],
+            'file_1' => $file
+        ];
 
-        // Assert redirect after successful creation
+        // Simulate the file storage
+        Storage::fake('gcs');
+
+        // Send a POST request to the store method
+        $response = $this->post('/beasiswa', $data);
+
+        // Assert that the response is a redirect
         $response->assertRedirect('/form-beasiswa');
 
-        // Assert the beasiswa is stored in the database
-        $this->assertDatabaseHas('beasiswa', ['nama_beasiswa' => 'Test Beasiswa']);
+        // Assert that the scholarship was stored in the database
+        $this->assertDatabaseHas('beasiswa', [
+            'nama_beasiswa' => 'Test Scholarship',
+            'deskripsi' => 'A description for the test scholarship.',
+            'jenis_beasiswa' => 'full',
+            'tipe_beasiswa' => 'prestasi',
+            'kuota' => 100,
+            'sumber' => 'Test Source',
+            'link_poster_1' => 'https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2Fposter1.jpg?alt=media', // Adjust this based on your upload logic
+        ]);
+
+        // Check if the requirements are stored
+        $this->assertDatabaseHas('syarat_beasiswa', [
+            'syarat' => 'Esai',
+        ]);
+
+        $this->assertDatabaseHas('syarat_beasiswa', [
+            'syarat' => 'Transkrip Nilai',
+        ]);
+
+        // Check if the benefits are stored
+        $this->assertDatabaseHas('benefit_beasiswa', [
+            'benefit' => 'Scholarship Fund',
+        ]);
+
+        // Check if the educational levels are stored
+        $this->assertDatabaseHas('jenjang_pendidikan', [
+            'jenjang' => 'Undergraduate',
+        ]);
     }
+
 
     /** @test */
     public function it_can_show_a_specific_beasiswa()

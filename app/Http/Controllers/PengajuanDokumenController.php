@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\PengajuanDokumen;
-use App\Http\Controllers\FileController;
 use Illuminate\Http\Request;
 
 class PengajuanDokumenController extends Controller
@@ -32,7 +31,7 @@ class PengajuanDokumenController extends Controller
 
          // Validate the input data
         $validatedData = $request->validate([
-            'pengajuan_beasiswa_id' => 'required|string',
+            'pengajuan_beasiswa_id' => 'required|integer',
             'nama_dokumen' => 'required|string',
             'link_dokumen' => 'required|string',
         ]);

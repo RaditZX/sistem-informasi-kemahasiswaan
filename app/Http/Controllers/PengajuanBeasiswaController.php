@@ -30,43 +30,48 @@ class PengajuanBeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the input data
         $validatedData = $request->validate([
             'beasiswa_id' => 'required|integer',
             'nim' => 'required|string|max:9',
-            'file' => 'required|file',
+            'file_1' => 'required|file',
+            'file_2' => 'required|file',
+            'file_3' => 'required|file',
+            'file_4' => 'required|file',
+            'file_5' => 'required|file',
         ]);
 
-        // Insert data into the 'PengajuanBeasiswa' table
+
         $pengajuanBeasiswa = PengajuanBeasiswa::create([
             'nim' => $validatedData['nim'],
             'beasiswa_id' => $validatedData['beasiswa_id'],
             'tanggal_pengajuan' => now(),
         ]);
 
-        // Get the uploaded file
-        $file = $request->file('file');
+        $fileKeys = ['file_1', 'file_2', 'file_3', 'file_4', 'file_5'];
+        foreach ($fileKeys as $fileKey) {
+            $file = $request->file($fileKey);
 
-        // Get the original file name
-        $fileName = $file->getClientOriginalName();
 
-        // Create a new request instance with the file (if needed)
-        $newRequest = new Request();
-        $newRequest->files->set('file', $file);
+            $fileName = $file->getClientOriginalName();
 
-        // Call the uploadFile method from FileController
-        $fileController = new FileController();
-        $fileUrl = $fileController->uploadFile($newRequest); // Assume this returns the uploaded file's URL
+            $newRequest = new Request();
+            $newRequest->files->set('file', $file);
+            $newRequest->merge(['path' => 'dokumen']);
 
-        // Insert document data into 'PengajuanDokumen' table (or any other related table)
-        $pengajuanDokumenController = new PengajuanDokumenController();
-        $pengajuanDokumenController->store([
-            'nama_dokumen' => $fileName, // Use the original file name or a different field
-            'file_url' => $fileUrl, // The file URL returned from the uploadFile method
-            'pengajuan_beasiswa_id' => $pengajuanBeasiswa->id, // Reference the ID of the created 'PengajuanBeasiswa'
-        ]);
+            $fileController = new FileController();
+            $fileUrl = $fileController->uploadFile($newRequest);
 
-        // Redirect or return success message
+            $newDocumentRequest = new Request([
+                'nama_dokumen' => $fileName,
+                'link_dokumen' => $fileUrl->getData()->url,
+                'pengajuan_beasiswa_id' => $pengajuanBeasiswa->id,
+            ]);
+
+
+            $pengajuanDokumenController = new PengajuanDokumenController();
+            $pengajuanDokumenController->store($newDocumentRequest);
+        }
+
         return redirect()->route('pengajuan.create')->with('success', 'Item created successfully.');
     }
 
