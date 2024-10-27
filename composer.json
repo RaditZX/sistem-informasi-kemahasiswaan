@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "davcpas1234/laravelpdfviewer": "^1.0",
         "google/cloud-storage": "^1.43",
         "kreait/firebase-php": "7.0",
         "kreait/laravel-firebase": "^5.8",
