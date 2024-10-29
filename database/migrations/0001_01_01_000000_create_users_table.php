@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->enum('jenis_kelamin',['Pria','Wanita']);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->enum('role_id', ['mahasiswa', 'staff_kemahasiswaan', 'ketua_jurusan', 'wd-3']);
             $table->timestamps();
         });
 
@@ -36,6 +36,51 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('jurusan', function (Blueprint $table) {
+            $table->id(); // Primary key
+            $table->string('nama_jurusan');
+            $table->timestamps();
+        });
+
+        Schema::create('prodi', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_prodi');
+            $table->unsignedBigInteger('jurusan_id');
+            $table->foreign('jurusan_id')->references('id')->on('jurusan')->onDelete('cascade');
+            $table->timestamps();
+
+        });
+
+        Schema::create('mahasiswa', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_id');
+            $table->string('nim',9)->primary();
+            $table->tinyInteger('semester');
+            $table->date('tgl_lahir');
+            $table->unsignedBigInteger('prodi_id');
+            $table->year('angkatan');
+
+            // Foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('prodi_id')->references('id')->on('prodi')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+
+        Schema::create('role',function(Blueprint $table){
+            $table->id("role_id");
+            $table->string("role_name");
+            $table->timestamps();
+        });
+
+        Schema::create('reviewer', function(Blueprint $table){
+            $table->unsignedBigInteger("user_id");
+            $table->string("nip",18)->primary();
+            $table->tinyInteger("role_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('role_id')->references('role_id')->on('role')->onDelete('cascade');;
+            $table->timestamps();
+        });
     }
 
     /**
@@ -43,8 +88,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('reviewer');
+        Schema::dropIfExists('role');
+        Schema::dropIfExists('mahasiswa');
+        Schema::dropIfExists('prodi'); // prodi depends on jurusan, so drop it first
+        Schema::dropIfExists('jurusan');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('users');
     }
 };

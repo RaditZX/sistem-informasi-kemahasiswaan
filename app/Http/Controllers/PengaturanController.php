@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PengaturanController extends Controller
 {
@@ -52,9 +53,11 @@ class PengaturanController extends Controller
      */
     public function update(Request $request)
     {
-        // $request->validate([
-        //     'foto_profil' => 'required|image'
-        // ])
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
+        $new_img = $request->input('new_img');
     }
 
     /**
