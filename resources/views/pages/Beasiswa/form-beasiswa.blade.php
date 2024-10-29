@@ -2,10 +2,21 @@
 @section('content')
     @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null])
 
+
+ @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
         <div class="bg-white rounded-lg p-6">
-        <form action="{{ route('beasiswa.store') }}" method="POST">
+        <form action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <!-- Nama Beasiswa -->
@@ -27,7 +38,7 @@
                     <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Beasiswa</label>
                     <textarea id="deskripsi" name="deskripsi" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <p class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</p>
@@ -100,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Kuota Beasiswa -->
                 <div>
                     <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
@@ -180,10 +191,10 @@
                 </div>
                 <br>
                 <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
-                <div class="mb-4">  
+                <div class="mb-4">
                     <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <i class="fa-duotone fa-solid fa-paperclip"></i>
-                    <input type="file" id="poster_beasiswa" name="poster_beasiswa"class="hidden" disabled>
+                    <input type="file" id="poster_beasiswa" name="file_1" >
                     </label>
                 </div>
                 <div>

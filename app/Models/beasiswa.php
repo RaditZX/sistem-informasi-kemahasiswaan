@@ -13,7 +13,7 @@ class Beasiswa extends Model
     protected $table = 'beasiswa';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['nama_beasiswa', 'deskripsi', 'jenis_waktu_beasiswa', 'jenis_beasiswa', 'tipe_beasiswa','kuota', 'sumber', 'tanggal_mulai', 'tanggal_berakhir'];
+    protected $fillable = ['nama_beasiswa', 'deskripsi', 'jenis_waktu_beasiswa', 'jenis_beasiswa', 'tipe_beasiswa','kuota', 'sumber', 'tanggal_mulai', 'tanggal_berakhir','link_poster_1'];
 
 
     // Relasi satu ke banyak dengan SyaratBeasiswa
@@ -36,5 +36,9 @@ class Beasiswa extends Model
     public function jenjangPendidikan()
     {
         return $this->hasMany(jenjangPendidikan::class);
+    }
+    public function pengajuanBeasiswa()
+    {
+        return $this->hasMany(PengajuanBeasiswa::class);
     }
 }
