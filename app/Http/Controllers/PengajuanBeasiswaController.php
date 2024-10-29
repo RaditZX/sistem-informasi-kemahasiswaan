@@ -6,6 +6,8 @@ use App\Models\PengajuanBeasiswa;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\FileController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PengajuanBeasiswaController extends Controller
 {
@@ -14,7 +16,12 @@ class PengajuanBeasiswaController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $name = $user->name; 
+        $email = $user->email;
+        $role_id = $user->role_id;
+
+        return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id'));
     }
 
     /**

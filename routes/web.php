@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\PengajuanBeasiswaController;
+use App\Http\Controllers\PengaturanController;
 
 // ========================================================================================
 // AUTHENTICATION ROUTES ==================================================================
@@ -60,3 +61,14 @@ Route::get('/pengajuan',function(){
 
 
 
+// ========================================================================================
+// PENGAJUAN ROUTES =======================================================================
+Route::middleware('auth')->group(function () {
+    Route::resource('tracking-pengajuan', PengajuanBeasiswaController::class);
+});
+
+// ========================================================================================
+// PENGATURAN ROUTES ======================================================================
+Route::middleware('auth')->group(function () {
+    Route::resource('pengaturan', PengaturanController::class);
+});
