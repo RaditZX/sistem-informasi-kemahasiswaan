@@ -40,8 +40,8 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 
-<body>
-    <main>
+<body class="overflow-hidden">
+    <main class="min-h-screen overflow-y-auto">
         @yield('content')
     </main>
 
@@ -51,6 +51,7 @@
     <script src="https://buttons.github.io/buttons.js" async defer></script>
     <script src="{{ asset('assets/js/soft-ui-dashboard-tailwind.js?v=1.0.5') }}" async></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 </body>
 
 </html>

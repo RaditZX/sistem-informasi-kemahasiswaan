@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\PengajuanBeasiswaController;
+use App\Http\Controllers\PengaturanController;
 
 // ========================================================================================
 // AUTHENTICATION ROUTES ==================================================================
@@ -25,8 +26,6 @@ Route::controller(AuthController::class)->group(function () {
 // BEASISWA ROUTES ========================================================================
 Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
 
-Route::get('/tracking-pengajuan', [PengajuanBeasiswaController::class, 'index'])->name('pengajuan.tracking');
-
 Route::get('/home', function () {
     return view('index');
 });
@@ -43,4 +42,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/form-beasiswa', function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
+});
+
+// ========================================================================================
+// PENGAJUAN ROUTES =======================================================================
+Route::middleware('auth')->group(function () {
+    Route::resource('tracking-pengajuan', PengajuanBeasiswaController::class);
+});
+
+// ========================================================================================
+// PENGATURAN ROUTES ======================================================================
+Route::middleware('auth')->group(function () {
+    Route::resource('pengaturan', PengaturanController::class);
 });
