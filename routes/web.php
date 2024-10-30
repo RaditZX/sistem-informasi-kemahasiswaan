@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\PengajuanBeasiswaController;
+use App\Http\Controllers\PengaturanController;
 
 // ========================================================================================
 // AUTHENTICATION ROUTES ==================================================================
@@ -35,6 +36,7 @@ Route::get('/dashboard', function () {
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('/pengajuan/create',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan/store', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
+    Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
 });
 
 Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
@@ -60,3 +62,14 @@ Route::get('/pengajuan',function(){
 
 
 
+// ========================================================================================
+// PENGAJUAN ROUTES =======================================================================
+Route::middleware('auth')->group(function () {
+    Route::resource('tracking-pengajuan', PengajuanBeasiswaController::class);
+});
+
+// ========================================================================================
+// PENGATURAN ROUTES ======================================================================
+Route::middleware('auth')->group(function () {
+    Route::resource('pengaturan', PengaturanController::class);
+});
