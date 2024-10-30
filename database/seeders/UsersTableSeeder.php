@@ -16,42 +16,46 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
+                'id'=>1,
                 'name' => 'John Doe',
                 'email' => 'john.doe@polban.ac.id',
                 'email_verified_at' => now(),
+                'jenis_kelamin' => 'Pria',
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'mahasiswa',
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
+                'id'=>2,
                 'name' => 'Jane Smith',
                 'email' => 'jane.smith@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'staff_kemahasiswaan',
                 'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
+                'id'=>3,
                 'name' => 'James Johnson',
                 'email' => 'james.johnson@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'ketua_jurusan',
                 'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
+                'id'=>4,
                 'name' => 'Alice Williams',
                 'email' => 'alice.williams@polban.ac.id',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // default password
-                'role_id' => 'wd-3',
                 'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

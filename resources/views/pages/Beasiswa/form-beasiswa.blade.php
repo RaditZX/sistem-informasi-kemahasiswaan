@@ -122,7 +122,7 @@
                     </div>
                     
                 </div>
-                
+
                 <!-- Kuota Beasiswa -->
                 <div>
                     <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
@@ -240,10 +240,10 @@
                 </div>
                 <br>
                 <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
-                <div class="mb-4">  
-                    <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <div class="mb-4">
+                    <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <i class="fa-duotone fa-solid fa-paperclip"></i>
-                    <input type="file" id="poster_beasiswa" name="poster_beasiswa"class="hidden" disabled>
+                    <input type="file" id="poster_beasiswa" name="file_1" >
                     </label>
                 </div>
                 <div>
