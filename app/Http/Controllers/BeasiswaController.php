@@ -20,16 +20,13 @@ class BeasiswaController extends Controller
      */
     public function index()
     {
-        $beasiswa = Beasiswa::all();
+        $beasiswa = Beasiswa::paginate(8);
         $user = Auth::user();
         $name = $user->name;
         $email = $user->email;
         $role_id = $user->role_id;
-        $beasiswa = beasiswa::All();
 
         return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa'));
-
-
     }
 
     public function getListBeasiswaForStaff()
@@ -44,6 +41,26 @@ class BeasiswaController extends Controller
 
         return view('pages.Beasiswa.pengumuman-beasiswa');
 
+    }
+
+    public function getImportDataBeasiswa()
+    {
+        return view('pages.Beasiswa.import-data-beasiswa');
+    }
+
+    public function getDetailBeasiswaKipk()
+    {
+        return view('pages.Beasiswa.detail-beasiswa-kipk');
+    }
+
+    public function getDetailBeasiswaEksternal()
+    {
+        return view('pages.Beasiswa.detail-beasiswa-eksternal');
+    }
+
+    public function getListPengajuBeasiswa()
+    {
+        return view('pages.Beasiswa.list-pengaju-beasiswa');
     }
 
     /**
