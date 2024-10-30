@@ -42,10 +42,8 @@ class FileController extends Controller
 
         $url = sprintf(
             'https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media',
-
             env('FIREBASE_STORAGE_BUCKET'),
-            urlencode($filePath) // URL encode the file path
-
+            urlencode($filePath)
         );
 
         return response()->json(['url' => $url]);
