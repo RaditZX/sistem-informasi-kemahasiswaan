@@ -39,8 +39,8 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 </head>
 
-<body>
-    <main>
+<body class="overflow-hidden">
+    <main class="min-h-screen overflow-y-auto">
         @yield('content')
     </main>
 
