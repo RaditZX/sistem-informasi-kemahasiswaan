@@ -42,7 +42,7 @@ class FileController extends Controller
 
         $url = sprintf(
             'https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media',
-            env('GOOGLE_CLOUD_STORAGE_BUCKET'),
+            env('FIREBASE_STORAGE_BUCKET'),
             urlencode($filePath)
         );
 
