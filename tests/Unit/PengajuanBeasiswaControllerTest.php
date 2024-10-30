@@ -2,11 +2,12 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Models\PengajuanBeasiswa;
+use App\Models\PengajuanDokumen;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\PengajuanBeasiswa;
+use Tests\TestCase;
 
 class PengajuanBeasiswaControllerTest extends TestCase
 {
@@ -111,6 +112,57 @@ class PengajuanBeasiswaControllerTest extends TestCase
         }
 
     }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Storage::fake('dokumen');
+    }
+
+    public function testEditUpdatesDocumentsSuccessfully()
+    {
+        $this->seed();
+
+        $files = [
+            UploadedFile::fake()->create('document1.pdf', 100),
+            UploadedFile::fake()->create('document2.pdf', 100),
+            UploadedFile::fake()->create('document3.pdf', 100),
+            UploadedFile::fake()->create('document4.pdf', 100),
+            UploadedFile::fake()->create('document5.pdf', 100),
+        ];
+
+        $data = [
+            'nim' => '123456789',
+            'beasiswa_id' => 11,
+            'file_1' => $files[0],
+            'file_2' => $files[1],
+            'file_3' => $files[2],
+            'file_4' => $files[3],
+            'file_5' => $files[4],
+        ];
+
+        // Call the store method
+        $this->post(route('pengajuan.store'), $data);
+
+        $response = $this->patch(route('pengajuan.edit', ['id' => 2]), [
+            'file_1' => UploadedFile::fake()->create('new_document.pdf', 100),
+        ]);
+
+        $response->assertRedirect(route('pengajuan.create'));
+        $response->assertSessionHas('success', 'Documents updated successfully.');
+    }
+
+    // public function testEditHandlesNoDocumentsFound()
+    // {
+    //     // Act: Simulate a request to edit with no documents
+    //     $response = $this->post(route('pengajuan.edit', ['id' => '999']), [
+    //         'title' => 'Updated Title',
+    //         'status' => 'Updated Status',
+    //     ]);
+
+    //     $response->assertRedirect(route('pengajuan.create'));
+    //     $this->assertSessionHas('failed', 'No documents found for pengajuan id: 999');
+    // }
 
 
 

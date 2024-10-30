@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PengajuanBeasiswa;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\FileController;
+use App\Models\PengajuanDokumen;
 use Illuminate\Http\Request;
 
 class PengajuanBeasiswaController extends Controller
@@ -79,18 +80,69 @@ class PengajuanBeasiswaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PengajuanBeasiswa $pengajuanBeasiswa)
+    public function show(string $id)
     {
-        //
+        $pengajuan_beasiswa = PengajuanBeasiswa::findOrFail($id);
+        $query = PengajuanDokumen::query();
+        $query->where('pengajuan_beasiswa_id', $id );
+        $dokumenPengajuan = $query->get();
+
+        return view('pages.PengajuanBeasiswa.formPengajuan', ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PengajuanBeasiswa $pengajuanBeasiswa)
+    public function edit(Request $request, string $id)
     {
-        //
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'file_1' => 'nullable|file',
+            'file_2' => 'nullable|file',
+            'file_3' => 'nullable|file',
+            'file_4' => 'nullable|file',
+            'file_5' => 'nullable|file',
+        ]);
+
+        // Retrieve all documents associated with the given pengajuan_beasiswa_id
+        $dokumenPengajuan = PengajuanDokumen::where('pengajuan_beasiswa_id', '=', $id)
+                    ->orderBy('dokumen_id', 'asc')
+                    ->get();
+
+        if ($dokumenPengajuan->isEmpty()) {
+            return redirect()->route('pengajuan.create')->with('failed', 'No documents found for pengajuan id: ' . $id);
+        }
+
+        $fileKeys = ['file_1', 'file_2', 'file_3', 'file_4', 'file_5'];
+        $fileController = new FileController();
+
+        foreach ($dokumenPengajuan as $index => $dokumen) {
+            $fileKey = $fileKeys[$index] ?? null;
+
+            if ($fileKey && $request->hasFile($fileKey)) {
+
+                $deleteRequest = new Request();
+                $deleteRequest->merge([
+                    'file_name' => $dokumen->nama_dokumen,
+                    'path' => 'dokumen'
+                ]);
+                $fileController->deleteFile($deleteRequest);
+                $file = $request->file($fileKey);
+                $newRequest = new Request();
+                $newRequest->files->set('file', $file);
+                $newRequest->merge(['path' => 'dokumen']);
+                $fileUrl = $fileController->uploadFile($newRequest);
+
+                $dokumen->nama_dokumen = $file->getClientOriginalName();
+                $dokumen->link_dokumen = $fileUrl;
+            }
+            $dokumen->save();
+        }
+
+        return redirect()->route('pengajuan.create')->with('success', 'Documents updated successfully.');
     }
+
+
 
     /**
      * Update the specified resource in storage.

@@ -20,20 +20,18 @@ class FileController extends Controller
 
     public function uploadFile(Request $request)
     {
-        // Validate the file upload
         $request->merge(['path' => $request->path]);
 
         $request->validate([
             'file' => 'required|file',
-            'path' => 'required|string', // Ensure path is validated
+            'path' => 'required|string',
         ]);
 
-        // Get the uploaded file
         $file = $request->file('file');
         $path = $request['path'];
         $filePath = rtrim($path, '/') . '/' . $file->getClientOriginalName();
 
-        // Store the file in Firebase Storage
+
         $bucket = $this->storage->getBucket();
         $bucket->upload(fopen($file->getPathname(), 'r'), [
             'name' => $filePath,
@@ -42,13 +40,34 @@ class FileController extends Controller
             ],
         ]);
 
-        // Get the file's public URL
         $url = sprintf(
             'https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media',
             env('GOOGLE_CLOUD_STORAGE_BUCKET'),
-            urlencode($filePath) // URL encode the file path
+            urlencode($filePath)
         );
 
         return response()->json(['url' => $url]);
     }
+
+    public function deleteFile(Request $request)
+    {
+        $request->validate([
+            'file_name' => 'required|string',
+            'path' => 'required|string',
+        ]);
+
+        $fileName = $request->input('file_name');
+        $path = rtrim($request->input('path'), '/') . '/' . $fileName;
+
+        $bucket = $this->storage->getBucket();
+        $object = $bucket->object($path);
+
+        if ($object->exists()) {
+            $object->delete();
+            return response()->json(['message' => 'File deleted successfully.'],200);
+        } else {
+            return response()->json(['message' => 'File not found.'], 404);
+        }
+    }
+
 }
