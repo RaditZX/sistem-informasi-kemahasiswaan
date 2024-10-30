@@ -46,6 +46,31 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
 {
+    $messages = [
+        'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
+        'nama_beasiswa.string' => 'Nama beasiswa harus berupa teks.',
+        'nama_beasiswa.max' => 'Nama beasiswa tidak boleh lebih dari 255 karakter.',
+        'deskripsi.required' => 'Deskripsi beasiswa tidak boleh kosong.',
+        'deskripsi.string' => 'Deskripsi harus berupa teks.',
+        'jenis_beasiswa.required' => 'Jenis beasiswa harus diisi.',
+        'tipe_beasiswa.required' => 'Tipe beasiswa harus diisi.',
+        'kuota_beasiswa.required' => 'Kuota beasiswa harus diisi.',
+        'kuota_beasiswa.integer' => 'Kuota beasiswa harus berupa angka.',
+        'kuota_beasiswa.min' => 'Kuota beasiswa minimal adalah 1.',
+        'sumber_beasiswa.required' => 'Sumber beasiswa wajib diisi.',
+        'sumber_beasiswa.string' => 'Sumber beasiswa harus berupa teks.',
+        'sumber_beasiswa.max' => 'Sumber beasiswa tidak boleh lebih dari 255 karakter.',
+        'tanggal_mulai.required' => 'Tanggal mulai harus diisi.',
+        'tanggal_mulai.date' => 'Tanggal mulai harus berupa tanggal yang valid.',
+        'tanggal_mulai.before' => 'Tanggal mulai harus sebelum tanggal berakhir.',
+        'tanggal_berakhir.required' => 'Tanggal berakhir harus diisi.',
+        'tanggal_berakhir.date' => 'Tanggal berakhir harus berupa tanggal yang valid.',
+        'tanggal_berakhir.after' => 'Tanggal berakhir harus setelah tanggal mulai.',
+        'ipk_min.numeric' => 'IPK minimal harus berupa angka.',
+        'ipk_min.min' => 'IPK minimal tidak boleh kurang dari 0.',
+        'ipk_min.max' => 'IPK minimal tidak boleh lebih dari 4.',
+    ];
+    
     // Validasi input
     $validatedData = $request->validate([
         'nama_beasiswa' => 'required|string|max:255',
@@ -56,14 +81,14 @@ class BeasiswaController extends Controller
         'sumber_beasiswa' => 'required|string|max:255',
         'tanggal_mulai' => 'required|date|before:tanggal_berakhir',
         'tanggal_berakhir' => 'required|date|after:tanggal_mulai',
-        'ipk_min' => 'numeric|max:4',
+        'ipk_min' => 'numeric|max:4|min:1',
         'syarat_beasiswa' => 'array',
         'syarat_beasiswa.*' => 'string',
         'benefit_beasiswa' => 'array',
-        'benefit_beasiswa.*' => 'string|max:255', // Untuk setiap benefit
+        'benefit_beasiswa.*' => 'string|max:255', 
         'jenjang_pendidikan' => 'array',
-        'jenjang_pendidikan.*' => 'string|max:100', // Untuk setiap jenjang
-    ]);
+        'jenjang_pendidikan.*' => 'string|max:100', 
+    ], $messages);
 
     // menambahkan ipk_min ke array syarat
     if (isset($validatedData['ipk_min'])) {
