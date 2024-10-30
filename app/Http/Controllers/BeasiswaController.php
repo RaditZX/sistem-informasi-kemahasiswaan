@@ -27,8 +27,6 @@ class BeasiswaController extends Controller
         $beasiswa = beasiswa::All();
 
         return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa'));
-
-
     }
 
     public function getListBeasiswaForStaff()
