@@ -58,7 +58,9 @@
                         </div>
                     </td>
                     <td>
-                        <i class="fas fa-arrow-right text-black text-lg" onclick=""></i>  
+                        <a href="{{ url('tracking-pengajuan') }}">
+                            <i class="fas fa-arrow-right text-black text-lg" onclick=""></i>     
+                        </a> 
                     </td>
                 </tr>
             </tbody>
