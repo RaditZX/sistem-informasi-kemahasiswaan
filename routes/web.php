@@ -3,9 +3,9 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeasiswaController;
-use App\Http\Controllers\FileController;
 use App\Http\Controllers\PengajuanBeasiswaController;
 use App\Http\Controllers\PengaturanController;
+use App\Http\Controllers\FileController;
 
 // ========================================================================================
 // AUTHENTICATION ROUTES ==================================================================
@@ -69,4 +69,5 @@ Route::middleware('auth')->group(function () {
 // PENGATURAN ROUTES ======================================================================
 Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
+    Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
 });

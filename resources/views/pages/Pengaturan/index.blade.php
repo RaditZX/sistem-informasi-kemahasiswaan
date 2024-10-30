@@ -22,51 +22,60 @@
 
                 <!-- Profil Section -->
                 <section id="profil" class="tab-content">
+                    @if(session('success'))
+                        <div class="bg-green-500 text-white p-4 rounded mb-4">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="bg-red-500 text-white p-4 rounded mb-4">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <div class="max-w-4xl mx-auto p-6 rounded-lg flex">
                         <!-- Profile Picture and Upload Button -->
                         <div class="w-1/4 text-center">
                             <h2 class="text-xl font-semibold mb-4">Profile</h2>
-                            <img class="w-48 h-48 rounded-full mx-auto" src="{{ asset('assets/img/ivancik.jpg') }}" alt="Avatar">
-                            <h2 class="mt-4 text-lg font-bold">Khusan Akhmedov</h2>
+                            <img class="w-48 h-48 rounded-full mx-auto" src="{{ asset('storage/' . $user_img) }}" alt="Avatar">
+                            <h2 class="mt-4 text-lg font-bold">{{ $nama_depan . ' ' . $nama_belakang }}</h2>
                             <p class="text-gray-600">Staff Kemahasiswaan</p>
-                            <button class="mt-4 bg-[#6B705C] text-white px-4 py-2 rounded">Upload new avatar</button>
-                            <!-- Modal toggle -->
-                            <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                                Ganti Foto
-                            </button>
-                            
-                            <!-- Main modal -->
-                            <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative p-4 w-full max-w-md max-h-full">
-                                    <!-- Modal content -->
-                                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                        <!-- Modal header -->
-                                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                                Ganti Foto Profil
-                                            </h3>
-                                            <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
-                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                                </svg>
-                                                <span class="sr-only">Close modal</span>
-                                            </button>
-                                        </div>
-                                        <!-- Modal body -->
-                                        <div class="p-4 md:p-5">
-                                            <form class="space-y-4" action="#">
-                                                <div>
-                                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload Foto</label>
-                                                    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
-                                                </div>
-                                                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>   
+                            <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="mt-4 bg-[#6B705C] text-white px-4 py-2 rounded" type="button">Ganti Foto</button> 
                         </div>
                         <div class="px-5 ml-7 inline-block h-[500px] w-0.5 self-stretch border-l-2 border-gray-300"></div>
+
+                        <!-- Main modal -->
+                        <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-md max-h-full">
+                                <!-- Modal content -->
+                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <!-- Modal header -->
+                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                            Ganti Foto Profil
+                                        </h3>
+                                        <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                    <!-- Modal body -->
+                                    <div class="p-4 md:p-5">
+                                        <form class="space-y-4" action="{{ route('pengaturan.update', $user_id) }}" method="POST" enctype="multipart/form-data">
+                                            @method('PATCH')
+                                            @csrf
+                                            <div>
+                                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="new_img">File Foto</label>
+                                                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="new_img" name="new_img" type="file" required>
+                                            </div>
+                                            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
+                                        </form>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
                         
                         <!-- Profile Information Form -->
                         <div class="w-3/4 pl-6">
@@ -78,12 +87,12 @@
                                     <!-- Nama Awal -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700" for="first-name">Nama Awal</label>
-                                        <input readonly type="text" id="first-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Nama Awal">
+                                        <input readonly type="text" id="first-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="{{ $nama_depan }}" disabled>
                                     </div>
                                     <!-- Nama Akhir -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700" for="last-name">Nama Akhir</label>
-                                        <input readonly type="text" id="last-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Nama Akhir">
+                                        <input readonly type="text" id="last-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="{{ $nama_belakang }}" disabled>
                                     </div>
                                 </div>
 
@@ -94,7 +103,7 @@
 
                                 <div class="mt-4">
                                     <label class="block text-sm font-medium text-gray-700" for="email">Email</label>
-                                    <input readonly type="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="EMAIL">
+                                    <input readonly type="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="{{ $email }}" disabled>
                                 </div>
 
                                 <div class="mt-4">
@@ -131,6 +140,7 @@
                         </div>
                     </div>
                 </section>
+
             </div>
         </div>
     </div>

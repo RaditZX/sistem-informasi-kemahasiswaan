@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
                 'jenis_kelamin' => 'Pria',
                 'password' => Hash::make('password'), // default password
                 'remember_token' => Str::random(10),
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -34,6 +35,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('password'), // default password
                 'remember_token' => Str::random(10),
                 'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -45,6 +47,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('password'), // default password
                 'remember_token' => Str::random(10),
                 'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -56,6 +59,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('password'), // default password
                 'remember_token' => Str::random(10),
                 'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
