@@ -498,29 +498,118 @@
                     </div>
                     <br>
                     <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
-                    <div class="mb-4">  
+                    <div class="mb-4">
                         <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <i class="fa-duotone fa-solid fa-paperclip"></i>
-                            <span id="file-name" class="ml-2 text-gray-600">Pilih file</span> <!-- Elemen untuk menampilkan nama file -->
-                            <input type="file" id="poster_beasiswa" name="file_1" class="hidden" onchange="displayFileName()">
+                            <span id="file-name" class="ml-2 text-gray-600">Pilih file</span>
+                            <input type="file" id="poster_beasiswa" name="file_1" class="hidden" multiple onchange="displayFileNamesAndPreview()">
                         </label>
                     </div>
-                    
+                    <div id="file-list" class="mt-2 text-gray-600"></div> <!-- Daftar nama file -->
+                    <div id="preview-container" class="flex flex-wrap gap-4 mt-2"></div> <!-- Preview gambar -->
+
+                    <!-- Modal untuk menampilkan gambar besar -->
+                    <div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                        <div class="relative max-w-full max-h-full">
+                            <img id="modal-image" class="max-w-screen max-h-screen object-contain rounded-md shadow-lg">
+                            <button id="close-modal" class="absolute top-2 right-2 bg-white text-black rounded-full p-1">X</button>
+                        </div>
+                    </div>
+
                     <script>
-                        function displayFileName() {
+                        let selectedFiles = []; // Menyimpan file yang dipilih
+
+                        function displayFileNamesAndPreview() {
                             const input = document.getElementById('poster_beasiswa');
-                            const fileNameDisplay = document.getElementById('file-name');
-                            
-                            if (input.files.length > 0) {
-                                // Mendapatkan nama file pertama
-                                const fileName = input.files[0].name;
-                                // Menampilkan nama file di dalam label
-                                fileNameDisplay.textContent = fileName;
-                            } else {
-                                fileNameDisplay.textContent = 'Pilih file'; // Tampilkan pesan default jika tidak ada file yang dipilih
-                            }
+                            selectedFiles = Array.from(input.files); // Salin file yang dipilih ke array `selectedFiles`
+                            renderPreviews();
                         }
+
+                        function renderFileList() {
+                            const fileList = document.getElementById('file-list');
+                            fileList.innerHTML = ''; // Kosongkan daftar file
+
+                            selectedFiles.forEach((file, index) => {
+                                const fileItem = document.createElement('div');
+                                fileItem.classList.add('flex', 'items-center', 'justify-between', 'mb-1');
+
+                                const fileName = document.createElement('span');
+                                fileName.textContent = file.name;
+
+                                const deleteButton = document.createElement('button');
+                                deleteButton.textContent = 'Hapus';
+                                deleteButton.classList.add('text-red-500', 'ml-2', 'hover:underline');
+                                deleteButton.onclick = () => removeFile(index); // Panggil fungsi `removeFile`
+
+                                fileItem.appendChild(fileName);
+                                fileItem.appendChild(deleteButton);
+                                fileList.appendChild(fileItem);
+                            });
+                        }
+
+                        function renderPreviews() {
+                            const previewContainer = document.getElementById('preview-container');
+                            previewContainer.innerHTML = ''; // Kosongkan kontainer preview
+
+                            selectedFiles.forEach((file, index) => {
+                                if (file.type.startsWith('image/')) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        const imgContainer = document.createElement('div');
+                                        imgContainer.classList.add('relative', 'w-24', 'h-24', 'mb-2', 'mr-2');
+
+                                        const img = document.createElement('img');
+                                        img.src = e.target.result;
+                                        img.alt = file.name;
+                                        img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-md', 'shadow-sm');
+
+                                        // Fungsi untuk memperbesar gambar saat diklik
+                                        img.onclick = () => openModal(e.target.result);
+
+                                        const deleteButton = document.createElement('button');
+                                        deleteButton.textContent = 'X';
+                                        deleteButton.classList.add(
+                                            'absolute', 'top-1', 'right-1', 'bg-red-500', 'text-white', 'rounded-full', 'w-6', 'h-6', 'flex',
+                                            'items-center', 'justify-center', 'text-xs', 'opacity-0', 'hover:opacity-100', 'transition-opacity'
+                                        );
+                                        deleteButton.onclick = () => removeFile(index); // Panggil fungsi `removeFile`
+
+                                        imgContainer.onmouseenter = () => (deleteButton.style.opacity = '1'); // Tampilkan tombol saat dihover
+                                        imgContainer.onmouseleave = () => (deleteButton.style.opacity = '0'); // Sembunyikan tombol saat tidak dihover
+
+                                        imgContainer.appendChild(img);
+                                        imgContainer.appendChild(deleteButton);
+                                        previewContainer.appendChild(imgContainer);
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+                            });
+                        }
+
+                        function removeFile(index) {
+                            selectedFiles.splice(index, 1); // Hapus file dari array `selectedFiles`
+                            renderFileList(); // Perbarui daftar file
+                            renderPreviews(); // Perbarui preview gambar
+                        }
+
+                        function openModal(imageSrc) {
+                            const modal = document.getElementById('modal');
+                            const modalImage = document.getElementById('modal-image');
+                            modalImage.src = imageSrc; // Set gambar modal ke gambar yang diklik
+                            modal.classList.remove('hidden'); // Tampilkan modal
+                        }
+
+                        document.getElementById('close-modal').onclick = function () {
+                            document.getElementById('modal').classList.add('hidden'); // Sembunyikan modal saat tombol close diklik
+                        };
+
+                        document.getElementById('modal').onclick = function (e) {
+                            if (e.target === this) {
+                                this.classList.add('hidden'); // Sembunyikan modal saat area luar gambar diklik
+                            }
+                        };
                     </script>
+
                     <div>
                         <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                     </div>
