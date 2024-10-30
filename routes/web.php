@@ -32,6 +32,11 @@ Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaF
 Route::get('/pengumuman-beasiswa', [BeasiswaController::class, 'getPengumumanBeasiswa'])->name('beasiswa.pengumuman-beasiswa');
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
+Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
+Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
+Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
+
 
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('/pengajuan/create',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
@@ -54,12 +59,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create']);
 
 
-
-
-
-
-
-
 // ========================================================================================
 // PENGAJUAN ROUTES =======================================================================
 Route::middleware('auth')->group(function () {
@@ -70,4 +69,5 @@ Route::middleware('auth')->group(function () {
 // PENGATURAN ROUTES ======================================================================
 Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
+    Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
 });
