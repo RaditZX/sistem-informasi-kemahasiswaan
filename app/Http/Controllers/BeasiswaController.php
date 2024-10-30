@@ -215,11 +215,59 @@ class BeasiswaController extends Controller
     public function update(Request $request, string $id)
     {
         // validasi
+        $messages = [
+            'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
+            'nama_beasiswa.string' => 'Nama beasiswa harus berupa teks.',
+            'nama_beasiswa.max' => 'Nama beasiswa tidak boleh lebih dari 255 karakter.',
+            'deskripsi.required' => 'Deskripsi beasiswa tidak boleh kosong.',
+            'deskripsi.string' => 'Deskripsi harus berupa teks.',
+            'jenis_beasiswa.required' => 'Jenis beasiswa harus diisi.',
+            'tipe_beasiswa.required' => 'Tipe beasiswa harus diisi.',
+            'kuota_beasiswa.required' => 'Kuota beasiswa harus diisi.',
+            'kuota_beasiswa.integer' => 'Kuota beasiswa harus berupa angka.',
+            'kuota_beasiswa.min' => 'Kuota beasiswa minimal adalah 1.',
+            'sumber_beasiswa.required' => 'Sumber beasiswa wajib diisi.',
+            'sumber_beasiswa.string' => 'Sumber beasiswa harus berupa teks.',
+            'sumber_beasiswa.max' => 'Sumber beasiswa tidak boleh lebih dari 255 karakter.',
+            'tanggal_mulai.required' => 'Tanggal mulai harus diisi.',
+            'tanggal_mulai.date' => 'Tanggal mulai harus berupa tanggal yang valid.',
+            'tanggal_mulai.before' => 'Tanggal mulai harus sebelum tanggal berakhir.',
+            'tanggal_berakhir.required' => 'Tanggal berakhir harus diisi.',
+            'tanggal_berakhir.date' => 'Tanggal berakhir harus berupa tanggal yang valid.',
+            'tanggal_berakhir.after' => 'Tanggal berakhir harus setelah tanggal mulai.',
+            'ipk_min.numeric' => 'IPK minimal harus berupa angka.',
+            'ipk_min.min' => 'IPK minimal tidak boleh kurang dari 0.',
+            'ipk_min.max' => 'IPK minimal tidak boleh lebih dari 4.',
+        ];
+        
+        // Validasi input
+        $validatedData = $request->validate([
+            'nama_beasiswa' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'jenis_beasiswa' => 'required|string|in:full,setengah',
+            'tipe_beasiswa' => 'required|string|in:prestasi,ekonomi,external',
+            'kuota_beasiswa' => 'required|integer|min:1',
+            'sumber_beasiswa' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date|before:tanggal_berakhir',
+            'tanggal_berakhir' => 'required|date|after:tanggal_mulai',
+            'ipk_min' => 'numeric|max:4|min:1',
+            'syarat_beasiswa' => 'array',
+            'syarat_beasiswa.*' => 'string',
+            'benefit_beasiswa' => 'array',
+            'benefit_beasiswa.*' => 'string|max:255', 
+            'jenjang_pendidikan' => 'array',
+            'jenjang_pendidikan.*' => 'string|max:100', 
+        ], $messages);
 
-        // jenis waktu
+
+        // menambahkan ipk_min ke array syarat
+        if (isset($validatedData['ipk_min'])) {
+            // Anda bisa menambahkan ipk_min ke dalam syarat_beasiswa
+            $validatedData['syarat_beasiswa'][] = $validatedData['ipk_min'];
+        }
         // jenis_waktu_beasiswa
-        $tgl_mulai = strtotime($request->tanggal_mulai);
-        $tgl_akhir = strtotime($request->tanggal_berakhir);
+        $tgl_mulai = strtotime($validatedData['tanggal_mulai']);
+        $tgl_akhir = strtotime($validatedData['tanggal_berakhir']);
         $tgl_skrg = time();
 
         // current = tgl_mulai <= tgl_skrg <= tgl_akhir
@@ -234,27 +282,24 @@ class BeasiswaController extends Controller
         }
     
         $beasiswa = Beasiswa::findOrFail($id);
-        $beasiswa->nama_beasiswa = $request->nama_beasiswa;
-        $beasiswa->deskripsi = $request->deskripsi;
-        $beasiswa->jenis_beasiswa = $request->jenis_beasiswa;
-        $beasiswa->tipe_beasiswa = $request->tipe_beasiswa;
-        $beasiswa->kuota = $request->kuota_beasiswa;
-        $beasiswa->tanggal_mulai = $request->tanggal_mulai;
-        $beasiswa->tanggal_berakhir = $request->tanggal_berakhir;
-        $beasiswa->jenis_waktu_beasiswa = $jenis_waktu;
-        $beasiswa->sumber = $request->sumber_beasiswa;
+        $beasiswa->fill([
+            'nama_beasiswa' => $validatedData['nama_beasiswa'],
+            'deskripsi' => $validatedData['deskripsi'],
+            'jenis_beasiswa' => $validatedData['jenis_beasiswa'],
+            'tipe_beasiswa' => $validatedData['tipe_beasiswa'],
+            'kuota' => $validatedData['kuota_beasiswa'],
+            'tanggal_mulai' => $validatedData['tanggal_mulai'],
+            'tanggal_berakhir' => $validatedData['tanggal_berakhir'],
+            'jenis_waktu_beasiswa' => $jenis_waktu,
+            'sumber' => $validatedData['sumber_beasiswa'],
+        ]);
         $beasiswa->save();
 
-        $dokumen = SyaratDokumen::where('beasiswa_id', $id)->get();
-        foreach ($dokumen as $doku){
-            $doku->delete();
-        }
+        SyaratDokumen::where('beasiswa_id', $id)->delete();
 
-        $syarat = SyaratBeasiswa::where('beasiswa_id', $id)->get();
-        foreach ($syarat as $sy) {
-            $sy->delete();
-        }
-        foreach ($request->input('syarat_beasiswa') as $syarat_beasiswa) {
+        SyaratBeasiswa::where('beasiswa_id', $id)->delete();
+
+        foreach ($validatedData['syarat_beasiswa'] as $syarat_beasiswa) {
             SyaratBeasiswa::create([
                 'beasiswa_id' => $beasiswa->id,
                 'syarat' => $syarat_beasiswa
@@ -266,11 +311,8 @@ class BeasiswaController extends Controller
             ]);
         }
 
-        $benefit = BenefitBeasiswa::where('beasiswa_id', $id)->get();
-        foreach ($benefit as $bene) {
-            $bene->delete();
-        }
-        foreach ($request->input('benefit_beasiswa') as $benefit_beasiswa) {
+        BenefitBeasiswa::where('beasiswa_id', $id)->delete();
+        foreach ($validatedData['benefit_beasiswa'] as $benefit_beasiswa) {
             BenefitBeasiswa::create([
                 'beasiswa_id' => $beasiswa->id,
                 'benefit' => $benefit_beasiswa,
@@ -278,10 +320,7 @@ class BeasiswaController extends Controller
             ]);
         }
 
-        $jenjang = JenjangPendidikan::where('beasiswa_id', $id)->get();
-        foreach ($jenjang as $jen) {
-            $jen->delete();
-        }
+        JenjangPendidikan::where('beasiswa_id', $id)->delete();
         foreach ($request->input('jenjang_pendidikan') as $jenjang_pendidikan) {
             JenjangPendidikan::create([
                 'beasiswa_id' => $beasiswa->id,
