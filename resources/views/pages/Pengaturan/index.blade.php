@@ -22,12 +22,23 @@
 
                 <!-- Profil Section -->
                 <section id="profil" class="tab-content">
+                    @if(session('success'))
+                        <div class="bg-green-500 text-white p-4 rounded mb-4">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="bg-red-500 text-white p-4 rounded mb-4">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <div class="max-w-4xl mx-auto p-6 rounded-lg flex">
                         <!-- Profile Picture and Upload Button -->
                         <div class="w-1/4 text-center">
                             <h2 class="text-xl font-semibold mb-4">Profile</h2>
-                            <img class="w-48 h-48 rounded-full mx-auto" src="{{ asset('assets/img/ivancik.jpg') }}" alt="Avatar">
-                            <h2 class="mt-4 text-lg font-bold">Khusan Akhmedov</h2>
+                            <img class="w-48 h-48 rounded-full mx-auto" src="{{ asset('storage/' . $user_img) }}" alt="Avatar">
+                            <h2 class="mt-4 text-lg font-bold">{{ $nama_depan . ' ' . $nama_belakang }}</h2>
                             <p class="text-gray-600">Staff Kemahasiswaan</p>
                             <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="mt-4 bg-[#6B705C] text-white px-4 py-2 rounded" type="button">Ganti Foto</button> 
                         </div>
@@ -52,13 +63,15 @@
                                     </div>
                                     <!-- Modal body -->
                                     <div class="p-4 md:p-5">
-                                        <form class="space-y-4" action="{{ route('pengaturan.update') }}">
+                                        <form class="space-y-4" action="{{ route('pengaturan.update', $user_id) }}" method="POST" enctype="multipart/form-data">
+                                            @method('PATCH')
+                                            @csrf
                                             <div>
                                                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="new_img">File Foto</label>
-                                                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="new_img" name="new_img" type="file">
+                                                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="new_img" name="new_img" type="file" required>
                                             </div>
                                             <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
-                                        </form>
+                                        </form>                                        
                                     </div>
                                 </div>
                             </div>
@@ -74,12 +87,12 @@
                                     <!-- Nama Awal -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700" for="first-name">Nama Awal</label>
-                                        <input readonly type="text" id="first-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Nama Awal">
+                                        <input readonly type="text" id="first-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="{{ $nama_depan }}" disabled>
                                     </div>
                                     <!-- Nama Akhir -->
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700" for="last-name">Nama Akhir</label>
-                                        <input readonly type="text" id="last-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Nama Akhir">
+                                        <input readonly type="text" id="last-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="{{ $nama_belakang }}" disabled>
                                     </div>
                                 </div>
 
@@ -90,7 +103,7 @@
 
                                 <div class="mt-4">
                                     <label class="block text-sm font-medium text-gray-700" for="email">Email</label>
-                                    <input readonly type="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="EMAIL">
+                                    <input readonly type="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="{{ $email }}" disabled>
                                 </div>
 
                                 <div class="mt-4">

@@ -60,7 +60,9 @@ Route::middleware('auth')->group(function () {
 // PENGATURAN ROUTES ======================================================================
 Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
+    Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
 });
+
 Route::get('/pengajuan',function(){
     return view('pages.Beasiswa.pengajuan');
 });

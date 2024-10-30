@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PengajuanBeasiswa;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\FileController;
-use Illuminate\Http\Request;
 
 class PengajuanBeasiswaController extends Controller
 {
