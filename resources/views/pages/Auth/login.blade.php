@@ -167,7 +167,12 @@
             },
             body: JSON.stringify({ password, password_confirmation: passwordConfirmation })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.message === 'Password updated successfully!') {
                 resetPasswordForm.classList.add('hidden');
@@ -176,7 +181,10 @@
                 alert(data.message);
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An unexpected error occurred. Please try again.');
+        });
     });
 
     // Back to Login from Success
