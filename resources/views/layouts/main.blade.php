@@ -40,7 +40,7 @@
     {{-- @vite(['resources/css/app.css','resources/js/app.js']) --}}
 </head>
 
-<body class="overflow-hidden">
+<body class="">
     <main class="min-h-screen overflow-y-auto">
         @yield('content')
     </main>

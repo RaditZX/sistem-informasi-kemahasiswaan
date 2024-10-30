@@ -223,7 +223,7 @@ class BeasiswaController extends Controller
             }
         }
     
-        return redirect('/form-beasiswa')->with('success', 'Beasiswa berhasil ditambahkan');
+        return redirect('/beasiswa')->with('success', 'Beasiswa berhasil ditambahkan');
     }
     
 
