@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main2')
 @section('content')
     @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null])
 
