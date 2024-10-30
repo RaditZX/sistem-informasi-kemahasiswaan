@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\PengajuanDokumenController;
-use App\Http\Controllers\FileController;
 use App\Models\PengajuanDokumen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
