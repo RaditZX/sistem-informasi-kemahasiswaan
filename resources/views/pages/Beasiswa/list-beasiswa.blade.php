@@ -198,4 +198,10 @@
             <div class="grid grid-cols-1 gap-4" id="notificationList">
             </div>
         </div>
+    </div>
+
+    <div class="p-5">
+        {{ $beasiswa->links() }}
+    </div>
+
     @endsection

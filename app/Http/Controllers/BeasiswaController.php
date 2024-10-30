@@ -19,12 +19,11 @@ class BeasiswaController extends Controller
      */
     public function index()
     {
-        $beasiswa = Beasiswa::all();
+        $beasiswa = Beasiswa::paginate(8);
         $user = Auth::user();
         $name = $user->name;
         $email = $user->email;
         $role_id = $user->role_id;
-        $beasiswa = beasiswa::All();
 
         return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa'));
     }
