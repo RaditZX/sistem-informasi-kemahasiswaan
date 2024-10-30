@@ -13,14 +13,22 @@ return new class extends Migration
     {
         Schema::create('pengajuan_beasiswa', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('pengguna_id');
+            $table->string("nim",9);
             $table->unsignedBigInteger('beasiswa_id');
             $table->date('tanggal_pengajuan');
             $table->enum('status', ['diterima', 'ditolak', 'diproses'])->default('diproses');
             $table->timestamps();
-
-            $table->foreign('pengguna_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+        });
+
+        Schema::create('pengajuan_dokumen', function(Blueprint $table){
+            $table->id("dokumen_id");
+            $table->unsignedBigInteger("pengajuan_beasiswa_id");
+            $table->string("nama_dokumen");
+            $table->text("link_dokumen");
+            $table->timestamps();
+            $table->foreign('pengajuan_beasiswa_id')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
     }
 
@@ -29,6 +37,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+
+        Schema::dropIfExists('pengajuan_dokumen');
         Schema::dropIfExists('pengajuan_beasiswa');
     }
 };

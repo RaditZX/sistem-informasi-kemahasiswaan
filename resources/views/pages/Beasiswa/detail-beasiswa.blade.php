@@ -1,15 +1,24 @@
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar')
-    <div class="p-2">
+    @include('component.navbar',['path'=>"Detail Beasiswa",'id'=>$id])
+    <div class="p-2 pl-10">
         <div class=" flex flex-auto">
             <div class="basis-1/4 flex justify-center  border-4 rounded-xl shadow  p-5">
-                <img src="https://th.bing.com/th/id/OIP.Hm3Ll_0FLV3Se-jBtxSmQAHaKe?w=202&h=286&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+                <img src={{ $beasiswa->link_poster_1 }}
                     alt="">
             </div>
             <div class="p-8 basis-3/4">
                 <h1 class="text-2xl font-semibold">{{ $beasiswa->nama_beasiswa }}</h1>
-                <p>{{ $beasiswa->deskripsi}}</p>
+                <div class="flex mb-3 gap-3">
+                    <div class=" border border-orange-500 rounded-xl p-1 px-3 bg-white inline-block mt-4">
+                        <h5 class="font-medium text-base text-orange-500">{{ $beasiswa->tipe_beasiswa }}</h5>
+                    </div>
+                    <div class=" border border-orange-500 rounded-xl p-1 px-3 bg-white inline-block mt-4">
+                        <h5 class="font-medium text-base text-orange-500">{{ $beasiswa->jenis_waktu_beasiswa }}</h5>
+                    </div>
+                </div>
+                <p>{{ $beasiswa->deskripsi }}</p>
+
                 <div class=" rounded-3xl p-3 bg-yellow-400 inline-block mt-4">
                     <div class="flex gap-7">
                         <h4 class="font-medium text-base text-black">Apply Now</h4>
@@ -23,6 +32,24 @@
                     </div>
 
                 </div>
+                <form action="{{ route('beasiswa.destroy', $beasiswa->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit" class="inline-block mt-4">
+                        <div class="rounded-3xl p-3 bg-red-500">
+                            <div class="flex gap-3">
+                                <h4 class="font-medium text-base text-black">Delete</h4>
+                                <div class="bg-black rounded-xl inline-block p-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                </form>
+
             </div>
 
         </div>
@@ -31,7 +58,7 @@
         <div class="mt-5">
             <h1 class="text-2xl font-semibold text-yellow-400">Benefit</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
-            @include('component.slider', ['beasiswa' => $beasiswa],['isBenefit'=>true])
+            @include('component.slider', ['beasiswa' => $beasiswa], ['isBenefit' => true])
 
 
         </div>
@@ -41,45 +68,12 @@
             <h1 class="text-2xl font-semibold text-yellow-400">Syarat</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
             <div class="grid grid-cols-4 gap-5 py-5">
+                @foreach($beasiswa->syaratBeasiswa as $syarat)
                 <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
+                    <p class="text-m font-medium">{{$syarat->syarat}}</p>
                 </div>
-                <!-- ... -->
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
+                @endforeach
 
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-                <!-- ... -->
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
-
-                <div>
-                    <p class="text-m font-medium">Tingkat Pendidikan :</p>
-                    <p>Diploma-III</p>
-                </div>
             </div>
         </div>
 
@@ -87,10 +81,10 @@
             <h1 class="text-2xl font-semibold text-yellow-400">Syarat Dokumen</h1>
             <div class=" w-10 h-2 rounded-xl bg-orange-500"></div>
             <div class="flex p-10 ">
-                <div class="basis-1/2 flex flex-col justify-center items-center">
+                <div class="basis-1/2 flex flex-col justify-center items-start">
                     <div class="">
                         <h1 class="text-2xl font-semibold slide-text" id="slide-text">Beasiswa LKPD</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero obcaecati suscipit consequatur sint
+                        <p id="slides-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero obcaecati suscipit consequatur sint
                             dolore,
                             natus veniam commodi modi ea nihil beatae asperiores consequuntur possimus non enim, accusantium
                             numquam
@@ -99,27 +93,39 @@
                     </div>
                 </div>
                 <div class="basis-1/2 flex justify-center">
-                    @include('component.document-slider', ['beasiswa' => $beasiswa],['isBenefit' => false])
+                    @include(
+                        'component.document-slider',
+                        ['beasiswa' => $beasiswa],
+                        ['isBenefit' => false]
+                    )
                 </div>
             </div>
 
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {    
+        document.addEventListener('DOMContentLoaded', function() {
             if (window.swiperInstance) {
                 const slideTexts = [
-                    @foreach ($beasiswa->benefitBeasiswa as $syarat)
-                        "{{ $syarat->benefit }}", // Store benefit text in an array
+                    @foreach ($beasiswa->syaratDokumen as $syarat)
+                        "{{ $syarat->dokumen }}", // Store benefit text in an array
                     @endforeach
                 ];
-    
+
+                const slideDescriptionTexts = [
+                    @foreach ($beasiswa->syaratDokumen as $syarat)
+                        "{{ $syarat->deskripsi_dokumen }}", // Store benefit text in an array
+                    @endforeach
+                ];
+
 
                 document.getElementById('slide-text').innerText = slideTexts[window.swiperInstance.realIndex];
+                document.getElementById('slides-description').innerText = slideDescriptionTexts[window.swiperInstance.realIndex];
 
-                window.swiperInstance.on('slideChange', function () {
-                    const currentIndex = window.swiperInstance.realIndex; 
+                window.swiperInstance.on('slideChange', function() {
+                    const currentIndex = window.swiperInstance.realIndex;
                     document.getElementById('slide-text').innerText = slideTexts[currentIndex];
+                    document.getElementById('slides-description').innerText = slideDescriptionTexts[currentIndex];
                 });
             } else {
                 console.error("Swiper instance not found.");

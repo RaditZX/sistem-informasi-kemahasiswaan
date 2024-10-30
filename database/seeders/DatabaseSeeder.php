@@ -16,5 +16,13 @@ class DatabaseSeeder extends Seeder
         // Panggil BeasiswaSeeder
         $this->call(BeasiswaSeeder::class);
         $this->call(UsersTableSeeder::class);
+        $this->call([
+            JurusanSeeder::class,
+        ]);
+
+        $this->call([
+            ProdiSeeder::class
+        ]);
+        $this->call(MahasiswaSeeder::class);
     }
 }

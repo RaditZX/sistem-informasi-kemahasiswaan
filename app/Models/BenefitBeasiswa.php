@@ -11,7 +11,11 @@ class BenefitBeasiswa extends Model
 
     protected $table = 'benefit_beasiswa';
 
-    protected $fillable = ['beasiswa_id', 'benefit'];
+    protected $fillable = ['beasiswa_id', 'benefit', 'deskripsi_benefit'];
+
+    public $incrementing = false; // Karena tidak menggunakan auto-increment ID
+    
+    protected $primaryKey = ['beasiswa_id', 'benefit']; // Menggunakan composite key
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()
