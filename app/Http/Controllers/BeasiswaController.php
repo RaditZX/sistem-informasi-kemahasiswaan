@@ -45,6 +45,26 @@ class BeasiswaController extends Controller
 
     }
 
+    public function getImportDataBeasiswa()
+    {
+        return view('pages.Beasiswa.import-data-beasiswa');
+    }
+
+    public function getDetailBeasiswaKipk()
+    {
+        return view('pages.Beasiswa.detail-beasiswa-kipk');
+    }
+
+    public function getDetailBeasiswaEksternal()
+    {
+        return view('pages.Beasiswa.detail-beasiswa-eksternal');
+    }
+
+    public function getListPengajuBeasiswa()
+    {
+        return view('pages.Beasiswa.list-pengaju-beasiswa');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
