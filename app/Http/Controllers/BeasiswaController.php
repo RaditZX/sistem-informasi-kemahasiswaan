@@ -10,6 +10,7 @@ use App\Models\BenefitBeasiswa;
 use App\Models\JenjangPendidikan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Kreait\Firebase\Factory;
 
 
 class BeasiswaController extends Controller
@@ -102,6 +103,7 @@ class BeasiswaController extends Controller
             'benefit_beasiswa.*' => 'string|max:255', 
             'jenjang_pendidikan' => 'array',
             'jenjang_pendidikan.*' => 'string|max:100', 
+            'file_1' => 'required|file'
         ], $messages);
     
         // menambahkan ipk_min ke array syarat
@@ -150,7 +152,6 @@ class BeasiswaController extends Controller
 
         // Assign URLs from $fileUrls array
         $linkPoster1 = $fileUrls[0] ?? null;
-
         
         // Simpan data beasiswa ke database dan dapatkan objek Beasiswa
         $beasiswa = Beasiswa::create([
@@ -162,9 +163,11 @@ class BeasiswaController extends Controller
             'kuota' => $validatedData['kuota_beasiswa'],
             'sumber' => $validatedData['sumber_beasiswa'],
             'tanggal_mulai' => $validatedData['tanggal_mulai'],
-            'tanggal_berakhir' => $validatedData['tanggal_berakhir']
+            'tanggal_berakhir' => $validatedData['tanggal_berakhir'],
+            'link_poster_1' => $linkPoster1
         ]); 
-            
+        
+       
         // Log the created scholarship data
         Log::info('Beasiswa created successfully: ', [$beasiswa]);
 

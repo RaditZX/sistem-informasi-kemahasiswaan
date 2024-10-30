@@ -257,7 +257,7 @@
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <div class="bg-white rounded-lg p-6">
-            <form action="{{ route('beasiswa.store') }}" method="POST">
+            <form action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <!-- Nama Beasiswa -->
@@ -500,10 +500,27 @@
                     <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
                     <div class="mb-4">  
                         <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <i class="fa-duotone fa-solid fa-paperclip"></i>
-                        <input type="file" id="poster_beasiswa" name="poster_beasiswa"class="hidden" disabled>
+                            <i class="fa-duotone fa-solid fa-paperclip"></i>
+                            <span id="file-name" class="ml-2 text-gray-600">Pilih file</span> <!-- Elemen untuk menampilkan nama file -->
+                            <input type="file" id="poster_beasiswa" name="file_1" class="hidden" onchange="displayFileName()">
                         </label>
                     </div>
+                    
+                    <script>
+                        function displayFileName() {
+                            const input = document.getElementById('poster_beasiswa');
+                            const fileNameDisplay = document.getElementById('file-name');
+                            
+                            if (input.files.length > 0) {
+                                // Mendapatkan nama file pertama
+                                const fileName = input.files[0].name;
+                                // Menampilkan nama file di dalam label
+                                fileNameDisplay.textContent = fileName;
+                            } else {
+                                fileNameDisplay.textContent = 'Pilih file'; // Tampilkan pesan default jika tidak ada file yang dipilih
+                            }
+                        }
+                    </script>
                     <div>
                         <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                     </div>
