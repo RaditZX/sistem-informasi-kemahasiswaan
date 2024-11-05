@@ -7,6 +7,8 @@ use App\Models\Beasiswa;
 use App\Models\SyaratBeasiswa;
 use App\Models\BenefitBeasiswa;
 use App\Models\SyaratDokumen;
+use App\Models\PosterBeasiswa;
+use App\Models\JenjangPendidikan;
 
 class BeasiswaSeeder extends Seeder
 {
@@ -29,7 +31,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'KEMENDIKBUD',
                 'tanggal_mulai' => '2024-01-01',
                 'tanggal_berakhir' => '2024-04-30',
-                'link_poster_1' => 'http://example.com/poster_lpdp.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_lpdp.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa Fulbright',
@@ -41,7 +43,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'USAID',
                 'tanggal_mulai' => '2024-02-01',
                 'tanggal_berakhir' => '2024-05-31',
-                'link_poster_1' => 'http://example.com/poster_fulbright.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_fulbright.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa Chevening',
@@ -53,7 +55,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'UK Government',
                 'tanggal_mulai' => '2024-03-01',
                 'tanggal_berakhir' => '2024-06-15',
-                'link_poster_1' => 'http://example.com/poster_chevening.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_chevening.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa Erasmus+',
@@ -65,7 +67,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'Erasmus+',
                 'tanggal_mulai' => '2024-05-01',
                 'tanggal_berakhir' => '2024-09-01',
-                'link_poster_1' => 'http://example.com/poster_erasmus.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_erasmus.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa MEXT',
@@ -77,7 +79,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'Ministry of Education, Japan',
                 'tanggal_mulai' => '2024-01-15',
                 'tanggal_berakhir' => '2024-04-15',
-                'link_poster_1' => 'http://example.com/poster_mext.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_mext.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa DAAD',
@@ -89,7 +91,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'DAAD',
                 'tanggal_mulai' => '2024-07-01',
                 'tanggal_berakhir' => '2024-10-30',
-                'link_poster_1' => 'http://example.com/poster_daad.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_daad.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa Sampoerna',
@@ -101,7 +103,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'Sampoerna Foundation',
                 'tanggal_mulai' => '2024-03-01',
                 'tanggal_berakhir' => '2024-08-01',
-                'link_poster_1' => 'http://example.com/poster_sampoerna.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_sampoerna.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa Mastercard Foundation',
@@ -113,7 +115,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'Mastercard Foundation',
                 'tanggal_mulai' => '2024-05-01',
                 'tanggal_berakhir' => '2024-10-01',
-                'link_poster_1' => 'http://example.com/poster_mastercard.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_mastercard.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa Australian Awards',
@@ -125,7 +127,7 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'Australian Government',
                 'tanggal_mulai' => '2024-01-01',
                 'tanggal_berakhir' => '2024-06-30',
-                'link_poster_1' => 'http://example.com/poster_australian.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_australian.jpg'], // Example link
             ],
             [
                 'nama_beasiswa' => 'Beasiswa Konrad Adenauer Stiftung',
@@ -137,14 +139,25 @@ class BeasiswaSeeder extends Seeder
                 'sumber' => 'Konrad Adenauer Stiftung',
                 'tanggal_mulai' => '2024-04-01',
                 'tanggal_berakhir' => '2024-08-01',
-                'link_poster_1' => 'http://example.com/poster_konrad.jpg', // Example link
+                'poster_links' => ['http://example.com/poster_konrad.jpg'], // Example link
             ],
         ];
 
 
         // Simpan data beasiswa dan ambil id yang disimpan
         foreach ($beasiswaData as $beasiswa) {
+            $posterLinks = $beasiswa['poster_links'];
+            unset($beasiswa['poster_links']); // Hapus 'poster_links' dari data utama beasiswa
+    
             $beasiswaEntry = Beasiswa::create($beasiswa);
+    
+            // Simpan data poster ke tabel PosterBeasiswa
+            foreach ($posterLinks as $link) {
+                PosterBeasiswa::create([
+                    'beasiswa_id' => $beasiswaEntry->id,
+                    'link_poster' => $link,
+                ]);
+            }
 
             // Data untuk tabel syarat_beasiswa
             SyaratBeasiswa::create([
@@ -180,7 +193,6 @@ class BeasiswaSeeder extends Seeder
                 'dokumen' => 'Surat rekomendasi.',
                 'deskripsi_dokumen' => 'Surat rekomendasi dari dosen atau atasan sebagai pendukung aplikasi beasiswa.',
             ]);
-
         }
     }
 }

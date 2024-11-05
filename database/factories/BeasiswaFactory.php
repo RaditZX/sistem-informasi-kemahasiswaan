@@ -32,10 +32,8 @@ class BeasiswaFactory extends Factory
             ]),
             'kuota' => $this->faker->numberBetween(1, 100),
             'jenis_beasiswa' => $this->faker->randomElement(['full', 'setengah']),
-            'tipe_beasiswa' => $this->faker->randomElement(['ekonomi','prestasi','external']),
             'tanggal_mulai' => $this->faker->date(),
             'tanggal_berakhir' => $this->faker->date(),
-            'link_poster_1' => 'http://example.com/poster_australian.jpg'
         ];
     }
 }

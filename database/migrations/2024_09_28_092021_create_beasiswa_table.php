@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('sumber');
             $table->date('tanggal_mulai');
             $table->date('tanggal_berakhir');
-            $table->text('link_poster_1');
             $table->timestamps();
         });
 
@@ -67,6 +66,15 @@ return new class extends Migration
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
+
+        Schema::create('poster_beasiswa', function(Blueprint $table){
+            $table->id();
+            $table->unsignedBigInteger('beasiswa_id');
+            $table->string('link_poster');
+            $table->timestamps();
+
+            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+        });
     }
 
     /**
@@ -78,6 +86,7 @@ return new class extends Migration
         Schema::dropIfExists('benefit_beasiswa');
         Schema::dropIfExists('syarat_beasiswa');
         Schema::dropIfExists('jenjang_pendidikan');
+        Schema::dropIfExists('poster_beasiswa');
         Schema::dropIfExists('beasiswa');
     }
 };
