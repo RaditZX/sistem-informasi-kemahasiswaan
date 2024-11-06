@@ -18,29 +18,39 @@ class PengajuanBeasiswaController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $name = $user->name; 
+        $name = $user->name;
         $email = $user->email;
         $role_id = $user->role_id;
 
         return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function listPengajuanStaff(){
+
+        $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+        ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+        ->join('users','mahasiswa.user_id', '=', 'users.id')
+        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->get();
+
+
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan'));
+    }
+
+    public function create(string $id)
     {
-        return view('pages.PengajuanBeasiswa.formPengajuan');
+        return view('pages.Beasiswa.pengajuan');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request,string $id)
     {
+
+
         $validatedData = $request->validate([
-            'beasiswa_id' => 'required|integer',
-            'nim' => 'required|string|max:9',
             'file_1' => 'required|file',
             'file_2' => 'required|file',
             'file_3' => 'required|file',
@@ -50,8 +60,8 @@ class PengajuanBeasiswaController extends Controller
 
 
         $pengajuanBeasiswa = PengajuanBeasiswa::create([
-            'nim' => $validatedData['nim'],
-            'beasiswa_id' => $validatedData['beasiswa_id'],
+            'nim' => 123456789,
+            'beasiswa_id' => $id,
             'tanggal_pengajuan' => now(),
         ]);
 
@@ -80,7 +90,7 @@ class PengajuanBeasiswaController extends Controller
             $pengajuanDokumenController->store($newDocumentRequest);
         }
 
-        return redirect()->route('pengajuan.create')->with('success', 'Item created successfully.');
+        return redirect()->route('pengajuan.create',['id'=>$id])->with('success', 'Item created successfully.');
     }
 
 

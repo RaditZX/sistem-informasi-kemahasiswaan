@@ -1,7 +1,6 @@
 @extends('layouts.filter')
 @extends('layouts.notification')
 @extends('layouts.main')
-@include
 @section('content')
     @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
 

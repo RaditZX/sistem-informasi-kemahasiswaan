@@ -31,8 +31,8 @@ class BeasiswaController extends Controller
 
     public function getListBeasiswaForStaff()
     {
-
-        return view('pages.Beasiswa.list-beasiswa-staff');
+        $beasiswa = Beasiswa::paginate(10);
+        return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa'));
 
     }
 
@@ -104,7 +104,7 @@ class BeasiswaController extends Controller
             'poster.required' => 'Poster Beasiswa wajib ada.',
             'poster.max' => 'Poster Beasiswa tidak boleh lebih dari 3.'
         ];
-        
+
         // Validasi input
         $validatedData = $request->validate([
             'nama_beasiswa' => 'required|string|max:255',
@@ -119,19 +119,19 @@ class BeasiswaController extends Controller
             'syarat_beasiswa' => 'array',
             'syarat_beasiswa.*' => 'string',
             'benefit_beasiswa' => 'array',
-            'benefit_beasiswa.*' => 'string|max:255', 
+            'benefit_beasiswa.*' => 'string|max:255',
             'jenjang_pendidikan' => 'array',
             'jenjang_pendidikan.*' => 'string|max:100', 
             'poster' => 'required|array|max:3',
             'poster.*' => 'image|mimes:jpeg,png,jpg'
         ], $messages);
-    
+
         // menambahkan ipk_min ke array syarat
         if (isset($validatedData['ipk_min'])) {
             // Anda bisa menambahkan ipk_min ke dalam syarat_beasiswa
             $validatedData['syarat_beasiswa'][] = $validatedData['ipk_min'];
         }
-        
+
         // jenis_waktu_beasiswa
         $tgl_mulai = strtotime($request->tanggal_mulai);
         $tgl_akhir = strtotime($request->tanggal_berakhir);
@@ -147,7 +147,7 @@ class BeasiswaController extends Controller
         } else {
             $jenis_waktu = 'last';
         }
-        
+
         // Handle file uploads
         $fileUrls = []; // Initialize an empty array to store file URLs
 
@@ -199,7 +199,7 @@ class BeasiswaController extends Controller
                 ]);
             }
         }
-    
+
         // Simpan benefit beasiswa, jika ada
         if (isset($validatedData['benefit_beasiswa'])) {
             foreach ($validatedData['benefit_beasiswa'] as $benefit) {
@@ -210,17 +210,17 @@ class BeasiswaController extends Controller
                 ]);
             }
         }
-    
+
         $syarat_dokumen = [
-            "Esai", 
-            "Surat Keterangan Penghasilan Orangtua", 
-            "Transkrip Nilai", 
-            "Surat Keterangan Tidak Mampu", 
-            "Proposal", 
-            "Sertifikat Prestasi", 
+            "Esai",
+            "Surat Keterangan Penghasilan Orangtua",
+            "Transkrip Nilai",
+            "Surat Keterangan Tidak Mampu",
+            "Proposal",
+            "Sertifikat Prestasi",
             "Surat Rekomendasi"
         ];
-    
+
         if (isset($validatedData['syarat_beasiswa'])) {
             foreach ($validatedData['syarat_beasiswa'] as $syarat){
                 foreach ($syarat_dokumen as $dokumen){
@@ -231,10 +231,10 @@ class BeasiswaController extends Controller
                             'deskripsi_dokumen' => $dokumen
                         ]);
                     }
-                } 
+                }
             }
         }
-    
+
         // Simpan jenjang pendidikan, jika ada
         if (isset($validatedData['jenjang_pendidikan'])) {
             foreach ($validatedData['jenjang_pendidikan'] as $jenjang){
@@ -244,10 +244,10 @@ class BeasiswaController extends Controller
                 ]);
             }
         }
-    
+
         return redirect('/beasiswa')->with('success', 'Beasiswa berhasil ditambahkan');
     }
-    
+
 
     /**
      * Display the specified resource.
@@ -307,7 +307,7 @@ class BeasiswaController extends Controller
             'ipk_min.max' => 'IPK minimal tidak boleh lebih dari 4.',
             'poster.max' => 'Poster Beasiswa tidak boleh lebih dari 3.'
         ];
-        
+
         // Validasi input
         $validatedData = $request->validate([
             'nama_beasiswa' => 'required|string|max:255',
@@ -322,7 +322,7 @@ class BeasiswaController extends Controller
             'syarat_beasiswa' => 'array',
             'syarat_beasiswa.*' => 'string',
             'benefit_beasiswa' => 'array',
-            'benefit_beasiswa.*' => 'string|max:255', 
+            'benefit_beasiswa.*' => 'string|max:255',
             'jenjang_pendidikan' => 'array',
             'jenjang_pendidikan.*' => 'string|max:100', 
             'poster' => 'array|max:3',
@@ -350,7 +350,7 @@ class BeasiswaController extends Controller
         } else {
             $jenis_waktu = 'last';
         }
-    
+
         $beasiswa = Beasiswa::findOrFail($id);
         $beasiswa->fill([
             'nama_beasiswa' => $validatedData['nama_beasiswa'],

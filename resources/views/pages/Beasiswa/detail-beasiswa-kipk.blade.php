@@ -3,7 +3,7 @@
 @extends('layouts.main')
 
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'Beasiswa KIPK', 'id' => null])
 
     <div class="flex flex-row m-5 p-5 mr-40 ml-40 ">
         <div class="basis-1/2">
@@ -20,20 +20,20 @@
                         KIP - KULIAH
                     </p>
                 </div>
-                <div class="basis-1/2 flex justify-center items-center">
-                    <p class="font-normal text-lg">
+                <div class="basis-1/2 flex justify-center items-center mb-5">
+                    <p class="font-normal text-lg mb-5">
                         Kartu Indonesia Pintar Kuliah Merdeka 2024
                     </p>
                 </div>   
             </div>
         </div>
     </div>
-    <div class="flex flex-row items-center justify-center mt-14">
+    <div class="flex flex-row items-center justify-center   ">
         <p class="font-bold text-lg text-blue-900">
             Kartu Indonesia Pintar Kuliah
         </p>
     </div>
-    <div class="flex flex-col items-start justify-left ml-10 mr-10 gap-5">
+    <div class="flex flex-col items-start justify-left ml-10 mr-10 gap-5 mt-5">
         <p class="font-normal text-sm text-black">
             Pemerintah Indonesia terus berkomitmen untuk fokus meningkatkan pembangunan Sumberdaya Manusia melalui berbagai upaya cerdas. Kartu Indonesia Pintar Kuliah (KIP-Kuliah) 
             adalah salah satu upaya untuk membantu asa para siswa yang memiliki keterbatasan ekonomi tetapi berprestasi untuk melanjutkan studi di perguruan tinggi.
@@ -47,15 +47,12 @@
             Pastikan NISN, NPSN dan NIK dari calon peserta KIP Kuliah 2023 valid, sesuai data yang tercatat di Data Pokok Pendidikan (Dapodik), Kemendikbudristek.
         </p>
     </div>
-    <div class="flex flex-row md:flex-col gap-5 mt-5 ml-10 mr-10">
+    <div class="flex flex-row md:flex-col gap-5 mt-5 ml-10 mr-10 mb-10">
         <div class="text-center bg-orange-500 rounded-lg shadow-lg p-2 basis-1/3 flex items-center justify-center">
             <p class="text-white">Daftar KIP - Kuliah</p>
         </div>
         <div class="border border-orange-500 rounded-lg text-center p-2 basis-1/3 flex items-center justify-center">
             <p class="text-orange-500">Download Panduan</p>
-        </div>
-        <div class="text-center bg-orange-500 rounded-lg shadow-lg p-2 basis-1/3 flex items-center justify-center">
-            <p class="text-white">Kunjungi Web Resmi</p>
         </div>
     </div>
 @endsection    
