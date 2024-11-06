@@ -32,15 +32,25 @@
                                         </div>
                                         <div class="basis-1/2">
                                             <div
-                                                class="rounded-full max-w-full lg:w-full h-16 border-2 flex items-center px-3">
+                                                class="rounded-full max-w-full lg:w-full h-16 border-2 flex items-center justify-between px-3">
                                                 <div class="flex -space-x-6">
                                                     @for ($i = 0; $i < 5; $i++)
                                                         <div class="w-14 h-14">
-                                                            <img class="rounded-full w-full h-full object-cover border-2 border-white" src="https://cdn2.f-cdn.com/files/download/38545966/4bce6b.jpg" alt="">
+                                                            <img class="rounded-full w-full h-full object-cover border-2 border-white"
+                                                                src="https://cdn2.f-cdn.com/files/download/38545966/4bce6b.jpg"
+                                                                alt="">
                                                         </div>
                                                     @endfor
                                                 </div>
+                                                <div>
+                                                    <p class="text-3xl mr-3">+7</p>
+                                                </div>
 
+                                            </div>
+
+                                            <div
+                                            class="rounded-3xl max-w-full lg:w-full h-10 border-2 flex items-center justify-center px-3 mt-5">
+                                                <p class="text-l ">Lihat lebih banyak</p>
                                             </div>
                                         </div>
                                     </div>
@@ -65,18 +75,11 @@
                         class="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border p-4">
                         <div class="relative h-full overflow-hidden bg-cover rounded-xl"
                             style="background-image: url('./assets/img/ivancik.jpg')">
-                            <span
-                                class="absolute top-0 left-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-gray-900 to-slate-800 opacity-80"></span>
+                            <span class="absolute top-0 left-0 w-full h-full bg-center bg-cover bg-white opacity-80"></span>
                             <div class="relative z-10 flex flex-col flex-auto h-full p-4">
-                                <h5 class="pt-2 mb-6 font-bold text-white">Work with the rockets</h5>
-                                <p class="text-white">Wealth creation is an evolutionarily recent positive-sum game. It is
-                                    all about who take the opportunity first.</p>
-                                <a class="mt-auto mb-0 text-sm font-semibold leading-normal text-white group"
-                                    href="javascript:;">
-                                    Read More
-                                    <i
-                                        class="fas fa-arrow-right ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
-                                </a>
+                                <div>
+                                    <canvas id="myChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,10 +145,9 @@
                             <div class="flex flex-row -mx-3">
                                 <div class="flex-none w-2/3 max-w-full px-3">
                                     <div>
-                                        <p class="mb-0 font-sans text-sm font-semibold leading-normal">New Clients</p>
+                                        <p class="mb-0 font-sans text-sm font-semibold leading-normal">Total Beasiswa</p>
                                         <h5 class="mb-0 font-bold">
-                                            +3,462
-                                            <span class="text-sm leading-normal text-red-600 font-weight-bolder">-2%</span>
+                                            3,462
                                         </h5>
                                     </div>
                                 </div>
@@ -168,10 +170,9 @@
                             <div class="flex flex-row -mx-3">
                                 <div class="flex-none w-2/3 max-w-full px-3">
                                     <div>
-                                        <p class="mb-0 font-sans text-sm font-semibold leading-normal">Sales</p>
+                                        <p class="mb-0 font-sans text-sm font-semibold leading-normal">Total Penerima Beasiswa</p>
                                         <h5 class="mb-0 font-bold">
-                                            $103,430
-                                            <span class="text-sm leading-normal font-weight-bolder text-lime-500">+5%</span>
+                                            103,430
                                         </h5>
                                     </div>
                                 </div>
@@ -195,8 +196,8 @@
                 <!-- card 1 -->
 
                 <div class="w-full max-w-full px-3 mt-0 mb-6 md:mb-0 md:w-1/2 md:flex-none lg:w-2/3 lg:flex-none">
-                        <div
-                            class="border-black/12.5 shadow-soft-xl relative flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
+                    <div
+                        class="border-black/12.5 shadow-soft-xl relative flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
 
                         <div class="flex-auto p-6 px-0 pb-2">
                             <div class="overflow-x-auto">
@@ -219,32 +220,36 @@
                                     </thead>
                                     <tbody>
                                         @for ($i = 0; $i < 5; $i++)
-                                        <tr>
-                                            <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap">
-                                                <div class="flex px-2 py-1">
-                                                    <div class="w-10 h-10">
-                                                            <img class="rounded-full w-full h-full object-cover border-2 border-white" src="https://clipground.com/images/logo-tut-wuri-handayani-png-3.jpg"
-                                                            alt="xd" />
+                                            <tr>
+                                                <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap">
+                                                    <div class="flex px-2 py-1">
+                                                        <div class="w-10 h-10">
+                                                            <img class="rounded-full w-full h-full object-cover border-2 border-white"
+                                                                src="https://clipground.com/images/logo-tut-wuri-handayani-png-3.jpg"
+                                                                alt="xd" />
+                                                        </div>
+                                                        <div class="flex flex-col justify-center ml-3">
+                                                            <h6 class="mb-0 text-sm leading-normal">Soft UI XD Version</h6>
+                                                        </div>
                                                     </div>
-                                                    <div class="flex flex-col justify-center ml-3">
-                                                        <h6 class="mb-0 text-sm leading-normal">Soft UI XD Version</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap">
-                                                <p>2024/10/10</p>
-                                            </td>
-                                            <td
-                                                class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap">
-                                                <p>2024/10/10</p>
+                                                </td>
+                                                <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap">
+                                                    <p>2024/10/10</p>
+                                                </td>
+                                                <td
+                                                    class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap">
+                                                    <p>2024/10/10</p>
 
-                                            </td>
-                                            <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap flex justify-center ">
-                                               <div class="w-3/4 rounded-full h-10 flex justify-center border-2 bg-green-500">
-                                                    <p class=" font-medium text-white flex items-center text-sm">Dibuka</p>
-                                               </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td
+                                                    class="p-2 align-middle bg-transparent border-b whitespace-nowrap flex justify-center ">
+                                                    <div
+                                                        class="w-3/4 rounded-full h-10 flex justify-center border-2 bg-green-500">
+                                                        <p class=" font-medium text-white flex items-center text-sm">Dibuka
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         @endfor
                                     </tbody>
                                 </table>
@@ -258,141 +263,14 @@
                 <div class="w-full max-w-full px-3 md:w-1/2 md:flex-none lg:w-1/3 lg:flex-none">
                     <div
                         class="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
-                        <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid bg-white p-6 pb-0">
-                            <h6>Orders overview</h6>
-                            <p class="text-sm leading-normal">
-                                <i class="fa fa-arrow-up text-lime-500"></i>
-                                <span class="font-semibold">24%</span> this month
-                            </p>
-                        </div>
-                        <div class="flex-auto p-4">
-                            <div
-                                class="before:border-r-solid relative before:absolute before:top-0 before:left-4 before:h-full before:border-r-2 before:border-r-slate-100 before:content-[''] before:lg:-ml-px">
-                                <div class="relative mb-4 mt-0 after:clear-both after:table after:content-['']">
-                                    <span
-                                        class="w-6.5 h-6.5 text-base absolute left-4 z-10 inline-flex -translate-x-1/2 items-center justify-center rounded-full bg-white text-center font-semibold">
-                                        <i
-                                            class="relative z-10 leading-none text-transparent ni ni-bell-55 leading-pro bg-gradient-to-tl from-green-600 to-lime-400 bg-clip-text fill-transparent"></i>
-                                    </span>
-                                    <div class="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto">
-                                        <h6 class="mb-0 text-sm font-semibold leading-normal text-slate-700">$2400, Design
-                                            changes</h6>
-                                        <p class="mt-1 mb-0 text-xs font-semibold leading-tight text-slate-400">22 DEC 7:20
-                                            PM</p>
-                                    </div>
-                                </div>
-                                <div class="relative mb-4 after:clear-both after:table after:content-['']">
-                                    <span
-                                        class="w-6.5 h-6.5 text-base absolute left-4 z-10 inline-flex -translate-x-1/2 items-center justify-center rounded-full bg-white text-center font-semibold">
-                                        <i
-                                            class="relative z-10 leading-none text-transparent ni ni-html5 leading-pro bg-gradient-to-tl from-red-600 to-rose-400 bg-clip-text fill-transparent"></i>
-                                    </span>
-                                    <div class="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto">
-                                        <h6 class="mb-0 text-sm font-semibold leading-normal text-slate-700">New order
-                                            #1832412</h6>
-                                        <p class="mt-1 mb-0 text-xs font-semibold leading-tight text-slate-400">21 DEC 11
-                                            PM</p>
-                                    </div>
-                                </div>
-                                <div class="relative mb-4 after:clear-both after:table after:content-['']">
-                                    <span
-                                        class="w-6.5 h-6.5 text-base absolute left-4 z-10 inline-flex -translate-x-1/2 items-center justify-center rounded-full bg-white text-center font-semibold">
-                                        <i
-                                            class="relative z-10 leading-none text-transparent ni ni-cart leading-pro bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text fill-transparent"></i>
-                                    </span>
-                                    <div class="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto">
-                                        <h6 class="mb-0 text-sm font-semibold leading-normal text-slate-700">Server
-                                            payments for April</h6>
-                                        <p class="mt-1 mb-0 text-xs font-semibold leading-tight text-slate-400">21 DEC 9:34
-                                            PM</p>
-                                    </div>
-                                </div>
-                                <div class="relative mb-4 after:clear-both after:table after:content-['']">
-                                    <span
-                                        class="w-6.5 h-6.5 text-base absolute left-4 z-10 inline-flex -translate-x-1/2 items-center justify-center rounded-full bg-white text-center font-semibold">
-                                        <i
-                                            class="relative z-10 leading-none text-transparent ni ni-credit-card leading-pro bg-gradient-to-tl from-red-500 to-yellow-400 bg-clip-text fill-transparent"></i>
-                                    </span>
-                                    <div class="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto">
-                                        <h6 class="mb-0 text-sm font-semibold leading-normal text-slate-700">New card added
-                                            for order #4395133</h6>
-                                        <p class="mt-1 mb-0 text-xs font-semibold leading-tight text-slate-400">20 DEC 2:20
-                                            AM</p>
-                                    </div>
-                                </div>
-                                <div class="relative mb-4 after:clear-both after:table after:content-['']">
-                                    <span
-                                        class="w-6.5 h-6.5 text-base absolute left-4 z-10 inline-flex -translate-x-1/2 items-center justify-center rounded-full bg-white text-center font-semibold">
-                                        <i
-                                            class="relative z-10 leading-none text-transparent ni ni-key-25 leading-pro bg-gradient-to-tl from-purple-700 to-pink-500 bg-clip-text fill-transparent"></i>
-                                    </span>
-                                    <div class="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto">
-                                        <h6 class="mb-0 text-sm font-semibold leading-normal text-slate-700">Unlock
-                                            packages for development</h6>
-                                        <p class="mt-1 mb-0 text-xs font-semibold leading-tight text-slate-400">18 DEC 4:54
-                                            AM</p>
-                                    </div>
-                                </div>
-                                <div class="relative mb-0 after:clear-both after:table after:content-['']">
-                                    <span
-                                        class="w-6.5 h-6.5 text-base absolute left-4 z-10 inline-flex -translate-x-1/2 items-center justify-center rounded-full bg-white text-center font-semibold">
-                                        <i
-                                            class="relative z-10 leading-none text-transparent ni ni-money-coins leading-pro bg-gradient-to-tl from-gray-900 to-slate-800 bg-clip-text fill-transparent"></i>
-                                    </span>
-                                    <div class="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto">
-                                        <h6 class="mb-0 text-sm font-semibold leading-normal text-slate-700">New order
-                                            #9583120</h6>
-                                        <p class="mt-1 mb-0 text-xs font-semibold leading-tight text-slate-400">17 DEC</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div style="height: 100%; display: flex; align-items: stretch;">
+                            <canvas id="myChart1" style="height: 100%; width: 100%;"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <footer class="pt-4">
-                <div class="w-full px-6 mx-auto">
-                    <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
-                        <div class="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
-                            <div class="text-sm leading-normal text-center text-slate-500 lg:text-left">
-                                ©
-                                <script>
-                                    document.write(new Date().getFullYear() + ",");
-                                </script>
-                                made with <i class="fa fa-heart"></i> by
-                                <a href="https://www.creative-tim.com" class="font-semibold text-slate-700"
-                                    target="_blank">Creative Tim</a>
-                                for a better web.
-                            </div>
-                        </div>
-                        <div class="w-full max-w-full px-3 mt-0 shrink-0 lg:w-1/2 lg:flex-none">
-                            <ul class="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
-                                <li class="nav-item">
-                                    <a href="https://www.creative-tim.com"
-                                        class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-soft-in-out text-slate-500"
-                                        target="_blank">Creative Tim</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.creative-tim.com/presentation"
-                                        class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-soft-in-out text-slate-500"
-                                        target="_blank">About Us</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://creative-tim.com/blog"
-                                        class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-soft-in-out text-slate-500"
-                                        target="_blank">Blog</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.creative-tim.com/license"
-                                        class="block px-4 pt-0 pb-1 pr-0 text-sm font-normal transition-colors ease-soft-in-out text-slate-500"
-                                        target="_blank">License</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+
         </div>
         <!-- end cards -->
         </main>
@@ -494,4 +372,97 @@
             </div>
         </div>
     </body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [300, 50, 100, 80],
+                    backgroundColor: [
+                        'rgb(0, 170, 0)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(255, 99, 132)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        color: '#333',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        align: 'end',
+                        anchor: 'end',
+                        offset: 10,
+                        formatter: (value, context) => {
+                            const customLabels = ['Diterima', 'Diproses', 'Direvisi', 'Ditolak'];
+                            return `${customLabels[context.dataIndex]}: ${value}`; // Custom label and value
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        const ctx1 = document.getElementById('myChart1').getContext('2d');
+
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024'], // Example labels
+                datasets: [{
+                    // Hide the label by not including it
+                    data: [65, 59, 80, 81],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hide the legend
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    </script>
 @endsection

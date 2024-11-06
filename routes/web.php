@@ -39,9 +39,10 @@ Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuB
 
 
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
-    Route::get('/pengajuan/create',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
+    Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
     Route::post('/pengajuan/store/{id}', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
     Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
+    Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
 });
 
 Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
@@ -56,7 +57,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create']);
+
 
 
 // ========================================================================================

@@ -25,9 +25,19 @@ class PengajuanBeasiswaController extends Controller
         return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
+    public function listPengajuanStaff(){
+
+        $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+        ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+        ->join('users','mahasiswa.user_id', '=', 'users.id')
+        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->get();
+
+
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan'));
+    }
+
     public function create(string $id)
     {
         return view('pages.Beasiswa.pengajuan');
