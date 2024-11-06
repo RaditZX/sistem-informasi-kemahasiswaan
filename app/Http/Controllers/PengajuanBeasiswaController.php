@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PengajuanBeasiswa;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\FileController;
+use App\Models\Mahasiswa;
+use App\Models\User;
 
 class PengajuanBeasiswaController extends Controller
 {
@@ -28,10 +30,13 @@ class PengajuanBeasiswaController extends Controller
 
     public function listPengajuanStaff(){
 
+        $user_id = Auth::id();
+
         $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
         ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
         ->join('users','mahasiswa.user_id', '=', 'users.id')
-        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.id','pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->where('user_id', $user_id)
         ->get();
 
 
@@ -176,4 +181,23 @@ class PengajuanBeasiswaController extends Controller
     {
         //
     }
+
+    public function showTracking(string $id) {
+        // Get data (Mahasiswa)
+        $user_id = Auth::id();
+        $userData = User::join('mahasiswa', 'users.id', 'mahasiswa.user_id')
+                        ->select('users.email', 'mahasiswa.nim')
+                        ->where('users.id', $user_id)
+                        ->get();
+    
+        // Get detail data of pengajuan beasiswa
+        $dataPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+        ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+        ->join('users','mahasiswa.user_id', '=', 'users.id')
+        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.id','pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->where('pengajuan_beasiswa.id', $id)
+        ->get();
+    
+        return view('pages.Pengajuan.tracking-pengajuan', compact('dataPengajuan', 'userData'));
+    }    
 }

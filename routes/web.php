@@ -43,6 +43,7 @@ Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::post('/pengajuan/store/{id}', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
     Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
     Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
+    Route::get('/tracking-pengajuan/{id}', [PengajuanBeasiswaController::class, 'showTracking'])->name('pengajuan.tracking');
 });
 
 Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
@@ -55,15 +56,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/form-beasiswa', function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
-});
-
-
-
-
-// ========================================================================================
-// PENGAJUAN ROUTES =======================================================================
-Route::middleware('auth')->group(function () {
-    Route::resource('tracking-pengajuan', PengajuanBeasiswaController::class);
 });
 
 // ========================================================================================
