@@ -20,43 +20,45 @@ class BeasiswaController extends Controller
      */
     public function index(Request $request)
     {
-        // Start with the base query for Beasiswa model
         $query = Beasiswa::query();
 
-            // Filter by search term if it is provided
+        // Filter `search` berdasarkan `nama_beasiswa`
         if ($request->has('search') && $request->input('search') !== '') {
             $searchTerm = $request->input('search');
-            $query->where('nama_beasiswa', 'like', "%{$searchTerm}%"); // Filter by 'nama_beasiswa'
+            $query->where('nama_beasiswa', 'like', "%{$searchTerm}%");
         }
 
-        // Filter by jenis_beasiswa (half or full)
+        // Filter `jenis_beasiswa`
         if ($request->has('jenis_beasiswa') && !empty($request->input('jenis_beasiswa'))) {
             $jenisBeasiswa = $request->input('jenis_beasiswa');
-
-            // Apply filters based on selected checkboxes
             foreach ($jenisBeasiswa as $jenis) {
                 $query->orWhere('jenis_beasiswa', $jenis);
             }
         }
 
-        // Filter by tipe_beasiswa (e.g., kipk, internal, eksternal)
+        // Filter `tipe_beasiswa`
         if ($request->has('tipe_beasiswa') && !empty($request->input('tipe_beasiswa'))) {
-            $tipeBeasiswa = $request->input('tipe_beasiswa');
-
-            // Filter by selected tipe_beasiswa values
-            $query->where('tipe_beasiswa', $tipeBeasiswa);
+            $query->where('tipe_beasiswa', $request->input('tipe_beasiswa'));
         }
 
-        // Execute the query and paginate the results
-        $beasiswa = $query->paginate(8); // Paginate with 8 items per page
+        // Filter `jurusan` dalam `syarat_beasiswa`
+        if ($request->has('jurusan') && !empty($request->input('jurusan'))) {
+            $jurusan = $request->input('jurusan');
+            $query->whereHas('syaratBeasiswa', function ($q) use ($jurusan) {
+                $q->where('syarat', 'like', "%{$jurusan}%");
+            });
+        }
 
-        // Get user data
+        // Jalankan query dan paginasi hasilnya
+        $beasiswa = $query->paginate(8);
+
+        // Data pengguna untuk view
         $user = Auth::user();
         $name = $user->name;
         $email = $user->email;
         $role_id = $user->role_id;
 
-        // Pass data to the view
+        // Kirim data ke view
         return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa'));
     }
     public function getListBeasiswaForStaff()

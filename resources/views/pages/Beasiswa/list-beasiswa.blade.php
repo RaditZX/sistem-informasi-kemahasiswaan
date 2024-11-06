@@ -93,6 +93,22 @@
                                         <option value="eksternal">Eksternal</option>
                                     </select>
                                 </div>
+                                <div>
+                                    <label for="jenjang_pendidikan">Jenjang Pendidikan:</label>
+                                    <select name="jenjang_pendidikan", id="jenjang_pendidikan">
+                                        <option value="">Select Education Level</option>
+                                        <option value="D3">D3</option>
+                                        <option value="S1">D4</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="jurusan">Jurusan Khusus:</label>
+                                    <select name="jurusan" id="jurusan">
+                                        <option value="">Pilih Jurusan</option>
+                                        <option value="Teknik Informatika">Teknik Informatika</option>
+                                        <option value="Teknik Sipil">Teknik Sipil</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
