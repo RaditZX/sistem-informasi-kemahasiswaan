@@ -21,10 +21,12 @@
                 </div>
             </div>
             <div class="relative flex items-center">    
-                <i class="fas fa-plus absolute left-3 text-white"></i>         
-                <div class="pl-10 pr-4 py-2 bg-orange-500 rounded shadow-lg p-2 w-auto cursor-pointer">
-                    <p class="text-xs sm:text-base text-white">Tambah</p>
-                </div>
+                <i class="fas fa-plus absolute left-3 text-white"></i>
+                <a href="/beasiswa/create">      
+                    <div class="pl-10 pr-4 py-2 bg-orange-500 rounded shadow-lg p-2 w-auto cursor-pointer">
+                        <p class="text-xs sm:text-base text-white">Tambah</p>
+                    </div>
+                 </a>   
             </div>
     </div>
     <div class="overflow-x-auto">

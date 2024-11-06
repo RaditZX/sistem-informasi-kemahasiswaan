@@ -2,7 +2,7 @@
 @extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'List Pengaju Beasiswa', 'id' => null])
 
 
 
@@ -30,7 +30,6 @@
                     <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Penyelenggara</th>
                     <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Tanggal Pengajuan</th>
                     <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Status</th>
-                    <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Action</th>
                     <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700"></th>
                 </tr>
             </thead>
