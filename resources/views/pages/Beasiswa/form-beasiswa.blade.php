@@ -2,7 +2,7 @@
 @section('content')
     @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null])
 
-    
+
 @if ($beasiswa != null)
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
@@ -36,20 +36,20 @@
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Beasiswa</label>
                         <textarea id="deskripsi" name="deskripsi" rows="4" class="mt-1 block w-full px-3 py-2 border @error('deskripsi') border-red-500 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"><?php echo old('deskripsi', $beasiswa->deskripsi)?></textarea>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <p class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</p>
                             <div class="mb-4">
                                 <label for="D3" class="flex items-center space-x-3">
-                                    <input type="checkbox" id="D3" name="jenjang_pendidikan[]" value="D3" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                    <input type="checkbox" id="D3" name="jenjang_pendidikan[]" value="D3" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                     @checked(in_array("D3", old('jenjang_pendidikan', $jenjang)))>
                                     <span class="text-gray-600">D3</span>
                                 </label>
                             </div>
                             <div class="mb-4">
                                 <label for="D4" class="flex items-center space-x-3">
-                                    <input type="checkbox" id="D4" name="jenjang_pendidikan[]" value="D4" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                    <input type="checkbox" id="D4" name="jenjang_pendidikan[]" value="D4" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                     @checked(in_array("D4",old('jenjang_pendidikan', $jenjang)))>
                                     <span class="text-gray-600">D4</span>
                                 </label>
@@ -121,9 +121,9 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
                 </div>
-                
+
                 <!-- Kuota Beasiswa -->
                 <div>
                     <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
@@ -141,14 +141,14 @@
                     <div>
                         <div class="space-y-2">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" 
+                                <input type="checkbox"
                                        class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                        onclick="toggleIpkMin()"
-                                       id="ipk_checkbox" 
+                                       id="ipk_checkbox"
                                        @checked(collect(old('ipk_min', $syarat))->contains(fn($s) => is_numeric($s)))>
                                 <label>IPK</label>
-                                <input type="text" id="IPK_min" name="ipk_min" 
-                                       class="ml-2 w-16 border rounded p-1 text-center" 
+                                <input type="text" id="IPK_min" name="ipk_min"
+                                       class="ml-2 w-16 border rounded p-1 text-center"
                                        value="{{ collect(old('ipk_min', $syarat))->first(fn($s) => is_numeric($s)) }}"
                                        disabled>
                                 @error('ipk_min')
@@ -160,25 +160,25 @@
                                     // Dapatkan elemen checkbox dan input IPK_min
                                     const checkbox = document.getElementById('ipk_checkbox');
                                     const ipkMinInput = document.getElementById('IPK_min');
-                            
+
                                     // Aktifkan input IPK_min hanya jika checkbox dicentang
                                     ipkMinInput.disabled = !checkbox.checked;
                                 }
                             </script>
-                            
-                            
+
+
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="transkrip_nilai" name="syarat_beasiswa[]" value="Transkrip Nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" id="transkrip_nilai" name="syarat_beasiswa[]" value="Transkrip Nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Transkrip Nilai", old('syarat_beasiswa', $syarat)))>
                                 <label>Transkrip Nilai</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="proposal" name="syarat_beasiswa[]" value="Proposal" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" id="proposal" name="syarat_beasiswa[]" value="Proposal" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Proposal", old('syarat_beasiswa', $syarat)))>
                                 <label>Proposal</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="esai" name="syarat_beasiswa[]" value="Esai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" id="esai" name="syarat_beasiswa[]" value="Esai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Esai", old('syarat_beasiswa', $syarat)))>
                                 <label>Esai</label>
                             </div>
@@ -188,22 +188,22 @@
                     <div>
                         <div class="space-y-2">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="sertifikat_prestasi" name="syarat_beasiswa[]" value="Sertifikat Prestasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" id="sertifikat_prestasi" name="syarat_beasiswa[]" value="Sertifikat Prestasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Sertifikat Prestasi", old('syarat_beasiswa', $syarat)))>
                                 <label>Sertifikat Prestasi</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="suket_penghasilan" name="syarat_beasiswa[]" value="Surat Keterangan Penghasilan Orangtua" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" id="suket_penghasilan" name="syarat_beasiswa[]" value="Surat Keterangan Penghasilan Orangtua" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Surat Keterangan Penghasilan Orangtua", old('syarat_beasiswa', $syarat)))>
                                 <label>Surat Keterangan Penghasilan Orangtua</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="suket_tidakmampu" name="syarat_beasiswa[]" value="Surat Keterangan Tidak Mampu" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" id="suket_tidakmampu" name="syarat_beasiswa[]" value="Surat Keterangan Tidak Mampu" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Surat Keterangan Tidak Mampu", old('syarat_beasiswa', $syarat)))>
                                 <label>Surat Keterangan Tidak Mampu</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="suket_rekomendasi" name="syarat_beasiswa[]" value="Surat Rekomendasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" id="suket_rekomendasi" name="syarat_beasiswa[]" value="Surat Rekomendasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Surat Rekomendasi", old('syarat_beasiswa', $syarat)))>
                                 <label>Surat Rekomendasi</label>
                             </div>
@@ -215,22 +215,22 @@
                         <h2 class="text-lg font-bold mb-4">Benefit Beasiswa</h2>
                         <div class="space-y-2">
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" name="benefit_beasiswa[]" value="Biaya Kuliah Penuh" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Biaya Kuliah Penuh" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Biaya Kuliah Penuh", old('benefit_beasiswa', $benefit)))>
                                 <label>Biaya Kuliah Penuh</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" name="benefit_beasiswa[]" value="Tunjangan Biaya Hidup" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Tunjangan Biaya Hidup" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Tunjangan Biaya Hidup", old('benefit_beasiswa', $benefit)))>
                                 <label>Tunjangan Biaya Hidup</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" name="benefit_beasiswa[]" value="Buku dan Perlengkapan Akademik" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Buku dan Perlengkapan Akademik" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Buku dan Perlengkapan Akademik", old('benefit_beasiswa', $benefit)))>
                                 <label>Buku dan Perlengkapan Akademik</label>
                             </div>
                             <div class="flex items-center space-x-3">
-                                <input type="checkbox" name="benefit_beasiswa[]" value="Internship" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" 
+                                <input type="checkbox" name="benefit_beasiswa[]" value="Internship" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"
                                 @checked(in_array("Internship", old('benefit_beasiswa', $benefit)))>
                                 <label>Internship</label>
                             </div>
@@ -239,7 +239,7 @@
                 </div>
                 <br>
                 <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
-                <div class="mb-4">  
+                <div class="mb-4">
                     <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <i class="fa-duotone fa-solid fa-paperclip"></i>
                     <input type="file" id="poster_beasiswa" name="poster_beasiswa"class="hidden" disabled>
@@ -263,10 +263,10 @@
                         <!-- Nama Beasiswa -->
                         <div class="mb-4">
                             <label for="nama_beasiswa" class="block text-sm font-medium text-gray-700">Nama Beasiswa</label>
-                            <input 
-                                type="text" 
-                                id="nama_beasiswa" 
-                                name="nama_beasiswa" 
+                            <input
+                                type="text"
+                                id="nama_beasiswa"
+                                name="nama_beasiswa"
                                 placeholder="Nama Beasiswa"
                                 value="{{old('nama_beasiswa')}}"
                                 class="block w-full border @error('nama_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
@@ -275,7 +275,7 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
-                        
+
 
                         <!-- Sumber Beasiswa -->
                         <div>
@@ -290,14 +290,14 @@
 
                     <div class="mb-4">
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Beasiswa</label>
-                        <textarea id="deskripsi" name="deskripsi" rows="4" 
+                        <textarea id="deskripsi" name="deskripsi" rows="4"
                                   class="mt-1 block w-full px-3 py-2 border @error('deskripsi') border-red-500 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    
-                    
+
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <p class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</p>
@@ -321,22 +321,22 @@
                             @enderror
                             <div class="mb-4">
                                 <label for="full" class="flex items-center space-x-3">
-                                    <input type="radio" id="full" name="jenis_beasiswa" value="full" 
-                                           class="form-radio h-5 w-5 text-blue-500 rounded-full @error('jenis_beasiswa') border-red-500 @enderror focus:ring-blue-500" 
+                                    <input type="radio" id="full" name="jenis_beasiswa" value="full"
+                                           class="form-radio h-5 w-5 text-blue-500 rounded-full @error('jenis_beasiswa') border-red-500 @enderror focus:ring-blue-500"
                                            {{ old('jenis_beasiswa') == 'full' ? 'checked' : '' }}>
                                     <span class="text-gray-600">Full</span>
                                 </label>
                             </div>
                             <div class="mb-4">
                                 <label for="half" class="flex items-center space-x-3">
-                                    <input type="radio" id="half" name="jenis_beasiswa" value="setengah" 
-                                           class="form-radio h-5 w-5 text-blue-500 rounded-full @error('jenis_beasiswa') border-red-500 @enderror focus:ring-blue-500" 
+                                    <input type="radio" id="half" name="jenis_beasiswa" value="setengah"
+                                           class="form-radio h-5 w-5 text-blue-500 rounded-full @error('jenis_beasiswa') border-red-500 @enderror focus:ring-blue-500"
                                            {{ old('jenis_beasiswa') == 'setengah' ? 'checked' : '' }}>
                                     <span class="text-gray-600">Half</span>
                                 </label>
                             </div>
                         </div>
-                        
+
                     </div>
                     <p class="block text-sm font-medium text-gray-700">Tipe Beasiswa</p>
                     @error('tipe_beasiswa')
@@ -345,24 +345,24 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div class="mb-4">
                             <label for="prestasi" class="flex items-center space-x-3">
-                                <input type="radio" id="prestasi" name="tipe_beasiswa" value="prestasi" 
-                                    class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500" 
+                                <input type="radio" id="prestasi" name="tipe_beasiswa" value="prestasi"
+                                    class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
                                     {{ old('tipe_beasiswa') == 'prestasi' ? 'checked' : '' }}>
                                 <span class="text-gray-600">Prestasi</span>
                             </label>
                         </div>
                         <div class="mb-4">
                             <label for="ekonomi" class="flex items-center space-x-3">
-                                <input type="radio" id="ekonomi" name="tipe_beasiswa" value="ekonomi" 
-                                    class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500" 
+                                <input type="radio" id="ekonomi" name="tipe_beasiswa" value="ekonomi"
+                                    class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
                                     {{ old('tipe_beasiswa') == 'ekonomi' ? 'checked' : '' }}>
                                 <span class="text-gray-600">Ekonomi</span>
                             </label>
                         </div>
                         <div class="mb-4">
                             <label for="eksternal" class="flex items-center space-x-3">
-                                <input type="radio" id="eksternal" name="tipe_beasiswa" value="external" 
-                                    class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500" 
+                                <input type="radio" id="eksternal" name="tipe_beasiswa" value="external"
+                                    class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
                                     {{ old('tipe_beasiswa') == 'external' ? 'checked' : '' }}>
                                 <span class="text-gray-600">Eksternal</span>
                             </label>
@@ -398,7 +398,7 @@
                             @enderror
                         </div>
                     </div>
-                    
+
                     <!-- Kuota Beasiswa -->
                     <div>
                         <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
@@ -425,18 +425,18 @@
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                
+
                                 <script>
                                     function toggleIpkMin() {
                                         // Dapatkan elemen checkbox dan input IPK_min
                                         const checkbox = document.getElementById('ipk_checkbox');
                                         const ipkMinInput = document.getElementById('IPK_min');
-                                
+
                                         // Aktifkan input IPK_min hanya jika checkbox dicentang
                                         ipkMinInput.disabled = !checkbox.checked;
                                     }
                                 </script>
-                                
+
                                 <div class="flex items-center space-x-3">
                                     <input type="checkbox" id="transkrip_nilai" name="syarat_beasiswa[]" value="Transkrip Nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Transkrip Nilai', old('syarat_beasiswa'))) checked @endif>
                                     <label>Transkrip Nilai</label>
@@ -498,19 +498,19 @@
                     </div>
                     <br>
                     <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
-                    <div class="mb-4">  
+                    <div class="mb-4">
                         <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <i class="fa-duotone fa-solid fa-paperclip"></i>
                             <span id="file-name" class="ml-2 text-gray-600">Pilih file</span> <!-- Elemen untuk menampilkan nama file -->
                             <input type="file" id="poster_beasiswa" name="file_1" class="hidden" onchange="displayFileName()">
                         </label>
                     </div>
-                    
+
                     <script>
                         function displayFileName() {
                             const input = document.getElementById('poster_beasiswa');
                             const fileNameDisplay = document.getElementById('file-name');
-                            
+
                             if (input.files.length > 0) {
                                 // Mendapatkan nama file pertama
                                 const fileName = input.files[0].name;

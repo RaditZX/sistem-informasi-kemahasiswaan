@@ -4,7 +4,8 @@
     <div class="p-2 pl-10">
         <div class=" flex flex-auto">
             <div class="basis-1/4 flex justify-center  border-4 rounded-xl shadow  p-5">
-                <img src={{ $beasiswa->link_poster_1 }}
+                <img src="{{ $beasiswa->link_poster_1 ?? 'https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2' }}"
+
                     alt="">
             </div>
             <div class="p-8 basis-3/4">
@@ -19,6 +20,7 @@
                 </div>
                 <p>{{ $beasiswa->deskripsi }}</p>
 
+                <a href="/pengajuan-beasiswa/{{$id}}">
                 <div class=" rounded-3xl p-3 bg-yellow-400 inline-block mt-4">
                     <div class="flex gap-7">
                         <h4 class="font-medium text-base text-black">Apply Now</h4>
@@ -32,6 +34,8 @@
                     </div>
 
                 </div>
+            </a>
+
 
             </div>
 
