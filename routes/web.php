@@ -23,6 +23,9 @@ Route::controller(AuthController::class)->group(function () {
 
     // Logout route should be outside the '/home' route
     Route::post('/logout', 'logout')->name('logout');
+
+    // Register Information
+    Route::get('/register-information', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
 });
 
 // ========================================================================================
@@ -36,7 +39,7 @@ Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBe
 Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
 Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
 Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
-
+Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
