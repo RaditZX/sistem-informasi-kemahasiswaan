@@ -41,11 +41,7 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 
-<<<<<<< HEAD
 <body>
-=======
-<body class="">
->>>>>>> e59ce91bf912c8c6224329af753fdef0b4cd499f
     <main class="min-h-screen overflow-y-auto">
         @yield('content')
     </main>
