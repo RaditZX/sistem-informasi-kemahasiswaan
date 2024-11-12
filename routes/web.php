@@ -75,3 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
     Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
 });
+
+//route notif
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+

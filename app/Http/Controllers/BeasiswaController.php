@@ -25,7 +25,7 @@ class BeasiswaController extends Controller
         // Filter `search` berdasarkan `nama_beasiswa`
         if ($request->has('search') && $request->input('search') !== '') {
             $searchTerm = $request->input('search');
-            $query->where('nama_beasiswa', 'like', "%{$searchTerm}%");
+            $query->where('nama_beasiswa', 'ilike', "%{$searchTerm}%");
         }
 
         // Filter `jenis_beasiswa`
