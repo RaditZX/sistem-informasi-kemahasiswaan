@@ -511,7 +511,7 @@
                     <!-- Kuota Beasiswa -->
                     <div>
                         <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
-                        <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" value="old{{'kuota_beasiswa'}}" placeholder="Kuota Beasiswa"
+                        <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" value="{{old('kuota_beasiswa')}}" placeholder="Kuota Beasiswa"
                             class="block w-full border @error('kuota_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
                     </div>
                     @error('kuota_beasiswa')
@@ -519,68 +519,108 @@
                     @enderror
                     <br>
 
-                    <h2 class="text-lg font-bold mb-4 block">Syarat-Syarat Beasiswa</h2>
-                    <div class="grid grid-cols-2 gap-10">
-                        <!-- Syarat-Syarat Beasiswa -->
-                        <div>
-                            <div class="space-y-2">
-                                <div class="flex items-center space-x-3">
-                                    <label>
-                                        <input type="checkbox" id="ipk_checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" onclick="toggleIpkMin()" @if(old('ipk_min') || $errors->has('ipk_min')) checked @endif>
-                                        IPK
-                                        <input type="text" id="IPK_min" name="ipk_min" class="ml-2 w-16 border rounded p-1 text-center @error('ipk_min') border-red-500  @enderror" value="{{old('ipk_min')}}" disabled>
-                                    </label>
-                                    @error('ipk_min')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                    <!-- Container untuk tag yang dipilih -->
+                    <div id="selected-tags" class="flex flex-wrap gap-2 mb-2"></div>
 
-                                <script>
-                                    function toggleIpkMin() {
-                                        // Dapatkan elemen checkbox dan input IPK_min
-                                        const checkbox = document.getElementById('ipk_checkbox');
-                                        const ipkMinInput = document.getElementById('IPK_min');
+                    <!-- Counter untuk jumlah tag yang dipilih -->
+                    <div id="tag-counter" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
 
-                                        // Aktifkan input IPK_min hanya jika checkbox dicentang
-                                        ipkMinInput.disabled = !checkbox.checked;
+                    <!-- Input pencarian -->
+                    <div class="relative">
+                        <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
+                        <input type="search" id="syarat_beasiswa" name="syarat_beasis" placeholder="Syarat-syarat Beasiswa"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) {let inputText = $('#syarat_beasiswa').val().trim();
+                                    if (inputText !== '') {
+                                        addTag(inputText);  // Tambahkan input pengguna sebagai tag
+                                    } event.preventDefault()}">
+                        <div id="syarat-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"></div>
+                    </div>
+
+                    <script>   
+                        function fetchTags() {
+                            let query = $('#syarat_beasiswa').val();
+                            
+                            if (query.trim() === '') {
+                                $('#syarat-suggestions').addClass('hidden'); // Hide suggestions when input is empty
+                                return;
+                            }
+                    
+                            $.ajax({
+                                url: "{{ route('Beasiswa.search_syarat') }}",
+                                type: 'GET',
+                                data: { query: query },
+                                success: function(tags) {
+                                    $('#syarat-suggestions').empty().removeClass('hidden'); // Show the suggestions
+                                    
+                                    if (tags.length === 0) {
+                                        // Jika tidak ada saran, tampilkan pesan kosong atau teruskan tanpa hasil
+                                        $('#syarat-suggestions').addClass('hidden');
+                                        return;
                                     }
-                                </script>
+                    
+                                    tags.forEach(tag => {
+                                        $('#syarat-suggestions').append(`
+                                            <div class="tag-suggestion px-4 py-2 text-gray-700 hover:bg-indigo-100 cursor-pointer">
+                                                ${tag.syarat}
+                                            </div>
+                                        `);
+                                    });
+                    
+                                    // Tambahkan event klik pada setiap tag rekomendasi
+                                    $('.tag-suggestion').on('click', function() {
+                                        addTag($(this).text());
+                                        $('#syarat-suggestions').empty().addClass('hidden');
+                                    });
+                                }
+                            });
+                        }
+                    
+                        function addTag(tagText) {
+                            // Tambahkan tag ke dalam container
+                            $('#selected-tags').append(`
+                                <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
+                                    ${tagText}
+                                    <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag(this)">×</span>
+                                </div>
+                            `);
+                    
+                            // Tambahkan input tersembunyi untuk setiap tag yang dipilih
+                            $('#selected-tags').append(`
+                                <input type="hidden" name="syarat_beasiswa[]" value="${tagText}">
+                            `);
+                    
+                            // Perbarui penghitung tag
+                            updateTagCounter();
+                    
+                            // Bersihkan input setelah menambah tag
+                            $('#syarat_beasiswa').val('');
+                            $('#syarat-suggestions').addClass('hidden'); // Hide suggestions after tag is added
+                        }
+                    
+                        function removeTag(element) {
+                            // Hapus tag dari container
+                            $(element).parent().remove();
+                            
+                            // Hapus input tersembunyi yang terkait dengan tag tersebut
+                            $(element).parent().next('input[type="hidden"]').remove();
+                            
+                            // Perbarui penghitung tag
+                            updateTagCounter();
+                        }
+                    
+                        function updateTagCounter() {
+                            // Hitung jumlah tag yang dipilih
+                            let tagCount = $('#selected-tags input[type="hidden"]').length;
+                            
+                            // Perbarui teks penghitung tag
+                            $('#tag-counter').text(`Jumlah syarat yang dipilih: ${tagCount}`);
+                        }
+                    </script>
+                   
 
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="transkrip_nilai" name="syarat_beasiswa[]" value="Transkrip Nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Transkrip Nilai', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Transkrip Nilai</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="proposal" name="syarat_beasiswa[]" value="Proposal" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Proposal', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Proposal</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="esai" name="syarat_beasiswa[]" value="Esai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"  @if(is_array(old('syarat_beasiswa')) && in_array('Esai', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Esai</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="space-y-2">
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="sertifikat_prestasi" name="syarat_beasiswa[]" value="Sertifikat Prestasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"  @if(is_array(old('syarat_beasiswa')) && in_array('Sertifikat Prestasi', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Sertifikat Prestasi</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="suket_penghasilan" name="syarat_beasiswa[]" value="Surat Keterangan Penghasilan Orangtua" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"  @if(is_array(old('syarat_beasiswa')) && in_array('Surat Keterangan Penghasilan Orangtua', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Surat Keterangan Penghasilan Orangtua</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="suket_tidakmampu" name="syarat_beasiswa[]" value="Surat Keterangan Tidak Mampu" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Surat Keterangan Tidak Mampu', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Surat Keterangan Tidak Mampu</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="suket_rekomendasi" name="syarat_beasiswa[]" value="Surat Rekomendasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Surat Rekomendasi', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Surat Rekomendasi</label>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="grid grid-cols-2 gap-10">
+                        
 
                         <!-- Benefit Beasiswa -->
                         <div>

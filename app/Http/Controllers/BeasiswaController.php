@@ -78,6 +78,7 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $messages = [
             'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
             'nama_beasiswa.string' => 'Nama beasiswa harus berupa teks.',
@@ -117,7 +118,7 @@ class BeasiswaController extends Controller
             'tanggal_berakhir' => 'required|date|after:tanggal_mulai',
             'ipk_min' => 'numeric|max:4|min:1',
             'syarat_beasiswa' => 'array',
-            'syarat_beasiswa.*' => 'string',
+            'syarat_beasiswa.*' => 'string|nullable',
             'benefit_beasiswa' => 'array',
             'benefit_beasiswa.*' => 'string|max:255',
             'jenjang_pendidikan' => 'array',
@@ -245,6 +246,7 @@ class BeasiswaController extends Controller
             }
         }
 
+
         return redirect('/beasiswa')->with('success', 'Beasiswa berhasil ditambahkan');
     }
 
@@ -254,8 +256,22 @@ class BeasiswaController extends Controller
      */
     public function show(string $id)
     {
-        $beasiswa = Beasiswa::findOrFail($id);
-        return view('pages.Beasiswa.detail-beasiswa', ['beasiswa' => $beasiswa, 'id' => $id]);
+        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])->findorFail($id);
+        $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
+        $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
+        $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
+        $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
+        $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
+
+        return view('pages.Beasiswa.detail-beasiswa', [
+            'beasiswa' => $beasiswa,
+            'id' => $id,
+            'syarat' => $syarat,
+            'jenjang' => $jenjang,
+            'benefit' => $benefit,
+            'dokumen' => $dokumen,
+            'poster' => $poster,
+        ]);
     }
 
     /**
@@ -439,5 +455,13 @@ class BeasiswaController extends Controller
         // Redirect back with a success message
         return redirect()->route('beasiswa.index')->with('success', 'Item deleted successfully!');
 
+    }
+
+    public function search_syarat(Request $request)
+    {
+        $search = $request->input('query');
+        $tags = SyaratBeasiswa::where('syarat', 'LIKE', "%{$search}%")->distinct()->limit(10)->get(['syarat']);
+
+        return response()->json($tags);
     }
 }
