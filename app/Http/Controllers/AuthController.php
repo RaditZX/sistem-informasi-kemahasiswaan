@@ -103,4 +103,11 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
+
+    public function getRegisterInformation()
+    {
+
+        return view('pages.Auth.register-information');
+
+    }
 }
