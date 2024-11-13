@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nama_beasiswa');
             $table->text('deskripsi');
-            $table->enum('jenis_waktu_beasiswa',['current','upcoming','last']);
             $table->enum('tipe_beasiswa',['kipk','internal','eksternal']);
             $table->enum('jenis_beasiswa', ['full', 'half']); // enum jenis_beasiswa
             $table->integer('kuota');
@@ -68,6 +67,16 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('jenjang');
+            $table->foreignId('jurusan')->constrained('jurusan')->onDelete('cascade');
+            $table->timestamps();
+
+            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+        });
+
+        Schema::create('poster_beasiswa', function(Blueprint $table){
+            $table->id();
+            $table->unsignedBigInteger('beasiswa_id');
+            $table->text('link_poster');
             $table->timestamps();
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
