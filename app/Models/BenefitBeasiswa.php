@@ -11,7 +11,7 @@ class BenefitBeasiswa extends Model
 
     protected $table = 'benefit_beasiswa';
 
-    protected $fillable = ['beasiswa_id', 'benefit', 'deskripsi_benefit'];
+    protected $fillable = ['beasiswa_id', 'benefit'];
 
     public $incrementing = false; // Karena tidak menggunakan auto-increment ID
     
