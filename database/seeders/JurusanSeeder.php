@@ -15,19 +15,22 @@ class JurusanSeeder extends Seeder
         DB::table('jurusan')->insert([
             [
                 'id'=>1,
-                'nama_jurusan' => 'Teknik Informatika',
+                'nama_jurusan' => 'Teknik Komputer dan Informatika',
+                'kajur_id' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>2,
-                'nama_jurusan' => 'Teknik Elektro',
+                'nama_jurusan' => 'Teknik Sipil',
+                'kajur_id' => 4,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>3,
-                'nama_jurusan' => 'Teknik Mesin',
+                'nama_jurusan' => 'Teknik Kimia',
+                'kajur_id' => 5,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

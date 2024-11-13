@@ -224,4 +224,17 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
+
+    public function getRegisterInformation()
+    {
+
+        return view('pages.Auth.register-information');
+
+    }
+
+    public function showRegistrationForm()
+    {
+        return view('pages.Auth.register'); // Path to your registration view file
+    }
+
 }

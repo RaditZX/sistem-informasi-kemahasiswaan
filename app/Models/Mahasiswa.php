@@ -15,10 +15,15 @@ class Mahasiswa extends Model
     protected $table = 'mahasiswa';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['nim','semester','tgl_lahir','no_hp','jurusan_id','prodi_id','angkatan','user_id'];
+    protected $fillable = ['nim','semester','tgl_lahir','no_hp','prodi_id','angkatan','user_id'];
 
     public function pengajuanBeasiswa()
     {
-        return $this->hasMany(PengajuanBeasiswa::class);
+        return $this->hasMany(PengajuanBeasiswa::class, 'beasiswa_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

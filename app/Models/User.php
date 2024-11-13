@@ -11,7 +11,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $primaryKey = 'user_id'; // Custom primary key
     public $incrementing = true; // Laravel will still auto-increment this field
     protected $keyType = 'int';
 
@@ -46,8 +45,9 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+
+
 }

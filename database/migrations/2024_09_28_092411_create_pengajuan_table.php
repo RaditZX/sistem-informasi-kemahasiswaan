@@ -16,20 +16,29 @@ return new class extends Migration
             $table->string("nim",9);
             $table->unsignedBigInteger('beasiswa_id');
             $table->date('tanggal_pengajuan');
-            $table->enum('status', ['diterima', 'ditolak', 'diproses'])->default('diproses');
+            $table->foreignId('status')->constrained('kode_status');
+            $table->text('komentar')->nullable();
             $table->timestamps();
+
             $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
 
-        Schema::create('pengajuan_dokumen', function(Blueprint $table){
-            $table->id("dokumen_id");
-            $table->unsignedBigInteger("pengajuan_beasiswa_id");
+        Schema::create('dokumen', function(Blueprint $table){
+            $table->string('kode_dokumen')->primary();
+            $table->unsignedBigInteger("id_pengajuan_beasiswa");
             $table->string("nama_dokumen");
             $table->text("link_dokumen");
             $table->timestamps();
-            $table->foreign('pengajuan_beasiswa_id')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
+            $table->foreign('id_pengajuan_beasiswa')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
+
+        Schema::create('kode_status', function (Blueprint $table) {
+            $table->id('id_status');
+            $table->string('isi_status');
+        });
+
+
     }
 
     /**
@@ -39,5 +48,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('pengajuan_dokumen');
         Schema::dropIfExists('pengajuan_beasiswa');
+        Schema::dropIfExists('kode_status');
     }
 };

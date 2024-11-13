@@ -23,6 +23,11 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/reset-password', 'resetPassword')->name('password.update');
     Route::post('/logout', 'logout')->name('logout');
     Route::post('/mahasiswa/create/{id}','insertMahasiswaData')->name('mahasiswa.insert');
+
+    // Register Information
+    Route::get('/register-information', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 });
 
 // ========================================================================================
@@ -30,13 +35,15 @@ Route::controller(AuthController::class)->group(function () {
 Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
 Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
 Route::get('/pengumuman-beasiswa', [BeasiswaController::class, 'getPengumumanBeasiswa'])->name('beasiswa.pengumuman-beasiswa');
+Route::get('/beasiswa/search-syarat', [BeasiswaController::class, 'search_syarat'])->name('Beasiswa.search_syarat');
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
 Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
 Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
 Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
-
+Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');

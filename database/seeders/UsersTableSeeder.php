@@ -16,9 +16,9 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'user_id' => 1,
-                'nama_depan' => 'John Doe',
-                'nama_belakang' => 'ujang',
+                'id'=>1,
+                'nama_depan' => 'John',
+                'nama_belakang' => 'Doe',
                 'email' => 'john.doe@polban.ac.id',
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
@@ -27,10 +27,12 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'user_id' => 2,
-                'nama_depan' => 's',
-                'nama_belakang' => 'ujang',
+                'id'=>2,
+                'nama_depan' => 'Jane',
+                'nama_belakang' => 'Smith',
                 'email' => 'jane.smith@polban.ac.id',
+                'password' => Hash::make('password'), // default password
+                'remember_token' => Str::random(10),
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
                 'email_verified_at'=>true,
@@ -38,27 +40,131 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'user_id' => 3,
-                'nama_depan' => 'Daffa',
-                'nama_belakang' => 'Alghifari',
-                'email' => 'james.johnson@polban.ac.id',
+                'id'=>3,
+                'nama_depan' => 'Staff Kemahasiswaan',
+                'nama_belakang' => 'Satu',
+                'email' => 'staffkema.satu@polban.ac.id',
+                'password' => Hash::make('password'), // default password
+                'remember_token' => Str::random(10),
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
                 'email_verified_at'=>true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>4,
+                'nama_depan' => 'Kepala Jurusan',
+                'nama_belakang' => 'Satu',
+                'email' => 'kajur.satu@polban.ac.id',
+                'password' => Hash::make('password'), // default password
+                'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>5,
+                'nama_depan' => 'Kepala Jurusan',
+                'nama_belakang' => 'Dua',
+                'email' => 'kajur.dua@polban.ac.id',
+                'password' => Hash::make('password'), // default password
+                'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Wanita',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>6,
+                'nama_depan' => 'Kepala Jurusan',
+                'nama_belakang' => 'Tiga',
+                'email' => 'kajur.tiga@polban.ac.id',
+                'password' => Hash::make('password'), // default password
+                'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>7,
+                'nama_depan' => 'Koordinator Layanan Eksternal',
+                'nama_belakang' => 'Satu',
+                'email' => 'kle.satu@polban.ac.id',
+                'password' => Hash::make('password'), // default password
+                'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>8,
+                'nama_depan' => 'Wakil Direktur',
+                'nama_belakang' => 'Tiga',
+                'email' => 'wd.tiga@polban.ac.id',
+                'password' => Hash::make('password'), // default password
+                'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'email_verified_at'=>true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        DB::table('reviewer')->insert([
+            [
+                'user_id' => 3,
+                'nip' => '12345678901234567890',
+                'role_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'user_id' => 4,
-                'nama_depan' => 'John',
-                'nama_belakang' => 'sheena',
-                'email' => 'alice.williams@polban.ac.id',
-                'jenis_kelamin' => 'Pria',
-                'foto' => 'example.jpg',
-                'email_verified_at'=>true,
+                'nip' => '09876543210987654321',
+                'role_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'user_id' => 5,
+                'nip' => '09876543210987654322',
+                'role_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 6,
+                'nip' => '09876543210987654323',
+                'role_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 7,
+                'nip' => '09876543210987654324',
+                'role_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 8,
+                'nip' => '09876543210987654325',
+                'role_id' => 4,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        DB::table('role')->insert([
+            'Staff Kemahasiswaan',
+            'Kepala Jurusan',
+            'Koordinator Layanan Eksternal',
+            'Wakil Direktur 3'
         ]);
     }
 }

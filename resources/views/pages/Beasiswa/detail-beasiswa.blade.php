@@ -3,11 +3,41 @@
     @include('component.navbar',['path'=>"Detail Beasiswa",'id'=>$id])
     <div class="p-2 pl-10">
         <div class=" flex flex-auto">
-            <div class="basis-1/4 flex justify-center  border-4 rounded-xl shadow  p-2">
-                <img src="{{ $beasiswa->link_poster_1 ?? 'https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2' }}"
+            <div class="basis-1/2 flex justify-center items-center overflow-hidden relative">
+                <div class="swiper-container w-3/4 h-56">
+                    <div class="swiper-wrapper">
+                        @foreach($poster as $post)
+                            <div class="swiper-slide flex justify-center">
+                                <img src="{{ $post }}" class="w-auto h-full object-contain rounded-lg" alt="poster">
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="swiper-pagination"></div>
 
-                    alt="">
+                    <!-- Position navigation buttons inside the swiper-container -->
+                    <div class="swiper-button-next absolute right-20"></div>
+                    <div class="swiper-button-prev absolute left-20"></div>
+                </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var swiper = new Swiper('.swiper-container', {
+                        slidesPerView: 1,
+                        spaceBetween: 100,
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        loop: true,
+                    });
+                });
+            </script>
+
             <div class="p-8 basis-3/4">
                 <h1 class="text-2xl font-semibold">{{ $beasiswa->nama_beasiswa }}</h1>
                 <div class="flex mb-3 gap-3">
