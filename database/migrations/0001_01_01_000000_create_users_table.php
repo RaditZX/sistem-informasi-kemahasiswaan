@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
+            $table->string('nama_depan');
+            $table->string('nama_belakang');
             $table->enum('jenis_kelamin',['Pria','Wanita']);
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->string('foto');
+            $table->text('foto');
             $table->timestamps();
         });
 
@@ -38,9 +38,25 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
 
+        Schema::create('role',function(Blueprint $table){
+            $table->id("role_id");
+            $table->string("role_name");
+            $table->timestamps();
+        });
+        
+        Schema::create('reviewer', function(Blueprint $table){
+            $table->unsignedBigInteger("user_id");
+            $table->string("nip",20)->primary();
+            $table->tinyInteger("role_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('role_id')->references('role_id')->on('role')->onDelete('cascade');;
+            $table->timestamps();
+        });
+
         Schema::create('jurusan', function (Blueprint $table) {
             $table->id(); // Primary key
             $table->string('nama_jurusan');
+            $table->foreignId('kajur_id')->constrained('reviewer', 'user_id');
             $table->timestamps();
         });
 
@@ -68,20 +84,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('role',function(Blueprint $table){
-            $table->id("role_id");
-            $table->string("role_name");
-            $table->timestamps();
-        });
-
-        Schema::create('reviewer', function(Blueprint $table){
-            $table->unsignedBigInteger("user_id");
-            $table->string("nip",18)->primary();
-            $table->tinyInteger("role_id");
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('role_id')->references('role_id')->on('role')->onDelete('cascade');;
-            $table->timestamps();
-        });
     }
 
     /**
