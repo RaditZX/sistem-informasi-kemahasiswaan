@@ -238,13 +238,122 @@
                     </div>
                 </div>
                 <br>
-                <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
-                <div class="mb-4">
-                    <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <i class="fa-duotone fa-solid fa-paperclip"></i>
-                    <input type="file" id="poster_beasiswa" name="poster_beasiswa"class="hidden" disabled>
-                    </label>
-                </div>
+                <p class="@error('poster[]') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
+                @error('poster[]')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                        <div class="mb-4">
+                        <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <i class="fa-duotone fa-solid fa-paperclip"></i>
+                            <span id="file-name" class="ml-2 text-gray-600">Pilih file</span>
+                            <input type="file" id="poster_beasiswa" name="poster[]" class="hidden" accept="image/*" multiple onchange="displayFileNamesAndPreview()">
+                        </label>
+                        
+                    </div>
+                    <div id="preview-container" class="flex flex-wrap gap-4 mt-2">
+                        @if(isset($poster) && count($poster) > 0)
+                            @foreach($poster as $index => $link)
+                                <div class="relative w-24 h-24 mb-2 mr-2" id="poster-{{$index}}">
+                                    <img src="{{ $link }}" alt="Poster" class="w-full h-full object-cover rounded-md shadow-sm" onclick="openModal('{{ $link }}')">
+                                    <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 hover:opacity-100 transition-opacity" onclick="removePoster('{{$index}}')">X</button>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+
+                    <!-- Modal untuk menampilkan gambar besar -->
+                    <div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                        <div class="relative max-w-full max-h-full">
+                            <img id="modal-image" class="max-w-screen max-h-screen object-contain rounded-md shadow-lg">
+                            <button id="close-modal" class="absolute top-2 right-2 bg-white text-black rounded-full p-1">X</button>
+                        </div>
+                    </div>
+
+                    <script>
+                        function removePoster(posterid){
+                            document.getElementById(`poster-${posterid}`).remove();
+                        }
+
+                        document.getElementById('poster_beasiswa').addEventListener('change', function () {
+                            if (this.files.length > 3) {
+                                alert("Anda hanya dapat mengupload maksimal 3 file.");
+                                this.value = ""; // Reset file input
+                            }
+                        });
+                        let selectedFiles = []; // Menyimpan file yang dipilih
+
+                        function displayFileNamesAndPreview() {
+                            const input = document.getElementById('poster_beasiswa');
+                            if (input.files.length > 3) {
+                                alert("Anda hanya dapat mengupload maksimal 3 file.");
+                                input.value = "";
+                                return;
+                            }
+                            selectedFiles = Array.from(input.files); // Salin file yang dipilih ke array `selectedFiles`
+                            renderPreviews();
+                        }
+                        function renderPreviews() {
+                            const previewContainer = document.getElementById('preview-container');
+                            previewContainer.innerHTML = ''; // Kosongkan kontainer preview
+
+                            selectedFiles.forEach((file, index) => {
+                                if (file.type.startsWith('image/')) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        const imgContainer = document.createElement('div');
+                                        imgContainer.classList.add('relative', 'w-24', 'h-24', 'mb-2', 'mr-2');
+
+                                        const img = document.createElement('img');
+                                        img.src = e.target.result;
+                                        img.alt = file.name;
+                                        img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-md', 'shadow-sm');
+
+                                        // Fungsi untuk memperbesar gambar saat diklik
+                                        img.onclick = () => openModal(e.target.result);
+
+                                        const deleteButton = document.createElement('button');
+                                        deleteButton.textContent = 'X';
+                                        deleteButton.classList.add(
+                                            'absolute', 'top-1', 'right-1', 'bg-red-500', 'text-white', 'rounded-full', 'w-6', 'h-6', 'flex',
+                                            'items-center', 'justify-center', 'text-xs', 'opacity-0', 'hover:opacity-100', 'transition-opacity'
+                                        );
+                                        deleteButton.onclick = () => removeFile(index); // Panggil fungsi `removeFile`
+
+                                        imgContainer.onmouseenter = () => (deleteButton.style.opacity = '1'); // Tampilkan tombol saat dihover
+                                        imgContainer.onmouseleave = () => (deleteButton.style.opacity = '0'); // Sembunyikan tombol saat tidak dihover
+
+                                        imgContainer.appendChild(img);
+                                        imgContainer.appendChild(deleteButton);
+                                        previewContainer.appendChild(imgContainer);
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+                            });
+                        }
+
+                        function removeFile(index) {
+                            selectedFiles.splice(index, 1); // Hapus file dari array `selectedFiles`
+                            renderPreviews(); // Perbarui preview gambar
+                        }
+
+                        function openModal(imageSrc) {
+                            const modal = document.getElementById('modal');
+                            const modalImage = document.getElementById('modal-image');
+                            modalImage.src = imageSrc; // Set gambar modal ke gambar yang diklik
+                            modal.classList.remove('hidden'); // Tampilkan modal
+                        }
+
+                        document.getElementById('close-modal').onclick = function () {
+                            document.getElementById('modal').classList.add('hidden'); // Sembunyikan modal saat tombol close diklik
+                        };
+
+                        document.getElementById('modal').onclick = function (e) {
+                            if (e.target === this) {
+                                this.classList.add('hidden'); // Sembunyikan modal saat area luar gambar diklik
+                            }
+                        };
+                    </script>
+
                 <div>
                     <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                 </div>
@@ -402,7 +511,7 @@
                     <!-- Kuota Beasiswa -->
                     <div>
                         <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
-                        <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" placeholder="Kuota Beasiswa"
+                        <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" value="{{old('kuota_beasiswa')}}" placeholder="Kuota Beasiswa"
                             class="block w-full border @error('kuota_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
                     </div>
                     @error('kuota_beasiswa')
@@ -410,68 +519,108 @@
                     @enderror
                     <br>
 
-                    <h2 class="text-lg font-bold mb-4 block">Syarat-Syarat Beasiswa</h2>
-                    <div class="grid grid-cols-2 gap-10">
-                        <!-- Syarat-Syarat Beasiswa -->
-                        <div>
-                            <div class="space-y-2">
-                                <div class="flex items-center space-x-3">
-                                    <label>
-                                        <input type="checkbox" id="ipk_checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" onclick="toggleIpkMin()" @if(old('ipk_min') || $errors->has('ipk_min')) checked @endif>
-                                        IPK
-                                        <input type="text" id="IPK_min" name="ipk_min" class="ml-2 w-16 border rounded p-1 text-center @error('ipk_min') border-red-500  @enderror" value="{{old('ipk_min')}}" disabled>
-                                    </label>
-                                    @error('ipk_min')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                    <!-- Container untuk tag yang dipilih -->
+                    <div id="selected-tags" class="flex flex-wrap gap-2 mb-2"></div>
 
-                                <script>
-                                    function toggleIpkMin() {
-                                        // Dapatkan elemen checkbox dan input IPK_min
-                                        const checkbox = document.getElementById('ipk_checkbox');
-                                        const ipkMinInput = document.getElementById('IPK_min');
+                    <!-- Counter untuk jumlah tag yang dipilih -->
+                    <div id="tag-counter" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
 
-                                        // Aktifkan input IPK_min hanya jika checkbox dicentang
-                                        ipkMinInput.disabled = !checkbox.checked;
+                    <!-- Input pencarian -->
+                    <div class="relative">
+                        <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
+                        <input type="search" id="syarat_beasiswa" name="syarat_beasis" placeholder="Syarat-syarat Beasiswa"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) {let inputText = $('#syarat_beasiswa').val().trim();
+                                    if (inputText !== '') {
+                                        addTag(inputText);  // Tambahkan input pengguna sebagai tag
+                                    } event.preventDefault()}">
+                        <div id="syarat-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"></div>
+                    </div>
+
+                    <script>   
+                        function fetchTags() {
+                            let query = $('#syarat_beasiswa').val();
+                            
+                            if (query.trim() === '') {
+                                $('#syarat-suggestions').addClass('hidden'); // Hide suggestions when input is empty
+                                return;
+                            }
+                    
+                            $.ajax({
+                                url: "{{ route('Beasiswa.search_syarat') }}",
+                                type: 'GET',
+                                data: { query: query },
+                                success: function(tags) {
+                                    $('#syarat-suggestions').empty().removeClass('hidden'); // Show the suggestions
+                                    
+                                    if (tags.length === 0) {
+                                        // Jika tidak ada saran, tampilkan pesan kosong atau teruskan tanpa hasil
+                                        $('#syarat-suggestions').addClass('hidden');
+                                        return;
                                     }
-                                </script>
+                    
+                                    tags.forEach(tag => {
+                                        $('#syarat-suggestions').append(`
+                                            <div class="tag-suggestion px-4 py-2 text-gray-700 hover:bg-indigo-100 cursor-pointer">
+                                                ${tag.syarat}
+                                            </div>
+                                        `);
+                                    });
+                    
+                                    // Tambahkan event klik pada setiap tag rekomendasi
+                                    $('.tag-suggestion').on('click', function() {
+                                        addTag($(this).text());
+                                        $('#syarat-suggestions').empty().addClass('hidden');
+                                    });
+                                }
+                            });
+                        }
+                    
+                        function addTag(tagText) {
+                            // Tambahkan tag ke dalam container
+                            $('#selected-tags').append(`
+                                <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
+                                    ${tagText}
+                                    <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag(this)">×</span>
+                                </div>
+                            `);
+                    
+                            // Tambahkan input tersembunyi untuk setiap tag yang dipilih
+                            $('#selected-tags').append(`
+                                <input type="hidden" name="syarat_beasiswa[]" value="${tagText}">
+                            `);
+                    
+                            // Perbarui penghitung tag
+                            updateTagCounter();
+                    
+                            // Bersihkan input setelah menambah tag
+                            $('#syarat_beasiswa').val('');
+                            $('#syarat-suggestions').addClass('hidden'); // Hide suggestions after tag is added
+                        }
+                    
+                        function removeTag(element) {
+                            // Hapus tag dari container
+                            $(element).parent().remove();
+                            
+                            // Hapus input tersembunyi yang terkait dengan tag tersebut
+                            $(element).parent().next('input[type="hidden"]').remove();
+                            
+                            // Perbarui penghitung tag
+                            updateTagCounter();
+                        }
+                    
+                        function updateTagCounter() {
+                            // Hitung jumlah tag yang dipilih
+                            let tagCount = $('#selected-tags input[type="hidden"]').length;
+                            
+                            // Perbarui teks penghitung tag
+                            $('#tag-counter').text(`Jumlah syarat yang dipilih: ${tagCount}`);
+                        }
+                    </script>
+                   
 
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="transkrip_nilai" name="syarat_beasiswa[]" value="Transkrip Nilai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Transkrip Nilai', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Transkrip Nilai</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="proposal" name="syarat_beasiswa[]" value="Proposal" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Proposal', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Proposal</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="esai" name="syarat_beasiswa[]" value="Esai" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"  @if(is_array(old('syarat_beasiswa')) && in_array('Esai', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Esai</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="space-y-2">
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="sertifikat_prestasi" name="syarat_beasiswa[]" value="Sertifikat Prestasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"  @if(is_array(old('syarat_beasiswa')) && in_array('Sertifikat Prestasi', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Sertifikat Prestasi</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="suket_penghasilan" name="syarat_beasiswa[]" value="Surat Keterangan Penghasilan Orangtua" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500"  @if(is_array(old('syarat_beasiswa')) && in_array('Surat Keterangan Penghasilan Orangtua', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Surat Keterangan Penghasilan Orangtua</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="suket_tidakmampu" name="syarat_beasiswa[]" value="Surat Keterangan Tidak Mampu" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Surat Keterangan Tidak Mampu', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Surat Keterangan Tidak Mampu</label>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <input type="checkbox" id="suket_rekomendasi" name="syarat_beasiswa[]" value="Surat Rekomendasi" class="form-checkbox h-5 w-5 text-blue-500 rounded-md focus:ring-blue-500" @if(is_array(old('syarat_beasiswa')) && in_array('Surat Rekomendasi', old('syarat_beasiswa'))) checked @endif>
-                                    <label>Surat Rekomendasi</label>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="grid grid-cols-2 gap-10">
+                        
 
                         <!-- Benefit Beasiswa -->
                         <div>
@@ -497,30 +646,133 @@
                         </div>
                     </div>
                     <br>
-                    <p class="block text-sm font-medium text-gray-700">Poster Beasiswa</p>
+                    <p class="@error('poster') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
                     <div class="mb-4">
                         <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <i class="fa-duotone fa-solid fa-paperclip"></i>
-                            <span id="file-name" class="ml-2 text-gray-600">Pilih file</span> <!-- Elemen untuk menampilkan nama file -->
-                            <input type="file" id="poster_beasiswa" name="file_1" class="hidden" onchange="displayFileName()">
+                            <span id="file-name" class="ml-2 text-gray-600">Pilih file</span>
+                            <input type="file" id="poster_beasiswa" name="poster[]" class="hidden" accept="image/*" multiple onchange="displayFileNamesAndPreview()">
                         </label>
+                        @error('poster')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div id="file-list" class="mt-2 text-gray-600"></div> <!-- Daftar nama file -->
+                    <div id="preview-container" class="flex flex-wrap gap-4 mt-2"></div> <!-- Preview gambar -->
+
+                    <!-- Modal untuk menampilkan gambar besar -->
+                    <div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                        <div class="relative max-w-full max-h-full">
+                            <img id="modal-image" class="max-w-screen max-h-screen object-contain rounded-md shadow-lg">
+                            <button id="close-modal" class="absolute top-2 right-2 bg-white text-black rounded-full p-1">X</button>
+                        </div>
                     </div>
 
                     <script>
-                        function displayFileName() {
-                            const input = document.getElementById('poster_beasiswa');
-                            const fileNameDisplay = document.getElementById('file-name');
-
-                            if (input.files.length > 0) {
-                                // Mendapatkan nama file pertama
-                                const fileName = input.files[0].name;
-                                // Menampilkan nama file di dalam label
-                                fileNameDisplay.textContent = fileName;
-                            } else {
-                                fileNameDisplay.textContent = 'Pilih file'; // Tampilkan pesan default jika tidak ada file yang dipilih
+                        document.getElementById('poster_beasiswa').addEventListener('change', function () {
+                            if (this.files.length > 3) {
+                                alert("Anda hanya dapat mengupload maksimal 3 file.");
+                                this.value = ""; // Reset file input
                             }
+                        });
+                        let selectedFiles = []; // Menyimpan file yang dipilih
+
+                        function displayFileNamesAndPreview() {
+                            const input = document.getElementById('poster_beasiswa');
+                            if (input.files.length > 3) {
+                                alert("Anda hanya dapat mengupload maksimal 3 file.");
+                                input.value = "";
+                                return;
+                            }
+                            selectedFiles = Array.from(input.files); // Salin file yang dipilih ke array `selectedFiles`
+                            renderPreviews();
                         }
+
+                        function renderFileList() {
+                            const fileList = document.getElementById('file-list');
+                            fileList.innerHTML = ''; // Kosongkan daftar file
+
+                            selectedFiles.forEach((file, index) => {
+                                const fileItem = document.createElement('div');
+                                fileItem.classList.add('flex', 'items-center', 'justify-between', 'mb-1');
+
+                                const fileName = document.createElement('span');
+                                fileName.textContent = file.name;
+
+                                const deleteButton = document.createElement('button');
+                                deleteButton.textContent = 'Hapus';
+                                deleteButton.classList.add('text-red-500', 'ml-2', 'hover:underline');
+                                deleteButton.onclick = () => removeFile(index); // Panggil fungsi `removeFile`
+
+                                fileItem.appendChild(fileName);
+                                fileItem.appendChild(deleteButton);
+                                fileList.appendChild(fileItem);
+                            });
+                        }
+
+                        function renderPreviews() {
+                            const previewContainer = document.getElementById('preview-container');
+                            previewContainer.innerHTML = ''; // Kosongkan kontainer preview
+
+                            selectedFiles.forEach((file, index) => {
+                                if (file.type.startsWith('image/')) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        const imgContainer = document.createElement('div');
+                                        imgContainer.classList.add('relative', 'w-24', 'h-24', 'mb-2', 'mr-2');
+
+                                        const img = document.createElement('img');
+                                        img.src = e.target.result;
+                                        img.alt = file.name;
+                                        img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-md', 'shadow-sm');
+
+                                        // Fungsi untuk memperbesar gambar saat diklik
+                                        img.onclick = () => openModal(e.target.result);
+
+                                        const deleteButton = document.createElement('button');
+                                        deleteButton.textContent = 'X';
+                                        deleteButton.classList.add(
+                                            'absolute', 'top-1', 'right-1', 'bg-red-500', 'text-white', 'rounded-full', 'w-6', 'h-6', 'flex',
+                                            'items-center', 'justify-center', 'text-xs', 'opacity-0', 'hover:opacity-100', 'transition-opacity'
+                                        );
+                                        deleteButton.onclick = () => removeFile(index); // Panggil fungsi `removeFile`
+
+                                        imgContainer.onmouseenter = () => (deleteButton.style.opacity = '1'); // Tampilkan tombol saat dihover
+                                        imgContainer.onmouseleave = () => (deleteButton.style.opacity = '0'); // Sembunyikan tombol saat tidak dihover
+
+                                        imgContainer.appendChild(img);
+                                        imgContainer.appendChild(deleteButton);
+                                        previewContainer.appendChild(imgContainer);
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+                            });
+                        }
+
+                        function removeFile(index) {
+                            selectedFiles.splice(index, 1); // Hapus file dari array `selectedFiles`
+                            renderFileList(); // Perbarui daftar file
+                            renderPreviews(); // Perbarui preview gambar
+                        }
+
+                        function openModal(imageSrc) {
+                            const modal = document.getElementById('modal');
+                            const modalImage = document.getElementById('modal-image');
+                            modalImage.src = imageSrc; // Set gambar modal ke gambar yang diklik
+                            modal.classList.remove('hidden'); // Tampilkan modal
+                        }
+
+                        document.getElementById('close-modal').onclick = function () {
+                            document.getElementById('modal').classList.add('hidden'); // Sembunyikan modal saat tombol close diklik
+                        };
+
+                        document.getElementById('modal').onclick = function (e) {
+                            if (e.target === this) {
+                                this.classList.add('hidden'); // Sembunyikan modal saat area luar gambar diklik
+                            }
+                        };
                     </script>
+
                     <div>
                         <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                     </div>
