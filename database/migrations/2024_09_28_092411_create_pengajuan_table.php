@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('beasiswa_id');
             $table->date('tanggal_pengajuan');
             $table->foreignId('status')->constrained('kode_status');
+            $table->text('komentar')->nullable();
             $table->timestamps();
 
             $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');

@@ -37,7 +37,6 @@ return new class extends Migration
         Schema::create('benefit_beasiswa', function (Blueprint $table) {
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('benefit');
-            $table->text('deskripsi_benefit');
             $table->timestamps();
 
 
@@ -66,8 +65,8 @@ return new class extends Migration
         Schema::create('jenjang_pendidikan', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('beasiswa_id');
-            $table->string('jenjang');
-            $table->foreignId('jurusan')->constrained('jurusan')->onDelete('cascade');
+            $table->enum('jenjang', ['D3', 'D4']);
+            $table->foreignId('jurusan')->constrained('jurusan')->onDelete('cascade')->nullable();
             $table->timestamps();
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');

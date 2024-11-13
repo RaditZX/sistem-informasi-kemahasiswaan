@@ -39,7 +39,7 @@ return new class extends Migration
         });
 
         Schema::create('role',function(Blueprint $table){
-            $table->id("role_id");
+            $table->id();
             $table->string("role_name");
             $table->timestamps();
         });
@@ -56,7 +56,8 @@ return new class extends Migration
         Schema::create('jurusan', function (Blueprint $table) {
             $table->id(); // Primary key
             $table->string('nama_jurusan');
-            $table->foreignId('kajur_id')->constrained('reviewer', 'user_id');
+            $table->unsignedBigInteger('kajur_id')->nullable();
+            $table->foreign('kajur_id')->references('user_id')->on('reviewer')->nullOnDelete();
             $table->timestamps();
         });
 
