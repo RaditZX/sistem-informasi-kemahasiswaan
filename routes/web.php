@@ -26,6 +26,8 @@ Route::controller(AuthController::class)->group(function () {
 
     // Register Information
     Route::get('/register-information', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 });
 
 // ========================================================================================
