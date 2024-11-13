@@ -126,9 +126,18 @@ class BeasiswaSeeder extends Seeder
 
         // Simpan data beasiswa dan ambil id yang disimpan
         foreach ($beasiswaData as $beasiswa) {
-
+            $posterLinks = $beasiswa['poster_links'];
+            unset($beasiswa['poster_links']); // Hapus 'poster_links' dari data utama beasiswa
     
             $beasiswaEntry = Beasiswa::create($beasiswa);
+    
+            // Simpan data poster ke tabel PosterBeasiswa
+            foreach ($posterLinks as $link) {
+                PosterBeasiswa::create([
+                    'beasiswa_id' => $beasiswaEntry->id,
+                    'link_poster' => $link,
+                ]);
+            }
 
             // Data untuk tabel syarat_beasiswa
             SyaratBeasiswa::create([
