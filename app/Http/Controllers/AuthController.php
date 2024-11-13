@@ -110,4 +110,39 @@ class AuthController extends Controller
         return view('pages.Auth.register-information');
 
     }
+
+    public function showRegistrationForm()
+    {
+        return view('pages.Auth.register'); // Path to your registration view file
+    }
+    
+
+
+    public function register(Request $request)
+    {
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
+        }
+
+        // Create User
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Return response (success or failure)
+        return response()->json([
+            'success' => true,
+            'message' => 'User registered successfully!',
+            'redirect_url' => route('home') // Redirect to home after registration
+        ]);
+    }
 }
