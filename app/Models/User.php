@@ -11,6 +11,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $primaryKey = 'user_id'; // Custom primary key
+    public $incrementing = true; // Laravel will still auto-increment this field
+    protected $keyType = 'int';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'jenis_kelamin'
+        'jenis_kelamin',
+        'email_verified_at'
     ];
 
     /**

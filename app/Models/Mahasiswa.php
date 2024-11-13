@@ -9,11 +9,13 @@ class Mahasiswa extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'nim'; // Custom primary key
+
     // Tentukan nama tabel jika berbeda dengan konvensi Laravel
     protected $table = 'mahasiswa';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['nim','semester','tgl_lahir','jurusan_id','prodi_id','angkatan'];
+    protected $fillable = ['nim','semester','tgl_lahir','no_hp','jurusan_id','prodi_id','angkatan','user_id'];
 
     public function pengajuanBeasiswa()
     {

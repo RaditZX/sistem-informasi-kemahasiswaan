@@ -14,15 +14,15 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'index')->name('login');
     Route::post('/login', 'login')->name('login.submit');
+    Route::post('/register','register')->name('register');
 
     // Forgot password process
     Route::post('/forgot-password', 'forgotPassword')->name('password.forgot');
     Route::post('/verify-code', 'verifyCode')->name('password.verifyCode');
     Route::get('/reset-password', 'showResetPasswordForm')->name('password.reset');
     Route::post('/reset-password', 'resetPassword')->name('password.update');
-
-    // Logout route should be outside the '/home' route
     Route::post('/logout', 'logout')->name('logout');
+    Route::post('/mahasiswa/create/{id}','insertMahasiswaData')->name('mahasiswa.insert');
 });
 
 // ========================================================================================
@@ -31,7 +31,7 @@ Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasi
 Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
 Route::get('/pengumuman-beasiswa', [BeasiswaController::class, 'getPengumumanBeasiswa'])->name('beasiswa.pengumuman-beasiswa');
 
-Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
 Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
 Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
@@ -47,7 +47,7 @@ Route::controller(PengajuanBeasiswaController::class)->group(function () {
 
 Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
 
-Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
     Route::resource('beasiswa', BeasiswaController::class);
     Route::get('/detail-beasiswa', function () {
         return view('pages.Beasiswa.detail-beasiswa');
@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/form-beasiswa', function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
-});
+// });
 
 
 
