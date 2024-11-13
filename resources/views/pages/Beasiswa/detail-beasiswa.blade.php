@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar',['path'=>"Detail Beasiswa",'id'=>$id])
+    @include('component.navbar',['path'=>"Detail Beasiswa",'id'=>$id, 'notificationData'=>$notificationData]))
+    
     <div class="p-2 pl-10">
         <div class=" flex flex-auto">
             <div class="basis-1/4 flex justify-center  border-4 rounded-xl shadow  p-5">

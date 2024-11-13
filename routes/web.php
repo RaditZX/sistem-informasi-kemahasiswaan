@@ -77,5 +77,5 @@ Route::middleware('auth')->group(function () {
 });
 
 //route notif
-Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+Route::get('/get-notif-data', [NotificationController::class, 'getNotifData'])->name('notifications');
 

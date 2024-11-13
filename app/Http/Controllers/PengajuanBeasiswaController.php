@@ -21,12 +21,17 @@ class PengajuanBeasiswaController extends Controller
         $name = $user->name;
         $email = $user->email;
         $role_id = $user->role_id;
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
 
-        return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id'));
+        return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id', 'notificationData'));
     }
 
 
     public function listPengajuanStaff(){
+
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
 
         $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
         ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
@@ -35,13 +40,15 @@ class PengajuanBeasiswaController extends Controller
         ->get();
 
 
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan'));
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan', 'notificationData'));
     }
 
     public function create(string $id)
     {
-        return view('pages.Beasiswa.pengajuan');
-    }
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
+        return view('pages.Beasiswa.pengajuan', compact('notificationData'));
+    } 
 
     /**
      * Store a newly created resource in storage.
@@ -88,9 +95,12 @@ class PengajuanBeasiswaController extends Controller
 
             $pengajuanDokumenController = new PengajuanDokumenController();
             $pengajuanDokumenController->store($newDocumentRequest);
+            
+            
         }
-
+        
         return redirect()->route('pengajuan.create',['id'=>$id])->with('success', 'Item created successfully.');
+
     }
 
 
@@ -103,8 +113,10 @@ class PengajuanBeasiswaController extends Controller
         $query = PengajuanDokumen::query();
         $query->where('pengajuan_beasiswa_id', $id );
         $dokumenPengajuan = $query->get();
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData(); 
 
-        return view('pages.PengajuanBeasiswa.formPengajuan', ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan ]);
+        return view('pages.PengajuanBeasiswa.formPengajuan', compact('notificationData'), ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan ]);
     }
 
     /**

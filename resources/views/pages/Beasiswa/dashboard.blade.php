@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null,'notificationData'=>$notificationData])
     <style>
         .bg-gradient-to-tl {
             background: linear-gradient(to right, orange, rgb(213, 213, 21));
@@ -7,7 +8,7 @@
     </style>
 
     <body class="m-0 font-sans text-base antialiased font-normal leading-default bg-gray-50 text-slate-500">
-        @include('component.navbar', ['path' => 'Dashboard', 'id' => null])
+
 
         <!-- cards -->
         <div class="w-full px-6 py-6 mx-auto">

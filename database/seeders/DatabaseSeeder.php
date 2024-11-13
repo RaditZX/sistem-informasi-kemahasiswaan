@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
             ProdiSeeder::class
         ]);
         $this->call(MahasiswaSeeder::class);
+        $this->call(NotifikasiSeeder::class);
     }
 }

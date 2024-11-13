@@ -1,8 +1,7 @@
 @extends('layouts.filter')
-@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null,'notificationData'=>$notificationData])
 
     {{-- Filter Button and Search Column --}}
     <div class="p-2">
@@ -50,76 +49,97 @@
         @endforeach
 
         {{-- Filter Popup --}}
-        <div id="popup" class="fixed inset-0 basis-2/3 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center">
-            <div class="bg-white w-full sm:w-2/3 p-4 sm:p-6 rounded-lg shadow-lg max-w-lg mx-auto relative">
-                <div class="absolute top-2 right-2">
+        <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center">
+            <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
+                <div class="absolute top-4 right-4">
                     <button onclick="hidePopup()" aria-label="Close" class="text-gray-500 hover:text-gray-700">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
-                <div class="p-3">
-             
-                        <div class="flex flex-col sm:flex-row justify-left gap-10 sm:gap-20">
-                            <div class="flex flex-col items-start gap-3">
-                                <p class="text-lg font-bold">Filter</p>
-
-                                <!-- Tipe Beasiswa Section -->
-                                <p class="text-sm sm:text-base font-bold">Jenis Beasiswa</p>
-                                <form action="{{ url('/beasiswa') }}" method="GET">
-                                    <div class="flex flex-row items-start gap-4 mb-4">
-                                        <div class="flex flex-col items-center">
-                                            <input type="checkbox" name="jenis_beasiswa[]" value="half" {{ in_array('half', request('jenis_beasiswa', [])) ? 'checked' : '' }} />
-                                            <label for="half" class="text-xs sm:text-basic">Half</label>
-                                        </div>
-                                        <div class="flex flex-col items-center">
-                                            <input type="checkbox" name="jenis_beasiswa[]" value="full" {{ in_array('full', request('jenis_beasiswa', [])) ? 'checked' : '' }} />
-                                            <label for="full" class="text-xs sm:text-basic">Full</label>
-                                        </div>
+                <div class="p-4">
+                    <form action="{{ url('/beasiswa') }}" method="GET">
+                        <div class="flex flex-col sm:flex-row justify-start gap-12 sm:gap-24">
+                            <!-- Left Section: Checkboxes -->
+                            <div class="flex flex-col items-start gap-6 sm:w-1/2">
+                                <p class="text-xl font-semibold text-gray-700">Filter</p>
+        
+                                <!-- Jenis Beasiswa Section -->
+                                <p class="text-sm sm:text-base font-medium text-gray-600">Jenis Beasiswa</p>
+                                <div class="flex flex-row items-start gap-4">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="jenis_beasiswa[]" value="half"
+                                            {{ in_array('half', request('jenis_beasiswa', [])) ? 'checked' : '' }}
+                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
+                                        <label for="half" class="ml-2 text-sm text-gray-600">Half</label>
                                     </div>
-
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="jenis_beasiswa[]" value="full"
+                                            {{ in_array('full', request('jenis_beasiswa', [])) ? 'checked' : '' }}
+                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
+                                        <label for="full" class="ml-2 text-sm text-gray-600">Full</label>
+                                    </div>
+                                </div>
+        
+                                <!-- Jenjang Pendidikan Section -->
+                                <p class="text-sm sm:text-base font-medium text-gray-600">Jenjang Pendidikan</p>
+                                <div class="flex flex-row items-start gap-4">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="jenjang_pendidikan[]" value="D3"
+                                            {{ in_array('D3', request('jenjang_pendidikan', [])) ? 'checked' : '' }}
+                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
+                                        <label for="D3" class="ml-2 text-sm text-gray-600">D3</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="jenjang_pendidikan[]" value="D4"
+                                            {{ in_array('D4', request('jenjang_pendidikan', [])) ? 'checked' : '' }}
+                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
+                                        <label for="D4" class="ml-2 text-sm text-gray-600">D4</label>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="flex flex-col items-start gap-3">
-                                <p class="text-transparent">a</p>
-                                <p class="text-sm sm:text-base font-bold">Tipe Beasiswa</p>
-                                <div class="flex flex-col items-center">
-                                    <select name="tipe_beasiswa" id="tipe_beasiswa" class="mt-1 block w-full rounded-md border border-orange-500 p-2 focus:border-orange-500 focus:ring-orange-500">
+        
+                            <!-- Right Section: Dropdowns -->
+                            <div class="flex flex-col items-start gap-6 sm:w-1/2 mt-6">
+                                <!-- Tipe Beasiswa Section -->
+                                <p class="text-sm sm:text-base font-medium text-gray-600">Tipe Beasiswa</p>
+                                <div class="w-full">
+                                    <select name="tipe_beasiswa" id="tipe_beasiswa"
+                                        class="mt-2 block w-full rounded-full border border-gray-300 p-3 focus:border-orange-400 focus:ring-orange-300">
                                         <option value="">Select Tipe Beasiswa</option>
-                                        <option value="kipk">KIPK</option>
-                                        <option value="internal">Internal</option>
-                                        <option value="eksternal">Eksternal</option>
+                                        <option value="kipk" {{ request('tipe_beasiswa') == 'kipk' ? 'selected' : '' }}>KIPK</option>
+                                        <option value="internal" {{ request('tipe_beasiswa') == 'internal' ? 'selected' : '' }}>Internal</option>
+                                        <option value="eksternal" {{ request('tipe_beasiswa') == 'eksternal' ? 'selected' : '' }}>Eksternal</option>
                                     </select>
                                 </div>
-                                <div>
-                                    <label for="jenjang_pendidikan">Jenjang Pendidikan:</label>
-                                    <select name="jenjang_pendidikan", id="jenjang_pendidikan">
-                                        <option value="">Select Education Level</option>
-                                        <option value="D3">D3</option>
-                                        <option value="S1">D4</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="jurusan">Jurusan Khusus:</label>
-                                    <select name="jurusan" id="jurusan">
+        
+                                <!-- Jurusan Section -->
+                                <p class="text-sm sm:text-base font-medium text-gray-600">Jurusan Khusus:</p>
+                                <div class="w-full">
+                                    <select name="jurusan" id="jurusan"
+                                        class="block w-full rounded-full border border-gray-300 p-3 focus:border-orange-400 focus:ring-orange-300">
                                         <option value="">Pilih Jurusan</option>
-                                        <option value="Teknik Informatika">Teknik Informatika</option>
-                                        <option value="Teknik Sipil">Teknik Sipil</option>
+                                        <option value="Teknik Informatika" {{ request('jurusan') == 'Teknik Informatika' ? 'selected' : '' }}>Teknik Informatika</option>
+                                        <option value="Teknik Sipil" {{ request('jurusan') == 'Teknik Sipil' ? 'selected' : '' }}>Teknik Sipil</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="flex flex-row justify-between gap-3 mt-4">
-                            <button type="submit" class="w-1/2 bg-blue-500 p-2 text-white rounded-lg shadow-lg hover:bg-blue-600">Apply</button>
-                            <button type="button" onclick="hidePopup()" class="w-1/2 bg-red-500 p-2 text-white rounded-lg shadow-lg hover:bg-red-600">Close</button>
+        
+                        <!-- Buttons Section -->
+                        <div class="flex flex-row justify-between gap-4 mt-6">
+                            <button type="submit"
+                                class="w-1/2 bg-blue-500 p-3 text-white rounded-full shadow-md hover:bg-blue-600">Apply</button>
+                            <button type="button" onclick="hidePopup()"
+                                class="w-1/2 bg-red-500 p-3 text-white rounded-full shadow-md hover:bg-red-600">Close</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        
+        
 
     </div>
 @endsection

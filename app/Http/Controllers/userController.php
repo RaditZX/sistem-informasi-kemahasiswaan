@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class userController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -12,6 +12,8 @@ class UserController extends Controller
     public function index()
     {
         // Using the 'view' helper function
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
         return view('user.index', ['user' => "hello world"]);
         
         // Alternatively, using 'compact' method
