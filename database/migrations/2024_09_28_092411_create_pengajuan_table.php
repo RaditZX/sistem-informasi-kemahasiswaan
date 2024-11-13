@@ -26,11 +26,11 @@ return new class extends Migration
 
         Schema::create('dokumen', function(Blueprint $table){
             $table->string('kode_dokumen')->primary();
-            $table->unsignedBigInteger("id_pengajuan_beasiswa");
+            $table->unsignedBigInteger("pengajuan_beasiswa_id");
             $table->string("nama_dokumen");
             $table->text("link_dokumen");
             $table->timestamps();
-            $table->foreign('id_pengajuan_beasiswa')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
+            $table->foreign('pengajuan_beasiswa_id')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
 
         Schema::create('kode_status', function (Blueprint $table) {
