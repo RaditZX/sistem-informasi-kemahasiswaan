@@ -126,6 +126,7 @@ class BeasiswaSeeder extends Seeder
 
         // Simpan data beasiswa dan ambil id yang disimpan
         foreach ($beasiswaData as $beasiswa) {
+
             
             $beasiswaEntry = Beasiswa::create($beasiswa);
 

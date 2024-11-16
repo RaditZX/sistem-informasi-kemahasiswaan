@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('kode_status', function (Blueprint $table) {
+            $table->id();
+            $table->string('isi_status');
+        });
+
         Schema::create('pengajuan_beasiswa', function (Blueprint $table) {
             $table->id();
             $table->string("nim",9);

@@ -11,7 +11,7 @@ class SyaratDokumen extends Model
 
     protected $table = 'syarat_dokumen';
 
-    protected $fillable = ['beasiswa_id', 'dokumen', 'deskripsi_dokumen'];
+    protected $fillable = ['beasiswa_id', 'dokumen'];
 
     public $incrementing = false; // Karena tidak menggunakan auto-increment ID
     
