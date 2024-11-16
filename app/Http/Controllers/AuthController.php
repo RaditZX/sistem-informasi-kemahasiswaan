@@ -89,8 +89,6 @@ class AuthController extends Controller
         $this->firebaseAuth = $firebase->createAuth();
     }
 
-
-
     public function register(Request $request)
     {
 
@@ -109,29 +107,20 @@ class AuthController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
 
+        if (strcasecmp($password, $request->input('password_confirmation')) != 0) {
+            return response()->json(['error' => 'Konfirmasi password salah'], 409);
+        }
+
         try {
-            if ($method === 'google') {
-                $idToken = $request->input('idToken');
-                $verifiedIdToken = $this->firebaseAuth->verifyIdToken($idToken);
-                $uid = $verifiedIdToken->claims()->get('sub');
-                $firebaseUser = $this->firebaseAuth->getUser($uid);
-            } elseif ($method === 'email_password') {
-                $firebaseUser = $this->firebaseAuth->createUserWithEmailAndPassword($email, $password);
-                $this->firebaseAuth->sendEmailVerificationLink($firebaseUser->email);
-            } else {
-                return response()->json(['error' => 'Invalid registration method'], 400);
-            }
+            $firebaseUser = $this->firebaseAuth->createUserWithEmailAndPassword($email, $password);
+            $this->firebaseAuth->sendEmailVerificationLink($firebaseUser->email);
 
-
-            User::create([
+            $user = User::create([
                 'email' => $firebaseUser->email,
                 'email_verified_at' => false,
             ]);
 
-            return response()->json([
-                'message' => 'User registered successfully',
-                'user' => $firebaseUser,
-            ], 201);
+            return redirect()->route('auth.register-information',['id'=>$user->user_id]);
 
         } catch (FirebaseEmailExists $e) {
             return response()->json(['error' => 'Email already exists in Firebase'], 409);
@@ -144,6 +133,7 @@ class AuthController extends Controller
 
     public function insertMahasiswaData(Request $request, string $id)
     {
+
         $request->validate([
             'nim' => 'required|string|size:9|unique:mahasiswa,nim',
             'semester' => 'required|integer|min:1|max:8',
@@ -166,7 +156,7 @@ class AuthController extends Controller
             'angkatan' => $request->angkatan,
         ]);
 
-        return response()->json(['message' => 'Mahasiswa created successfully.'], 201);
+        return redirect()->intended('/beasiswa');
     }
 
 
