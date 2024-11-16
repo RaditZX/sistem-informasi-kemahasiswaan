@@ -1,9 +1,8 @@
 @extends('layouts.filter')
-@extends('layouts.notification')
 @extends('layouts.main')
 
 @section('content')
-    @include('component.navbar', ['path' => 'Beasiswa KIPK', 'id' => null])
+    @include('component.navbar', ['path' => 'Beasiswa KIPK', 'id' => null, 'notificationData'=>$notificationData])
 
     <div class="flex flex-row m-5 p-5 mr-40 ml-40 ">
         <div class="basis-1/2">

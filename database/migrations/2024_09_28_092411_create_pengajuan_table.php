@@ -23,7 +23,8 @@ return new class extends Migration
             $table->date('tanggal_pengajuan');
             $table->foreignId('status')->constrained('kode_status');
             $table->text('komentar')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
             $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
@@ -34,12 +35,10 @@ return new class extends Migration
             $table->unsignedBigInteger("id_pengajuan_beasiswa");
             $table->string("nama_dokumen");
             $table->text("link_dokumen");
-            $table->timestamps();
-            $table->foreign('id_pengajuan_beasiswa')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->foreign('pengajuan_beasiswa_id')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
-
-
-
     }
 
     /**

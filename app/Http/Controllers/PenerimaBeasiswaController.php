@@ -13,8 +13,10 @@ class PenerimaBeasiswaController extends Controller
     public function index()
     {
         $penerima_beasiswa = PenerimaBeasiswa::All();
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
 
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa'));
+        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa','notificationData' ));
     }
 
     /**

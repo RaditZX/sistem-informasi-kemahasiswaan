@@ -8,7 +8,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('pages.Beasiswa.dashboard');
+
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
+
+        return view('pages.Beasiswa.dashboard', compact('notificationData'));
     }
 
 }
