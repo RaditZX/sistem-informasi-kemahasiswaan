@@ -47,7 +47,6 @@ return new class extends Migration
         Schema::create('syarat_dokumen', function (Blueprint $table) {
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('dokumen');
-            $table->text('deskripsi_dokumen');
             $table->timestamps();
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
@@ -67,24 +66,6 @@ return new class extends Migration
             $table->unsignedBigInteger('beasiswa_id');
             $table->enum('jenjang', ['D3', 'D4']);
             $table->foreignId('jurusan')->constrained('jurusan')->onDelete('cascade')->nullable();
-            $table->timestamps();
-
-            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
-        });
-
-        Schema::create('poster_beasiswa', function(Blueprint $table){
-            $table->id();
-            $table->unsignedBigInteger('beasiswa_id');
-            $table->text('link_poster');
-            $table->timestamps();
-
-            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
-        });
-
-        Schema::create('poster_beasiswa', function(Blueprint $table){
-            $table->id();
-            $table->unsignedBigInteger('beasiswa_id');
-            $table->string('link_poster');
             $table->timestamps();
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');

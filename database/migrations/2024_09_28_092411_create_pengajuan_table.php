@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('kode_status', function (Blueprint $table) {
+            $table->id();
+            $table->string('isi_status');
+        });
+
         Schema::create('pengajuan_beasiswa', function (Blueprint $table) {
             $table->id();
             $table->string("nim",9);
@@ -33,10 +38,6 @@ return new class extends Migration
             $table->foreign('id_pengajuan_beasiswa')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
 
-        Schema::create('kode_status', function (Blueprint $table) {
-            $table->id('id_status');
-            $table->string('isi_status');
-        });
 
 
     }
