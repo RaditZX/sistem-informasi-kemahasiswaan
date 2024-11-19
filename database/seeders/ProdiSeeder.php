@@ -15,29 +15,29 @@ class ProdiSeeder extends Seeder
         DB::table('prodi')->insert([
             [
                 'id'=>1,
-                'nama_prodi' => 'Sistem Informasi',
-                'jurusan_id' => 1, // Assuming 1 is the ID for 'Teknik Informatika' from the JurusanSeeder
+                'nama_prodi' => 'Teknik Informatika',
+                'jurusan_id' => 1, 
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>2,
-                'nama_prodi' => 'Teknik Komputer',
-                'jurusan_id' => 1, // Assuming 1 is the ID for 'Teknik Informatika'
+                'nama_prodi' => 'Konstruksi Sipil',
+                'jurusan_id' => 2, 
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>3,
-                'nama_prodi' => 'Elektronika',
-                'jurusan_id' => 2, // Assuming 2 is the ID for 'Teknik Elektro'
+                'nama_prodi' => 'Teknik Kimia Produksi Bersih',
+                'jurusan_id' => 3, 
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>4,
-                'nama_prodi' => 'Mesin Produksi',
-                'jurusan_id' => 3, // Assuming 3 is the ID for 'Teknik Mesin'
+                'nama_prodi' => 'Analis Kimia',
+                'jurusan_id' => 3, 
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

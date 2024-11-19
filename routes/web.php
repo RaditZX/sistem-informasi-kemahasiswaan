@@ -24,6 +24,11 @@ Route::controller(AuthController::class)->group(function () {
 
     // Logout route should be outside the '/home' route
     Route::post('/logout', 'logout')->name('logout');
+
+    // Register Information
+    Route::get('/register-information', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 });
 
 // ========================================================================================
@@ -31,13 +36,15 @@ Route::controller(AuthController::class)->group(function () {
 Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
 Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
 Route::get('/pengumuman-beasiswa', [BeasiswaController::class, 'getPengumumanBeasiswa'])->name('beasiswa.pengumuman-beasiswa');
+Route::get('/beasiswa/search-syarat', [BeasiswaController::class, 'search_syarat'])->name('Beasiswa.search_syarat');
+
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
 Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
 Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
 Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
-
+Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
@@ -66,3 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
     Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
 });
+
+//route notif
+Route::get('/get-notif-data', [NotificationController::class, 'getNotifData'])->name('notifications');
+

@@ -1,8 +1,7 @@
 @extends('layouts.filter')
-@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Pengaju Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'List Pengaju Beasiswa', 'id' => null, 'notificationData'=>$notificationData])
 
 
 

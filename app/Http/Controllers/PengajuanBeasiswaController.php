@@ -25,8 +25,10 @@ class PengajuanBeasiswaController extends Controller
         $name = $user->name;
         $email = $user->email;
         $role_id = $user->role_id;
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
 
-        return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id'));
+        return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id', 'notificationData'));
     }
 
 
@@ -35,10 +37,14 @@ class PengajuanBeasiswaController extends Controller
         $user_id = Auth::id();
         $nip = null;
 
-        // Check if the user is a Reviewer
-        $dataReviewer = Reviewer::join('users', 'reviewer.user_id', '=', 'users.id')
-            ->where('user_id', $user_id)
-            ->get();
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
+
+        $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+        ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+        ->join('users','mahasiswa.user_id', '=', 'users.id')
+        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->get();
 
         if (!$dataReviewer->isEmpty()) {
             $nip = $dataReviewer[0]->nip;
@@ -58,13 +64,15 @@ class PengajuanBeasiswaController extends Controller
             $listPengajuan = $query->where('users.id', $user_id)->get();
         }
 
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan'));
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan', 'notificationData'));
     }
 
     public function create(string $id)
     {
-        return view('pages.Beasiswa.pengajuan');
-    }
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
+        return view('pages.Beasiswa.pengajuan', compact('notificationData'));
+    } 
 
     /**
      * Store a newly created resource in storage.
@@ -111,9 +119,12 @@ class PengajuanBeasiswaController extends Controller
 
             $pengajuanDokumenController = new PengajuanDokumenController();
             $pengajuanDokumenController->store($newDocumentRequest);
+            
+            
         }
-
+        
         return redirect()->route('pengajuan.create',['id'=>$id])->with('success', 'Item created successfully.');
+
     }
 
 
@@ -126,8 +137,10 @@ class PengajuanBeasiswaController extends Controller
         $query = PengajuanDokumen::query();
         $query->where('pengajuan_beasiswa_id', $id );
         $dokumenPengajuan = $query->get();
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData(); 
 
-        return view('pages.PengajuanBeasiswa.formPengajuan', ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan ]);
+        return view('pages.PengajuanBeasiswa.formPengajuan', compact('notificationData'), ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan ]);
     }
 
     /**

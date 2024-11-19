@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Beasiswa extends Model
+class beasiswa extends Model
 {
     use HasFactory;
 
@@ -13,7 +13,7 @@ class Beasiswa extends Model
     protected $table = 'beasiswa';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['nama_beasiswa', 'deskripsi', 'jenis_waktu_beasiswa', 'jenis_beasiswa', 'tipe_beasiswa','kuota', 'sumber', 'tanggal_mulai', 'tanggal_berakhir','link_poster_1'];
+    protected $fillable = ['nama_beasiswa', 'deskripsi', 'jenis_beasiswa', 'tipe_beasiswa','kuota', 'sumber', 'tanggal_mulai', 'tanggal_berakhir'];
 
 
     // Relasi satu ke banyak dengan SyaratBeasiswa
@@ -40,5 +40,9 @@ class Beasiswa extends Model
     public function pengajuanBeasiswa()
     {
         return $this->hasMany(PengajuanBeasiswa::class);
+    }
+    public function posterBeasiswa()
+    {
+        return $this->hasMany(PosterBeasiswa::class);
     }
 }

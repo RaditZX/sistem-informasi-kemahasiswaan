@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    @include('component.navbar', ['path' => 'Pengajuan Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'Pengajuan Beasiswa', 'id' => null, 'notificationData'=>$notificationData])
 
 
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">

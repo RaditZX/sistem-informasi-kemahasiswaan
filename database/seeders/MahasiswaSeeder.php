@@ -16,22 +16,22 @@ class MahasiswaSeeder extends Seeder
     {
         DB::table('mahasiswa')->insert([
             [
-                'user_id' => 1, // Assuming this is the ID of an existing user
+                'user_id' => 1, 
                 'nim' => '123456789',
                 'semester' => 5,
-                'tgl_lahir' => Carbon::create('2000', '05', '15')->toDateString(), // Use Carbon to handle dates
-                'prodi_id' => 1, // Assuming this is the ID of an existing prodi
-                'angkatan' => 2019,
+                'tgl_lahir' => '2000-05-15',
+                'prodi_id' => 1, 
+                'angkatan' => 2020,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'user_id' => 2,
+                'user_id' => 2, 
                 'nim' => '987654321',
                 'semester' => 3,
-                'tgl_lahir' => Carbon::create('2001', '10', '25')->toDateString(),
-                'prodi_id' => 2,
-                'angkatan' => 2020,
+                'tgl_lahir' => '2001-07-20',
+                'prodi_id' => 2, 
+                'angkatan' => 2021,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

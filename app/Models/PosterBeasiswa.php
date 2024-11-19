@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class BenefitBeasiswa extends Model
+class PosterBeasiswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'benefit_beasiswa';
+    protected $table = 'poster_beasiswa';
 
-    protected $fillable = ['beasiswa_id', 'benefit'];
+    protected $fillable = ['beasiswa_id', 'link_poster'];
 
     public $incrementing = false; // Karena tidak menggunakan auto-increment ID
     
-    protected $primaryKey = ['beasiswa_id', 'benefit']; // Menggunakan composite key
+    protected $primaryKey = ['beasiswa_id', 'link_poster']; // Menggunakan composite key
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()
