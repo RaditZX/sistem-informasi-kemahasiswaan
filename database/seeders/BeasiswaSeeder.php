@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\JenjangPendidikan;
 use Illuminate\Database\Seeder;
 use App\Models\Beasiswa;
 use App\Models\SyaratBeasiswa;
@@ -129,14 +128,6 @@ class BeasiswaSeeder extends Seeder
 
             
             $beasiswaEntry = Beasiswa::create($beasiswa);
-
-            $jenjang_pendidikan = [
-                ['beasiswa_id' => $beasiswaEntry->id, 'jenjang' => 'D3']
-            ];
-            
-            foreach ($jenjang_pendidikan as $jenjang) {
-                JenjangPendidikan::create($jenjang);
-            }
 
             // Data untuk tabel syarat_beasiswa
             SyaratBeasiswa::create([

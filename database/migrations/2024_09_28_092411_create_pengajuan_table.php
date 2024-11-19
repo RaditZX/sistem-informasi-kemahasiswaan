@@ -37,7 +37,7 @@ return new class extends Migration
             $table->text("link_dokumen");
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreign('pengajuan_beasiswa_id')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
+            $table->foreign('id_pengajuan_beasiswa')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
     }
 
