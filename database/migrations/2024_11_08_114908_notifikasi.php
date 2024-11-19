@@ -20,12 +20,6 @@ return new class extends Migration
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
-
-        Schema::create('kode_status', function(Blueprint $table){
-            $table->increments('id_status');
-            $table->string('isi_status');
-
-        });
     }
 
     /**
