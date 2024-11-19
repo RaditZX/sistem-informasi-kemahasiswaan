@@ -13,7 +13,7 @@ class PengajuanBeasiswa extends Model
     protected $table = 'pengajuan_beasiswa';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['beasiswa_id','nim','tanggal_pengajuan','status'];
+    protected $fillable = ['beasiswa_id','nim','tanggal_pengajuan','status', 'komentar'];
 
 
     public function Beasiswa()

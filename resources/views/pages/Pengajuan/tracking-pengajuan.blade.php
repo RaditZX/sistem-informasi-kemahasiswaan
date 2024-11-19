@@ -11,39 +11,49 @@
         <!-- Timeline Section -->
         <section class="timeline mx-auto py-6 sm:px-6 lg:px-8">
             <ol class="flex justify-between items-center w-full relative">
+                @php
+                    $statusss = $dataStatus;
+                    $idStatuses = $statusss->pluck('id_status'); // Extract 'id_status' values from the collection
+                    $idStatusesArray = $idStatuses->toArray(); // Convert the collection to an array
+                    $whatIndex = array_search($dataPengajuan[0]->status, $idStatusesArray);
+                @endphp
+                    
                 <!-- Timeline Steps -->
-                {{-- {{ $status = ['diproses', ''] }} --}}
-                @foreach (['Submit', 'Review oleh Staff', 'Review oleh Ketua Jurusan', 'Review oleh WD3', 'Selesai'] as $index => $step)
-                    <li class="flex flex-col items-center w-full relative">
-                        @if ($index == 0)
-                            <!-- First Step Completed -->
-                            <span class="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10">
-                                <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                </svg>
-                            </span>
-                            <div class="absolute top-1/2 right-0 w-full h-1 bg-green-500 transform -translate-y-4 z-0"></div>
-                        @else
-                            <!-- Upcoming or In-Progress Steps -->
-                            <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-300 dark:bg-gray-700 transform -translate-y-4 z-0"></div>
-                            <span class="flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full lg:h-12 lg:w-12 shrink-0 z-10">
-                                <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                </svg>
-                            </span>
-                            @if ($index < 4)
-                                <div class="absolute top-1/2 right-0 w-full h-1 bg-gray-300 dark:bg-gray-700 transform -translate-y-4 z-0"></div>
+                @foreach ($dataStatus as $index => $step)
+                    @if (in_array($index, [0, 1, 3, 5, 7, 9]))
+                        <li class="flex flex-col items-center w-full relative">
+                            @if ($index <= $whatIndex)
+                                <!-- Completed Step -->
+                                <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 {{ (($whatIndex % 2 == 0) && ($index == $whatIndex - 1)) ? 'bg-yellow-500' : 'bg-green-500' }}">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </span>
+                                <div class="absolute top-1/2 right-0 w-full h-1 {{ (($whatIndex % 2 == 0) && ($index == $whatIndex - 1)) ? 'bg-yellow-500' : 'bg-green-500' }} transform -translate-y-4 z-0" style="top: 40px"></div>
+                            @else
+                                <!-- Upcoming or In-Progress Steps -->
+                                <span class="flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </span>
+                                <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-300 dark:bg-gray-700 transform -translate-y-4 z-0" style="top: 40px"></div>
                             @endif
-                        @endif
-                        <p class="mt-2 text-center text-sm text-gray-700">{{ $step }}</p>
-                    </li>
+                            <div>
+                                <!-- Step Text with Fixed Max Height and Clipping Overflow -->
+                                <p class="text-center text-sm text-gray-700 px-2 max-w-[8rem] min-h-[4rem] line-clamp-3 overflow-hidden">
+                                    {{ $step->isi_status }}
+                                </p>
+                            </div>
+                        </li>
+                    @endif
                 @endforeach
             </ol>
         </section>
 
         <!-- Timer Section -->
         <section class="timer my-8">
-            <h1 class="text-center text-xl font-semibold mb-4">ESTIMASI</h1>
+            <h1 class="text-center text-xl font-semibold mb-4">ESTIMASI {{ $dataPengajuan[0]->status }}</h1>
             <div class="timer-block">
                 <div class="mx-auto w-1/2 grid grid-cols-4 justify-items-center items-center mb-4">
                     <p>Hari</p>
@@ -107,21 +117,24 @@
             </div>
         </section>
 
-        @if ($userData[0]->nim == NULL)
-            <!-- Comment Form -->
-            <form action="#" method="POST" class="my-8 px-4">
+        @if ($reviewer[0] != NULL)
+            <form action="{{ route('pengajuan.update-progress', $dataPengajuan[0]->id) }}" method="POST" class="my-8 px-4">
                 @csrf
+                @method('PATCH')
                 <div>
                     <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Your message</label>
-                    <textarea id="message" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Tambahkan komentar disini..."></textarea>
+                    <textarea id="message" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Tambahkan komentar disini..." name="reviewerComment"></textarea>
                 </div>
                 <div class="mt-4 flex items-center justify-end space-x-2">
-                    <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Tolak</button>
-                    <button type="button" class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5">Revisi</button>
-                    <button type="button" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5">Terima</button>
+                    <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="reject">Tolak</button>
+                    <button type="submit" class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="revise">Revisi</button>
+                    <button type="submit" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="approve">Terima</button>
                 </div>
-            </form>
-        @else
+
+                <!-- Hidden input field for role_id -->
+                <input type="hidden" name="role_id" value="{{ $reviewer[1] }}">
+            </form>        
+        @elseif ($dataPengajuan[0]->status < 1)
             <form action="#" method="POST" class="my-8 px-4">
                 @csrf
                 <div class="flex flex-col items-center justify-end">
@@ -129,6 +142,10 @@
                     <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Batalkan</button>
                 </div>
             </form>
+        @else
+            <div class="flex flex-col items-center justify-end">
+                <p><b>Pengajuan hanya dapat dibatalkan jika masih dalam proses "Diajukan"!</b></p>
+            </div>
         @endif
     </div>
 @endsection
