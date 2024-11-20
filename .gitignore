@@ -21,4 +21,4 @@ yarn-error.log
 database/seeders/BeasiswaSeeder.php
 resources/views/pages/Beasiswa/form-beasiswa.blade.php
 resources/views/pages/Beasiswa/form-beasiswa.blade.php
-*.php
+.php

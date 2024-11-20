@@ -62,8 +62,14 @@ class BeasiswaController extends Controller
         $email = $user->email;
         $role_id = $user->role_id;
 
+<<<<<<< Updated upstream
         // Kirim data ke view
         return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa','notificationData'));
+=======
+        // Pass data to the view
+        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa', 'notificationData'));
+
+>>>>>>> Stashed changes
     }
     public function getListBeasiswaForStaff()
     {
