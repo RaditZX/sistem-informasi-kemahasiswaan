@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PengajuanBeasiswa;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -44,7 +45,9 @@ class PengajuanBeasiswaController extends Controller
 
     public function create(string $id)
     {
-        return view('pages.Beasiswa.pengajuan');
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
+        return view('pages.Beasiswa.pengajuan', compact('notificationData'));
     }
 
     /**
@@ -61,13 +64,15 @@ class PengajuanBeasiswaController extends Controller
             'file_5' => 'required|file',
         ]);
 
+        $nim = Auth::user()->nim;
+
         // Start a database transaction
         DB::beginTransaction();
 
         try {
             // Create the PengajuanBeasiswa record
             $pengajuanBeasiswa = PengajuanBeasiswa::create([
-                'nim' => 123456789,
+                'nim' => $nim,
                 'beasiswa_id' => $id,
                 'tanggal_pengajuan' => now(),
             ]);
@@ -80,7 +85,6 @@ class PengajuanBeasiswaController extends Controller
                 // Extract file name
                 $fileName = $file->getClientOriginalName();
 
-                // Prepare request for file upload
                 $newRequest = new Request();
                 $newRequest->files->set('file', $file);
                 $newRequest->merge(['path' => 'dokumen']);
@@ -97,11 +101,34 @@ class PengajuanBeasiswaController extends Controller
                 ]);
             }
 
+            // Commit the transaction
             DB::commit();
 
-            return redirect()->route('pengajuan.create', ['id' => $id])->with('success', 'Item created successfully.');
-        } catch (\Exception $e) {
+            $bs = new BeasiswaController();
+            $beasiswaData = $bs->getBeasiswaDataBaseOnBeasiswaId($id);
 
+
+            $data = [
+                'nama' => "Pengajuan beasiswa pada program beasiswa " . $beasiswaData->nama_beasiswa .
+                          " oleh mahasiswa dengan NIM " . 123456789,
+                'message' => "Yth. Mahasiswa,\n\n" .
+                            "Kami ingin memberitahukan bahwa pengajuan beasiswa Anda pada program beasiswa " .
+                            $beasiswaData->nama_beasiswa . " telah diterima. " .
+                            "Pengajuan ini diajukan oleh mahasiswa dengan NIM: " . $nim . "\n\n" .
+                            "Jika Anda memiliki pertanyaan lebih lanjut, silakan hubungi kami.\n\n" .
+                            "Hormat kami,\n" .
+                            "Tim Beasiswa"
+            ];
+
+            $request = new Request($data);
+
+            $email = new MailController();
+            $email->sendExampleMail($request);
+
+            return redirect()->route('pengajuan.create', ['id' => $id])->with('success', 'Item created successfully.');
+
+        } catch (\Exception $e) {
+            // Rollback the transaction if any error occurs
             DB::rollBack();
 
             // Optionally log the exception for debugging purposes

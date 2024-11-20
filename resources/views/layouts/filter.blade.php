@@ -58,27 +58,39 @@
         function runFilter() {
             let halfSelected = document.getElementById('half').classList.contains('border-orange-500');
             let fullSelected = document.getElementById('full').classList.contains('border-orange-500');
-            let programSelected = document.getElementById('tipe_beasiswa').value; // Assume it's a select or input
+            let programSelected = document.getElementById('tipe_beasiswa').value;
+            let jenjangSelected = document.getElementById('jenjang_pendidikan').value;
+            let jurusanSelected = document.getElementById('jurusan').value;
 
             // Create the query string based on selected filters
             let queryParams = new URLSearchParams();
 
             // Add jenis_beasiswa filters
             if (halfSelected) {
-                queryParams.append('jenis_beasiswa', 'half');
+                queryParams.append('jenis_beasiswa[]', 'half');
             } 
             if (fullSelected) {
-                queryParams.append('jenis_beasiswa', 'full');
+                queryParams.append('jenis_beasiswa[]', 'full');
             }
 
             // Add tipe_beasiswa filter (only if it is selected)
             if (programSelected) {
-                queryParams.append('tipe_beasiswa', programSelected); // 'kipk', 'internal', 'eksternal'
+                queryParams.append('tipe_beasiswa', programSelected);
             }
 
-            // Redirect to the filtered URL (add more query params if necessary)
+            // Add jenjang_pendidikan filter (only if it is selected)
+            if (jenjangSelected) {
+                queryParams.append('jenjang_pendidikan', jenjangSelected);
+            }
+
+            if(jurusanSelected) {
+                queryParams.append('jurusan_khusus', jurusanSelected);
+            }
+
+            // Redirect to the filtered URL
             window.location.href = `?${queryParams.toString()}`;
         }
+
 
     </script>
 </head>

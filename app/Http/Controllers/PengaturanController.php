@@ -23,8 +23,10 @@ class PengaturanController extends Controller
         $nama = explode(' ', $user->name);
         $nama_depan = $nama[0];
         $nama_belakang = $nama[1];
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
 
-        return view('pages.Pengaturan.index', compact('user_id', 'email', 'nama_depan', 'nama_belakang', 'jk', 'user_img'));
+        return view('pages.Pengaturan.index', compact('user_id', 'email', 'nama_depan', 'nama_belakang', 'jk', 'user_img', 'notificationData'));
     }
 
     /**

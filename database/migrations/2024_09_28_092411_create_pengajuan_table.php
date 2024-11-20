@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,6 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('kode_status', function (Blueprint $table) {
+            $table->id();
+            $table->string('isi_status');
+        });
+
         Schema::create('pengajuan_beasiswa', function (Blueprint $table) {
             $table->id();
             $table->string("nim",9);
@@ -18,7 +24,8 @@ return new class extends Migration
             $table->date('tanggal_pengajuan');
             $table->foreignId('status')->constrained('kode_status');
             $table->text('komentar')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
             $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
@@ -29,16 +36,10 @@ return new class extends Migration
             $table->unsignedBigInteger("id_pengajuan_beasiswa");
             $table->string("nama_dokumen");
             $table->text("link_dokumen");
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->foreign('id_pengajuan_beasiswa')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
-
-        Schema::create('kode_status', function (Blueprint $table) {
-            $table->id('id_status');
-            $table->string('isi_status');
-        });
-
-
     }
 
     /**

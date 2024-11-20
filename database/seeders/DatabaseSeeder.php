@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,9 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Panggil BeasiswaSeeder
-        $this->call(BeasiswaSeeder::class);
         $this->call(UsersTableSeeder::class);
+        $this->call(RoleSeeder::class);
+        $this->call(ReviewerSeeder::class);
         $this->call([
             JurusanSeeder::class,
         ]);
@@ -23,6 +24,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProdiSeeder::class
         ]);
+
+        $this->call(BeasiswaSeeder::class);
         $this->call(MahasiswaSeeder::class);
+        $this->call(NotifikasiSeeder::class);
     }
 }

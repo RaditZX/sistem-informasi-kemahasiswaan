@@ -116,11 +116,11 @@ class AuthController extends Controller
             $this->firebaseAuth->sendEmailVerificationLink($firebaseUser->email);
 
             $user = User::create([
+                'id' => User::orderBy('id', 'desc')->first()?->id + 1,
                 'email' => $firebaseUser->email,
-                'email_verified_at' => false,
             ]);
 
-            return redirect()->route('auth.register-information',['id'=>$user->user_id]);
+            return redirect()->route('auth.register-information',['id'=>$user->id]);
 
         } catch (FirebaseEmailExists $e) {
             return response()->json(['error' => 'Email already exists in Firebase'], 409);
@@ -133,8 +133,10 @@ class AuthController extends Controller
 
     public function insertMahasiswaData(Request $request, string $id)
     {
-
         $request->validate([
+            'nama_depan'=>'required|string',
+            'nama_belakang'=>'required|string',
+            'jenis_kelamin'=>'required|string',
             'nim' => 'required|string|size:9|unique:mahasiswa,nim',
             'semester' => 'required|integer|min:1|max:8',
             'tgl_lahir' => 'required|date',
@@ -143,9 +145,6 @@ class AuthController extends Controller
             'angkatan' => 'required|integer|digits:4',
         ]);
 
-
-
-        // Create a new Mahasiswa record
         Mahasiswa::create([
             'user_id' => $id,
             'nim' => $request->nim,
@@ -154,6 +153,12 @@ class AuthController extends Controller
             'prodi_id' => $request->prodi_id,
             'no_hp' => $request->no_hp,
             'angkatan' => $request->angkatan,
+        ]);
+
+        User::where('id','=', $id)->update([
+            'nama_depan' => $request->nama_depan,
+            'nama_belakang' => $request->nama_belakang,
+            'jenis_kelamin' => $request->jenis_kelamin,
         ]);
 
         return redirect()->intended('/beasiswa');

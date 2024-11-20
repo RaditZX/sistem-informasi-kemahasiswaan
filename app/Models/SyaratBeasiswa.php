@@ -13,13 +13,10 @@ class SyaratBeasiswa extends Model
 
     protected $fillable = ['beasiswa_id', 'syarat'];
 
-    public $incrementing = false; // Karena tidak menggunakan auto-increment ID
-    
-    protected $primaryKey = ['beasiswa_id', 'syarat']; // Menggunakan composite key
-
-    // Relasi ke Beasiswa (many to one)
+    // Relasi ke Beasiswa (many to many)
     public function beasiswa()
     {
-        return $this->belongsTo(Beasiswa::class);
+        return $this->belongsToMany(Beasiswa::class, 'beasiswa_syarat_beasiswa');
     }
 }
+

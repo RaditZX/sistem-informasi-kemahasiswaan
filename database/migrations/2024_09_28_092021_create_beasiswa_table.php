@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -21,42 +22,39 @@ return new class extends Migration
             $table->string('sumber');
             $table->date('tanggal_mulai');
             $table->date('tanggal_berakhir');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         // Table untuk syarat_beasiswa (pivot table)
         Schema::create('syarat_beasiswa', function (Blueprint $table) {
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->id();
             $table->string('syarat');
-            $table->timestamps();
-
-            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         // Table untuk benefit_beasiswa (pivot table)
         Schema::create('benefit_beasiswa', function (Blueprint $table) {
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->id();
             $table->string('benefit');
-            $table->timestamps();
-
-
-            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         // Table untuk syarat_dokumen (pivot table)
         Schema::create('syarat_dokumen', function (Blueprint $table) {
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->id();
             $table->string('dokumen');
-            $table->text('deskripsi_dokumen');
-            $table->timestamps();
-
-            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
         Schema::create('poster_beasiswa', function (Blueprint $table) {
             $table->unsignedBigInteger('beasiswa_id');
             $table->text('link_poster');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
@@ -64,31 +62,56 @@ return new class extends Migration
         // Table untuk jenjang_pendidikan (pivot table)
         Schema::create('jenjang_pendidikan', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('beasiswa_id');
             $table->enum('jenjang', ['D3', 'D4']);
             $table->foreignId('jurusan')->constrained('jurusan')->onDelete('cascade')->nullable();
-            $table->timestamps();
-
-            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
 
-        Schema::create('poster_beasiswa', function(Blueprint $table){
-            $table->id();
+                // Tabel pivot untuk beasiswa dan jenjang_pendidikan
+        Schema::create('beasiswa_jenjang_pendidikan', function (Blueprint $table) {
             $table->unsignedBigInteger('beasiswa_id');
-            $table->text('link_poster');
-            $table->timestamps();
+            $table->unsignedBigInteger('jenjang_pendidikan_id');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->foreign('jenjang_pendidikan_id')->references('id')->on('jenjang_pendidikan')->onDelete('cascade');
         });
 
-        Schema::create('poster_beasiswa', function(Blueprint $table){
-            $table->id();
+        // Tabel pivot untuk beasiswa dan benefit_beasiswa
+        Schema::create('beasiswa_benefit', function (Blueprint $table) {
             $table->unsignedBigInteger('beasiswa_id');
-            $table->string('link_poster');
-            $table->timestamps();
+            $table->unsignedBigInteger('benefit_beasiswa_id');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->foreign('benefit_beasiswa_id')->references('id')->on('benefit_beasiswa')->onDelete('cascade');
         });
+
+        // Tabel pivot untuk beasiswa dan syarat_dokumen
+        Schema::create('beasiswa_syarat_dokumen', function (Blueprint $table) {
+            $table->unsignedBigInteger('beasiswa_id');
+            $table->unsignedBigInteger('syarat_dokumen_id');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+
+            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->foreign('syarat_dokumen_id')->references('id')->on('syarat_dokumen')->onDelete('cascade');
+        });
+
+        // Tabel pivot untuk beasiswa dan syarat_beasiswa
+        Schema::create('beasiswa_syarat_beasiswa', function (Blueprint $table) {
+            $table->unsignedBigInteger('beasiswa_id');
+            $table->unsignedBigInteger('syarat_beasiswa_id');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+
+            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+            $table->foreign('syarat_beasiswa_id')->references('id')->on('syarat_beasiswa')->onDelete('cascade');
+        });
+
     }
 
     /**

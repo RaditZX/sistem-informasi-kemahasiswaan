@@ -12,7 +12,10 @@ class PengajuanDokumenController extends Controller
      */
     public function index()
     {
-        //
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
+
+        return compact('notificationData');
     }
 
     /**
