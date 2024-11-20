@@ -15,7 +15,21 @@ class FileController extends Controller
         $credentialsFile = env('FIREBASE_CREDENTIALS');
 
         $firebase = (new Factory)->withServiceAccount($credentialsFile);
-        $this->storage = $firebase->createStorage();
+        $this->storage = $firebase->createStorage()->getBucket();
+    }
+
+    public function setMetadataForAllFiles()
+    {
+        $prefix = 'dokumen/';
+        $objects = $this->storage->objects(['prefix' => $prefix]);
+
+        foreach ($objects as $object) {
+            $object->updateMetadata([
+                'contentDisposition' => 'inline',
+                'contentType' => 'application/pdf',
+            ]);
+            echo "Updated metadata for {$object->name()}\n";
+        }
     }
 
     public function uploadFile(Request $request)
@@ -32,7 +46,7 @@ class FileController extends Controller
         $filePath = rtrim($path, '/') . '/' . $file->getClientOriginalName();
 
 
-        $bucket = $this->storage->getBucket();
+        $bucket = $this->storage;
         $bucket->upload(fopen($file->getPathname(), 'r'), [
             'name' => $filePath,
             'metadata' => [
@@ -59,7 +73,7 @@ class FileController extends Controller
         $fileName = $request->input('file_name');
         $path = rtrim($request->input('path'), '/') . '/' . $fileName;
 
-        $bucket = $this->storage->getBucket();
+        $bucket = $this->storage;
         $object = $bucket->object($path);
 
         if ($object->exists()) {

@@ -46,7 +46,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-
         Schema::dropIfExists('pengajuan_dokumen');
         Schema::dropIfExists('pengajuan_beasiswa');
         Schema::dropIfExists('kode_status');

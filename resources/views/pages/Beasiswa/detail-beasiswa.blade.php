@@ -14,13 +14,13 @@
                         @endforeach
                     </div>
                     <div class="swiper-pagination"></div>
-            
+
                     <!-- Position navigation buttons inside the swiper-container -->
                     <div class="swiper-button-next absolute right-20"></div>
                     <div class="swiper-button-prev absolute left-20"></div>
                 </div>
             </div>
-            
+
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     var swiper = new Swiper('.swiper-container', {
