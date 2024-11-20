@@ -11,15 +11,12 @@ class BenefitBeasiswa extends Model
 
     protected $table = 'benefit_beasiswa';
 
-    protected $fillable = ['beasiswa_id', 'benefit'];
+    protected $fillable = ['benefit'];
 
-    public $incrementing = false; // Karena tidak menggunakan auto-increment ID
-    
-    protected $primaryKey = ['beasiswa_id', 'benefit']; // Menggunakan composite key
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()
     {
-        return $this->belongsTo(Beasiswa::class);
+        return $this->belongsToMany(Beasiswa::class, 'beasiswa_benefit');
     }
 }

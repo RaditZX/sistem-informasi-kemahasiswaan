@@ -63,10 +63,11 @@ class PengajuanBeasiswaControllerTest extends TestCase
 
     public function test_store_pengajuan_beasiswa_with_multiple_file_uploads_to_firestorage()
     {
-        $this->seed();
 
-        // Simulate the file upload
-        Storage::fake('gcs'); // Use a fake storage disk
+        $this->seed(); // Seed the database, if needed
+
+        // Simulate the file upload using fake storage
+        Storage::fake('gcs');
 
         // Prepare the request data with multiple files
         $files = [
@@ -89,10 +90,10 @@ class PengajuanBeasiswaControllerTest extends TestCase
         ];
 
         // Call the store method
-        $response = $this->post(route('pengajuan.store'), $data);
+        $response = $this->post(route('pengajuan.store', ['id' => 1]), $data);
 
         // Assert the redirect and success message
-        $response->assertRedirect(route('pengajuan.create'));
+        $response->assertRedirect(route('pengajuan.create', ['id' => 1]));
         $response->assertSessionHas('success', 'Item created successfully.');
 
         // Assert that the data was inserted into the PengajuanBeasiswa table
@@ -110,8 +111,8 @@ class PengajuanBeasiswaControllerTest extends TestCase
                 'pengajuan_beasiswa_id' => PengajuanBeasiswa::first()->id,
             ]);
         }
-
     }
+
 
     protected function setUp(): void
     {
@@ -142,27 +143,17 @@ class PengajuanBeasiswaControllerTest extends TestCase
         ];
 
         // Call the store method
-        $this->post(route('pengajuan.store'), $data);
+        $this->post(route('pengajuan.store', ["id" => 11]), $data);
 
+        // Edit test: update document
         $response = $this->patch(route('pengajuan.edit', ['id' => 2]), [
             'file_1' => UploadedFile::fake()->create('new_document.pdf', 100),
         ]);
 
-        $response->assertRedirect(route('pengajuan.create'));
+        // Pass the correct id for the redirect route
+        $response->assertRedirect(route('pengajuan.create', ['id' => 2]));
         $response->assertSessionHas('success', 'Documents updated successfully.');
     }
-
-    // public function testEditHandlesNoDocumentsFound()
-    // {
-    //     // Act: Simulate a request to edit with no documents
-    //     $response = $this->post(route('pengajuan.edit', ['id' => '999']), [
-    //         'title' => 'Updated Title',
-    //         'status' => 'Updated Status',
-    //     ]);
-
-    //     $response->assertRedirect(route('pengajuan.create'));
-    //     $this->assertSessionHas('failed', 'No documents found for pengajuan id: 999');
-    // }
 
 
 

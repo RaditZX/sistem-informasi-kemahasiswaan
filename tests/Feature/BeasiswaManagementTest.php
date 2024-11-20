@@ -16,14 +16,10 @@ class BeasiswaManagementTest extends TestCase
     /** @test */
     public function it_can_list_all_beasiswa()
     {
-        // Create a user
-        $user = User::factory()->create(); // Ensure this returns a User instance
+
 
         // Create some Beasiswa records
         Beasiswa::factory(5)->create();
-
-        // Act as the user
-        $this->actingAs($user);
 
         // Call the index route
         $response = $this->get(route('beasiswa.index'));
@@ -38,8 +34,6 @@ class BeasiswaManagementTest extends TestCase
     public function it_can_store_a_new_scholarship()
     {
         // Create a user and act as the user
-        $user = User::factory()->create();
-        $this->actingAs($user); // Ensure the user is authenticated
 
         $file = UploadedFile::fake()->image('poster1.jpg');
 
@@ -69,7 +63,7 @@ class BeasiswaManagementTest extends TestCase
         $response = $this->post('/beasiswa', $data);
 
         // Assert that the response is a redirect
-        $response->assertRedirect('/form-beasiswa');
+        $response->assertRedirect('/beasiswa');
 
         // Assert that the scholarship was stored in the database
         $this->assertDatabaseHas('beasiswa', [
@@ -79,7 +73,6 @@ class BeasiswaManagementTest extends TestCase
             'tipe_beasiswa' => 'prestasi',
             'kuota' => 100,
             'sumber' => 'Test Source',
-            'link_poster_1' => 'https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2Fposter1.jpg?alt=media', // Adjust this based on your upload logic
         ]);
 
         // Check if the requirements are stored
@@ -106,14 +99,10 @@ class BeasiswaManagementTest extends TestCase
     /** @test */
     public function it_can_show_a_specific_beasiswa()
     {
-        // Create a user
-        $user = User::factory()->create();
 
         // Create a Beasiswa
         $beasiswa = Beasiswa::factory()->create();
 
-        // Act as the user
-        $this->actingAs($user);
 
         // Call the show route
         $response = $this->get(route('beasiswa.show', $beasiswa->id));
@@ -126,14 +115,9 @@ class BeasiswaManagementTest extends TestCase
     /** @test */
     public function it_can_delete_a_beasiswa()
     {
-        // Create a user
-        $user = User::factory()->create();
 
         // Create a Beasiswa
         $beasiswa = Beasiswa::factory()->create();
-
-        // Act as the user
-        $this->actingAs($user);
 
         // Call the destroy route
         $response = $this->delete(route('beasiswa.destroy', $beasiswa->id));

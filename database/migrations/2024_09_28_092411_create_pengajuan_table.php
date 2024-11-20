@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -37,7 +38,7 @@ return new class extends Migration
             $table->text("link_dokumen");
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreign('pengajuan_beasiswa_id')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
+            $table->foreign('id_pengajuan_beasiswa')->references('id')->on('pengajuan_beasiswa')->onDelete('cascade');
         });
     }
 
@@ -46,7 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-
         Schema::dropIfExists('pengajuan_dokumen');
         Schema::dropIfExists('pengajuan_beasiswa');
         Schema::dropIfExists('kode_status');
