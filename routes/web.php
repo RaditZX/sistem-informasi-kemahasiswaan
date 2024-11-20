@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PengajuanBeasiswaController;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\PengaturanController;

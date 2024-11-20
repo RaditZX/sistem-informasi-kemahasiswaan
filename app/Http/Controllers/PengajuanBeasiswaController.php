@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PengajuanBeasiswa;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\NotificationController;
 use App\Models\KodeStatus;
 use App\Models\Mahasiswa;
 use App\Models\Reviewer;
@@ -43,8 +44,12 @@ class PengajuanBeasiswaController extends Controller
         $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
         ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
         ->join('users','mahasiswa.user_id', '=', 'users.id')
-        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->select('beasiswa.*', 'users.nama_depan', 'users.nama_belakang','pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
         ->get();
+
+        $dataReviewer = Reviewer::join('users', 'reviewer.user_id', '=', 'users.id')
+            ->where('user_id', $user_id)
+            ->get();
 
         if (!$dataReviewer->isEmpty()) {
             $nip = $dataReviewer[0]->nip;
@@ -54,7 +59,7 @@ class PengajuanBeasiswaController extends Controller
         $query = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
             ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
             ->join('users', 'mahasiswa.user_id', '=', 'users.id')
-            ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.id', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan');
+            ->select('beasiswa.*', 'users.nama_depan', 'users.nama_belakang', 'pengajuan_beasiswa.id', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan');
 
         if ($nip !== null) {
             // If the user is a reviewer, no additional conditions are needed
