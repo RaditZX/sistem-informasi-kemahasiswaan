@@ -19,23 +19,23 @@ class beasiswa extends Model
     // Relasi satu ke banyak dengan SyaratBeasiswa
     public function syaratBeasiswa()
     {
-        return $this->hasMany(SyaratBeasiswa::class);
+        return $this->belongsToMany(SyaratBeasiswa::class,'beasiswa_syarat_beasiswa');
     }
 
     // Relasi satu ke banyak dengan BenefitBeasiswa
     public function benefitBeasiswa()
     {
-        return $this->hasMany(BenefitBeasiswa::class);
+        return $this->belongsToMany(BenefitBeasiswa::class, 'beasiswa_benefit');
     }
 
     // Relasi satu ke banyak dengan SyaratDokumen
     public function syaratDokumen()
     {
-        return $this->hasMany(SyaratDokumen::class);
+        return $this->belongsToMany(SyaratDokumen::class,'beasiswa_syarat_dokumen');
     }
     public function jenjangPendidikan()
     {
-        return $this->hasMany(jenjangPendidikan::class);
+        return $this->belongsToMany(JenjangPendidikan::class, 'beasiswa_jenjang_pendidikan');
     }
     public function pengajuanBeasiswa()
     {

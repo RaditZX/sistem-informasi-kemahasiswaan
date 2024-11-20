@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PengajuanBeasiswaController;
 use App\Http\Controllers\PengaturanController;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/mahasiswa/create/{id}','insertMahasiswaData')->name('mahasiswa.insert');
 
     // Register Information
-    Route::get('/register-information', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
+    Route::get('/register-information/{id}', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
     Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
