@@ -3,7 +3,7 @@
 @extends('layouts.main')
 
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null, 'notificationData'=>$notificationData])
 
     <div class="flex flex-row p-5">
         <!-- Left Side: Swiper Image - Set to 50% width, centered content -->

@@ -11,6 +11,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+
         $data = DB::table('beasiswa as b')
             ->selectRaw('
         COUNT(DISTINCT b.id) AS total_beasiswa,

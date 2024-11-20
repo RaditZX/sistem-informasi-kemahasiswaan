@@ -14,6 +14,25 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('role')->insert([
+            [
+                'id' => 1,
+                'role_name' => 'Staff Kemahasiswaan',
+            ],
+            [
+                'id' => 2,
+                'role_name' => 'Kepala Jurusan'
+            ],
+            [
+                'id' => 3,
+                'role_name' => 'Koordinator Layanan Eksternal'
+            ],
+            [
+                'id' => 4,
+                'role_name' => 'Wakil Direktur 3'
+            ],
+        ]);
+
         DB::table('users')->insert([
             [
                 'id'=>1,
@@ -160,11 +179,5 @@ class UsersTableSeeder extends Seeder
             ],
         ]);
 
-        DB::table('role')->insert([
-            'Staff Kemahasiswaan',
-            'Kepala Jurusan',
-            'Koordinator Layanan Eksternal',
-            'Wakil Direktur 3'
-        ]);
     }
 }

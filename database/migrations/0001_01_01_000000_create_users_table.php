@@ -44,12 +44,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('reviewer', function(Blueprint $table){
-            $table->unsignedBigInteger("user_id");
-            $table->string("nip",20)->primary();
+        
+        Schema::create('reviewer', function(Blueprint $table): void{
+            $table->unsignedBigInteger("user_id")->primary();
+            $table->string("nip",20);
             $table->tinyInteger("role_id");
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('role_id')->references('role_id')->on('role')->onDelete('cascade');;
+            $table->foreign('role_id')->references('id')->on('role')->onDelete('cascade');;
             $table->timestamps();
         });
 
