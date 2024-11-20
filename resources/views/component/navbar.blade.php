@@ -1,5 +1,5 @@
-<!-- sidenav  -->
 
+<!-- sidenav  -->
 <style>
     .icon {
         background: white; /* Warna default latar belakang */
@@ -18,7 +18,7 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 </style>
-{{-- @dd($notificationData) --}}
+
 <aside
     class="max-w-62.5 h-screen ease-nav-brand z-990 fixed inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent">
     <div class="h-19.5">
@@ -31,10 +31,9 @@
         </a>
     </div>
 
-    <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-t<<<<<<< HEAD
-       <div class="items-center
-        block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
-    <ul class="flex flex-col pl-0 mb-0">
+    <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+    <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+      <ul class="flex flex-col pl-0 mb-0">
         <li class="mt-0.5 w-full">
 
             <a id="dashboard-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
@@ -84,7 +83,6 @@
                 <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Beasiswa</span>
             </a>
         </li>
-
 
         <li class="mt-0.5 w-full">
             <a id="beasiswa-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
@@ -136,9 +134,6 @@
                 <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Pengumuman</span>
             </a>
         </li>
-
-
-
 
         <li class="w-full mt-4">
             <h6 class="pl-6 ml-2 text-xs font-bold leading-tight uppercase opacity-60">Account pages</h6>
@@ -204,22 +199,22 @@
         <li class="mt-0.5 w-full">
             <form id="logout-form" action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit"
+                <button 
+                    type="submit" 
                     class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors hover:bg-gray-200 rounded-lg">
-                    <div
+                    <div 
                         class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white bg-center stroke-0 text-center xl:p-2.5">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
-                    <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Logout</span>
+                    <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">
+                        Logout
+                    </span>
                 </button>
             </form>
         </li>
 
-
     </ul>
     </div>
-
-
 </aside>
 
 <!-- end sidenav -->
@@ -269,18 +264,18 @@
                     </li>
 
                     <!-- notifications -->
-                    
                     <li class="relative flex items-center pr-2">
                         <p class="hidden transform-dropdown-show"></p>
                         <a href="javascript:;" class="block p-0 text-sm transition-all ease-nav-brand text-slate-500"
                             dropdown-trigger aria-expanded="false">
                             <i class="cursor-pointer fa fa-bell"></i>
                         </a>
-                    
+
                         <ul dropdown-menu class="text-sm transform-dropdown before:font-awesome before:leading-default before:duration-350 before:ease-soft lg:shadow-soft-3xl duration-250 min-w-44 before:sm:right-7.5 before:text-5.5 pointer-events-none absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 opacity-0 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8'] sm:-mr-6 lg:absolute lg:right-0 lg:left-auto lg:mt-2 lg:block lg:cursor-pointer">
-                            <!-- Looping through notifications -->
-                           
-                            @if(isset($notificationData))
+                            
+                            <!-- Check if notifications are available -->
+                            @if(isset($notificationData) && count($notificationData) > 0)
+                                <!-- Looping through notifications -->
                                 @foreach ($notificationData as $notification)
                                     <li class="relative mb-2">
                                         <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" href="javascript:;">
@@ -301,12 +296,14 @@
                                     </li>
                                 @endforeach
                             @else
+                                <!-- If there are no notifications, show this message -->
                                 <li class="relative mb-2">
                                     <p class="text-center text-gray-500 py-2">No new notifications</p>
                                 </li>
                             @endif
                         </ul>
                     </li>
+
                 </ul>
             </div>
         </div>

@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         // Panggil BeasiswaSeeder
         $this->call(UsersTableSeeder::class);
+        $this->call(RoleSeeder::class);
+        $this->call(ReviewerSeeder::class);
         $this->call([
             JurusanSeeder::class,
         ]);

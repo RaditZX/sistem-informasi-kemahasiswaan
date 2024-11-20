@@ -60,7 +60,7 @@ class BeasiswaController extends Controller
         $user = Auth::user();
 
         // Pass data to the view
-        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa'));
+        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa', 'notificationData'));
 
     }
     public function getListBeasiswaForStaff()
