@@ -58,12 +58,10 @@ class BeasiswaController extends Controller
 
         // Data pengguna untuk view
         $user = Auth::user();
-        $name = $user->name;
-        $email = $user->email;
-        $role_id = $user->role_id;
 
-        // Kirim data ke view
-        return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa','notificationData'));
+        // Pass data to the view
+        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa'));
+
     }
     public function getListBeasiswaForStaff()
     {
@@ -172,7 +170,7 @@ class BeasiswaController extends Controller
             'benefit_beasiswa' => 'array',
             'benefit_beasiswa.*' => 'string|max:255',
             'jenjang_pendidikan' => 'array',
-            'jenjang_pendidikan.*' => 'string|max:100', 
+            'jenjang_pendidikan.*' => 'string|max:100',
             'poster' => 'required|array|max:3',
             'poster.*' => 'image|mimes:jpeg,png,jpg'
         ], $messages);
@@ -183,22 +181,6 @@ class BeasiswaController extends Controller
             $validatedData['syarat_beasiswa'][] = $validatedData['ipk_min'];
         }
 
-        // jenis_waktu_beasiswa
-        $tgl_mulai = strtotime($request->tanggal_mulai);
-        $tgl_akhir = strtotime($request->tanggal_berakhir);
-        $tgl_skrg = date( time());
-
-        // current = tgl_mulai <= tgl_skrg <= tgl_akhir
-        // upcoming = tgl_skrg < tgl_mulai
-        // last = tgl_skrg > tgl_akhir
-        if ($tgl_skrg < $tgl_mulai){
-            $jenis_waktu = 'upcoming';
-        } elseif ($tgl_mulai <= $tgl_skrg && $tgl_skrg <= $tgl_akhir){
-            $jenis_waktu = 'current';
-        } else {
-            $jenis_waktu = 'last';
-        }
-
         // Handle file uploads
         $fileUrls = []; // Initialize an empty array to store file URLs
 
@@ -207,11 +189,11 @@ class BeasiswaController extends Controller
                     $newRequest = new Request();
                     $newRequest->files->set('file', $file);
                     $newRequest->merge(['path' => 'poster']);
-    
+
                     // Call the uploadFile method from FileController
                     $fileController = new FileController();
                     $uploadedFileUrl = $fileController->uploadFile($newRequest);
-    
+
                     // Store the uploaded file URL in the array
                     $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
             }
@@ -220,16 +202,15 @@ class BeasiswaController extends Controller
         $beasiswa = Beasiswa::create([
             'nama_beasiswa' => $validatedData['nama_beasiswa'],
             'deskripsi' => $validatedData['deskripsi'],
-            'jenis_waktu_beasiswa' => $jenis_waktu,
             'jenis_beasiswa' => $validatedData['jenis_beasiswa'],
             'tipe_beasiswa' => $validatedData['tipe_beasiswa'],
             'kuota' => $validatedData['kuota_beasiswa'],
             'sumber' => $validatedData['sumber_beasiswa'],
             'tanggal_mulai' => $validatedData['tanggal_mulai'],
             'tanggal_berakhir' => $validatedData['tanggal_berakhir']
-        ]); 
-        
-       
+        ]);
+
+
         // Log the created scholarship data
         Log::info('Beasiswa created successfully: ', [$beasiswa]);
 
@@ -353,7 +334,7 @@ class BeasiswaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        
+
         // validasi
         $messages = [
             'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
@@ -397,12 +378,11 @@ class BeasiswaController extends Controller
             'benefit_beasiswa' => 'array',
             'benefit_beasiswa.*' => 'string|max:255',
             'jenjang_pendidikan' => 'array',
-            'jenjang_pendidikan.*' => 'string|max:100', 
+            'jenjang_pendidikan.*' => 'string|max:100',
             'poster' => 'array|max:3',
             'poster.*' => 'image|mimes:jpeg,png,jpg'
         ], $messages);
 
-        dd($validatedData);
         // menambahkan ipk_min ke array syarat
         if (isset($validatedData['ipk_min'])) {
             // Anda bisa menambahkan ipk_min ke dalam syarat_beasiswa
@@ -433,7 +413,6 @@ class BeasiswaController extends Controller
             'kuota' => $validatedData['kuota_beasiswa'],
             'tanggal_mulai' => $validatedData['tanggal_mulai'],
             'tanggal_berakhir' => $validatedData['tanggal_berakhir'],
-            'jenis_waktu_beasiswa' => $jenis_waktu,
             'sumber' => $validatedData['sumber_beasiswa'],
         ]);
         $beasiswa->save();

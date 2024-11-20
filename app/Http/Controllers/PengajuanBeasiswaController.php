@@ -43,8 +43,8 @@ class PengajuanBeasiswaController extends Controller
 
         $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
         ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
-        ->join('users','mahasiswa.user_id', '=', 'users.id')
-        ->select('beasiswa.*', 'users.nama_depan', 'users.nama_belakang','pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
+        ->join('users','mahasiswa.email', '=', 'users.email')
+        ->select('beasiswa.*', 'users.nama_depan', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
         ->get();
 
         $dataReviewer = Reviewer::join('users', 'reviewer.user_id', '=', 'users.id')
@@ -168,7 +168,7 @@ class PengajuanBeasiswaController extends Controller
                     ->get();
 
         if ($dokumenPengajuan->isEmpty()) {
-            return redirect()->route('pengajuan.create')->with('failed', 'No documents found for pengajuan id: ' . $id);
+            return redirect()->route('pengajuan.create',['id'=>$id])->with('failed', 'No documents found for pengajuan id: ' . $id);
         }
 
         $fileKeys = ['file_1', 'file_2', 'file_3', 'file_4', 'file_5'];
@@ -197,7 +197,7 @@ class PengajuanBeasiswaController extends Controller
             $dokumen->save();
         }
 
-        return redirect()->route('pengajuan.create')->with('success', 'Documents updated successfully.');
+        return redirect()->route('pengajuan.create',['id'=>$id])->with('success', 'Documents updated successfully.');
     }
 
 

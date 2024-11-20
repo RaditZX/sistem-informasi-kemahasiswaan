@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('email')->unique();
-            $table->string('nama_depan');
-            $table->string('nama_belakang');
             $table->enum('jenis_kelamin',['Pria','Wanita']);
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->text('foto');
+            $table->string('foto');
             $table->timestamps();
         });
 
@@ -43,6 +43,7 @@ return new class extends Migration
             $table->string("role_name");
             $table->timestamps();
         });
+
         
         Schema::create('reviewer', function(Blueprint $table): void{
             $table->unsignedBigInteger("user_id")->primary();
@@ -76,15 +77,30 @@ return new class extends Migration
             $table->tinyInteger('semester');
             $table->date('tgl_lahir');
             $table->unsignedBigInteger('prodi_id');
+            $table->string('no_hp')->unique();
             $table->year('angkatan');
 
             // Foreign key constraints
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreign('prodi_id')->references('id')->on('prodi')->onDelete('cascade');
 
             $table->timestamps();
         });
 
+        Schema::create('role',function(Blueprint $table){
+            $table->id("role_id");
+            $table->string("role_name");
+            $table->timestamps();
+        });
+
+        Schema::create('reviewer', function(Blueprint $table){
+            $table->unsignedBigInteger("user_id");
+            $table->string("nip",18)->primary();
+            $table->tinyInteger("role_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('role_id')->references('role_id')->on('role')->onDelete('cascade');;
+            $table->timestamps();
+        });
     }
 
     /**

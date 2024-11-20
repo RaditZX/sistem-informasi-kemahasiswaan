@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reviewer extends Model
 {
+    /** @use HasFactory<\Database\Factories\ReviewerFactory> */
     use HasFactory;
 
-    // Tentukan nama tabel jika berbeda dengan konvensi Laravel
+    protected $primaryKey = 'nip'; // Custom primary key
     protected $table = 'reviewer';
+    protected $fillable = ['nim','semester','tgl_lahir','no_hp','jurusan_id','prodi_id','angkatan','user_id'];
 
-    // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['user_id','nip','role_id'];
 }
