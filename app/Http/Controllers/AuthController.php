@@ -111,22 +111,13 @@ class AuthController extends Controller
         $password = $request->input('password');
 
         try {
-            if ($method === 'google') {
-                $idToken = $request->input('idToken');
-                $verifiedIdToken = $this->firebaseAuth->verifyIdToken($idToken);
-                $uid = $verifiedIdToken->claims()->get('sub');
-                $firebaseUser = $this->firebaseAuth->getUser($uid);
-            } elseif ($method === 'email_password') {
                 $firebaseUser = $this->firebaseAuth->createUserWithEmailAndPassword($email, $password);
                 $this->firebaseAuth->sendEmailVerificationLink($firebaseUser->email);
-            } else {
-                return response()->json(['error' => 'Invalid registration method'], 400);
-            }
+
 
 
             User::create([
-                'email' => $firebaseUser->email,
-                'email_verified_at' => false,
+                'email' => $firebaseUser->email
             ]);
 
             return response()->json([
