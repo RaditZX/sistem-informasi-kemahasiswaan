@@ -25,7 +25,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/mahasiswa/create/{id}','insertMahasiswaData')->name('mahasiswa.insert');
 
     // Register Information
-    Route::get('/register-information', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
+    Route::get('/register-information/{id}', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
     Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
