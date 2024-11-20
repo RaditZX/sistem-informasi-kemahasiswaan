@@ -43,7 +43,7 @@ class PengajuanBeasiswaController extends Controller
 
         $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
         ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
-        ->join('users','mahasiswa.email', '=', 'users.email')
+        ->join('users','mahasiswa.user_id', '=', 'users.id')
         ->select('beasiswa.*', 'users.nama_depan', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
         ->get();
 
@@ -229,20 +229,23 @@ class PengajuanBeasiswaController extends Controller
         // Get data Reviewer
         $reviewer = [];
         $dataReviewer = Reviewer::join('users', 'reviewer.user_id', '=', 'users.id')
-            ->join('role', 'role.role_id', '=', 'reviewer.role_id')
+            ->join('role', 'role.id', '=', 'reviewer.role_id')
             ->where('user_id', $user_id)
             ->get();
         if (!$dataReviewer->isEmpty()) {
             $reviewer[0] = $dataReviewer[0]->nip;
             $reviewer[1] = $dataReviewer[0]->role_id;
+        } else {
+            $reviewer[0] = NULL;
+            $reviewer[1] = NULL;
         }
     
         // Get detail data of pengajuan beasiswa
         $dataPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
         ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
         ->join('users','mahasiswa.user_id', '=', 'users.id')
-        ->join('kode_status', 'kode_status.id_status', '=', 'pengajuan_beasiswa.status')
-        ->select('beasiswa.*', 'users.name', 'pengajuan_beasiswa.id','pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan', 'kode_status.isi_status')
+        ->join('kode_status', 'kode_status.id', '=', 'pengajuan_beasiswa.status')
+        ->select('beasiswa.*', 'users.nama_depan', 'pengajuan_beasiswa.id','pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan', 'kode_status.isi_status')
         ->where('pengajuan_beasiswa.id', $id)
         ->get();
         

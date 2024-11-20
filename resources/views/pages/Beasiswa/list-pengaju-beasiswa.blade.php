@@ -36,7 +36,7 @@
                 @foreach ($listPengajuan as $pengajuan )
                 <tr class="border-2 rounded-3xl     ">
 
-                        <td class="text-center py-5">{{ $pengajuan->name }}</td>
+                        <td class="text-center py-5">{{ $pengajuan->nama_depan }}  {{ $pengajuan->nama_belakang }}</td>
                         <td class="text-center py-5">{{ $pengajuan->nama_beasiswa }}</td>
                         <td class="text-center py-5">{{ $pengajuan->sumber }}</td>
                         <td class="text-center py-5">{{ $pengajuan->tanggal_pengajuan}}</td>
