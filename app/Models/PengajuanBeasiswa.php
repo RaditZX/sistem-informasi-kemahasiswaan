@@ -30,4 +30,9 @@ class PengajuanBeasiswa extends Model
     {
         return $this->hasMany(PengajuanDokumen::class);
     }
+
+    public function Status()
+    {
+        return $this->belongsTo(KodeStatus::class, 'status');
+    }
 }

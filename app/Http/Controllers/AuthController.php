@@ -52,11 +52,11 @@ class AuthController extends Controller
 
             if ($firebaseUser->emailVerified) {
                 $user = User::where('email', $email)->firstOrFail();
-                $mhs = Mahasiswa::where('user_id',$user->user_id)->firstOrFail();
+                $mhs = Mahasiswa::where('user_id',$user->id)->firstOrFail();
                 if ($mhs) {
                     Auth::login($user);
                 } else {
-                    $reviewer = Reviewer::where('user_id', $user->user_id)->first();
+                    $reviewer = Reviewer::where('user_id', $user->id)->first();
                     if ($reviewer) {
                         Auth::login($user);
                     } else {

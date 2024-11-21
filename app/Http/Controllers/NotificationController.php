@@ -11,14 +11,14 @@ class NotificationController extends Controller
 {
     try {
         // Get all notifications
-        $notifikasi = Notifikasi::all();
-
+        $notifikasi = Notifikasi::with('pengajuanBeasiswa.Status')->get();
+        // dd($notifikasi);
         // Return the notifications as JSON
         return $notifikasi;
     } catch (\Exception $e) {
         // Log the error and return an internal server error response
         \Log::error('Error fetching notifications: ' . $e->getMessage());
-        return response()->json(['error' => 'Unable to fetch notifications'], 500);
+        return response()->json(['error' => $e->getMessage()], 500);
     }
 }
 
