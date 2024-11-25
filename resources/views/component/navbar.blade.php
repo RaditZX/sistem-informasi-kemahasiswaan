@@ -285,7 +285,10 @@
                                                 </div>
                                                 <div class="flex flex-col justify-center">
                                                     <!-- Display status of the notification -->
-                                                    <h6 class="mb-1 text-sm font-normal leading-normal">{{ $notification->pengajuanBeasiswa->Status->isi_status }}</h6>
+                                                    <h6 class="mb-1 text-sm font-normal leading-normal">
+                                                        {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}
+                                                        {{ $notification->pengajuanBeasiswa->Status->isi_status }}
+                                                    </h6>
                                                     <p class="mb-0 text-xs leading-tight text-slate-400">
                                                         <i class="mr-1 fa fa-clock"></i>
                                                         {{ $notification->created_at }}
