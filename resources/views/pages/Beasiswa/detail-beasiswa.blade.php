@@ -1,24 +1,57 @@
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar',['path'=>"Detail Beasiswa",'id'=>$id])
+    @include('component.navbar',['path'=>"Detail Beasiswa",'id'=>$id, 'notificationData'=>$notificationData]))
+    
     <div class="p-2 pl-10">
         <div class=" flex flex-auto">
-            <div class="basis-1/4 flex justify-center  border-4 rounded-xl shadow  p-5">
-                <img src="https://th.bing.com/th/id/OIP.Hm3Ll_0FLV3Se-jBtxSmQAHaKe?w=202&h=286&c=7&r=0&o=5&dpr=1.3&pid=1.7"
-                    alt="">
+            <div class="basis-1/2 flex justify-center items-center overflow-hidden relative">
+                <div class="swiper-container w-3/4 h-56">
+                    <div class="swiper-wrapper">
+                        @foreach($poster as $post)
+                            <div class="swiper-slide flex justify-center">
+                                <img src="{{ $post }}" class="w-auto h-full object-contain rounded-lg" alt="poster">
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="swiper-pagination"></div>
+
+                    <!-- Position navigation buttons inside the swiper-container -->
+                    <div class="swiper-button-next absolute right-20"></div>
+                    <div class="swiper-button-prev absolute left-20"></div>
+                </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var swiper = new Swiper('.swiper-container', {
+                        slidesPerView: 1,
+                        spaceBetween: 100,
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        loop: true,
+                    });
+                });
+            </script>
+
             <div class="p-8 basis-3/4">
                 <h1 class="text-2xl font-semibold">{{ $beasiswa->nama_beasiswa }}</h1>
                 <div class="flex mb-3 gap-3">
-                    <div class=" rounded-xl p-1 px-3 bg-orange-400 inline-block mt-4">
-                        <h5 class="font-medium text-base text-white">{{ $beasiswa->tipe_beasiswa }}</h5>
+                    <div class=" border border-orange-500 rounded-xl p-1 px-3 bg-white inline-block mt-4">
+                        <h5 class="font-medium text-base text-orange-500">{{ $beasiswa->tipe_beasiswa }}</h5>
                     </div>
-                    <div class=" rounded-xl p-1 px-3 bg-orange-400 inline-block mt-4">
-                        <h5 class="font-medium text-base text-white">{{ $beasiswa->jenis_waktu_beasiswa }}</h5>
+                    <div class=" border border-orange-500 rounded-xl p-1 px-3 bg-white inline-block mt-4">
+                        <h5 class="font-medium text-base text-orange-500">{{ $beasiswa->jenis_waktu_beasiswa }}</h5>
                     </div>
                 </div>
                 <p>{{ $beasiswa->deskripsi }}</p>
 
+                <a href="/pengajuan-beasiswa/{{$id}}">
                 <div class=" rounded-3xl p-3 bg-yellow-400 inline-block mt-4">
                     <div class="flex gap-7">
                         <h4 class="font-medium text-base text-black">Apply Now</h4>
@@ -32,24 +65,9 @@
                     </div>
 
                 </div>
-                <form action="{{ route('beasiswa.destroy', $beasiswa->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                    @csrf
-                    @method('DELETE')
-                    
-                    <button type="submit" class="inline-block mt-4">
-                        <div class="rounded-3xl p-3 bg-red-500">
-                            <div class="flex gap-3">
-                                <h4 class="font-medium text-base text-black">Delete</h4>
-                                <div class="bg-black rounded-xl inline-block p-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </button>
-                </form>
-                
+            </a>
+
+
             </div>
 
         </div>
@@ -73,7 +91,7 @@
                     <p class="text-m font-medium">{{$syarat->syarat}}</p>
                 </div>
                 @endforeach
-                
+
             </div>
         </div>
 

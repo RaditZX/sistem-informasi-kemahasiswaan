@@ -14,47 +14,89 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
+
         DB::table('users')->insert([
             [
-                'name' => 'John Doe',
+                'id'=>1,
+                'nama_depan' => 'John',
+                'nama_belakang' => 'Doe',
                 'email' => 'john.doe@polban.ac.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'), // default password
-                'role_id' => 'mahasiswa',
-                'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Jane Smith',
+                'id'=>2,
+                'nama_depan' => 'Jane',
+                'nama_belakang' => 'Smith',
                 'email' => 'jane.smith@polban.ac.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'), // default password
-                'role_id' => 'staff_kemahasiswaan',
-                'remember_token' => Str::random(10),
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'James Johnson',
-                'email' => 'james.johnson@polban.ac.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'), // default password
-                'role_id' => 'ketua_jurusan',
-                'remember_token' => Str::random(10),
+                'id'=>3,
+                'nama_depan' => 'Staff Kemahasiswaan',
+                'nama_belakang' => 'Satu',
+                'email' => 'staffkema.satu@polban.ac.id',
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Alice Williams',
-                'email' => 'alice.williams@polban.ac.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'), // default password
-                'role_id' => 'wd-3',
-                'remember_token' => Str::random(10),
+                'id'=>4,
+                'nama_depan' => 'Kepala Jurusan',
+                'nama_belakang' => 'Satu',
+                'email' => 'kajur.satu@polban.ac.id',
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>5,
+                'nama_depan' => 'Kepala Jurusan',
+                'nama_belakang' => 'Dua',
+                'email' => 'kajur.dua@polban.ac.id',
+                'jenis_kelamin' => 'Wanita',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>6,
+                'nama_depan' => 'Kepala Jurusan',
+                'nama_belakang' => 'Tiga',
+                'email' => 'kajur.tiga@polban.ac.id',
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>7,
+                'nama_depan' => 'Koordinator Layanan Eksternal',
+                'nama_belakang' => 'Satu',
+                'email' => 'kle.satu@polban.ac.id',
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id'=>8,
+                'nama_depan' => 'Wakil Direktur',
+                'nama_belakang' => 'Tiga',
+                'email' => 'wd.tiga@polban.ac.id',
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
         ]);
+
     }
 }

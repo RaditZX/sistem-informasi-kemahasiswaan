@@ -24,13 +24,18 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'email' => $this->faker->unique()->safeEmail,
+            'nama_depan' => $this->faker->firstName,
+            'nama_belakang' => $this->faker->lastName,
+            'jenis_kelamin' => $this->faker->randomElement(['Pria', 'Wanita']),
+            'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
+            'foto' => 'path/to/foto.jpg',
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
+
 
     /**
      * Indicate that the model's email address should be unverified.
@@ -41,4 +46,5 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
 }

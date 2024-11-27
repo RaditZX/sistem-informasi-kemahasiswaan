@@ -11,11 +11,11 @@ class SyaratDokumen extends Model
 
     protected $table = 'syarat_dokumen';
 
-    protected $fillable = ['beasiswa_id', 'dokumen', 'deskripsi_dokumen'];
+    protected $fillable = ['dokumen'];
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()
     {
-        return $this->belongsTo(Beasiswa::class);
+        return $this->belongsToMany(Beasiswa::class, 'beasiswa_syarat_dokumen');
     }
 }

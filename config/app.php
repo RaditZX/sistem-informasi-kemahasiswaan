@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    Davcpas1234\LaravelPdfViewer\LaravelPdfViewerServiceProvider::class,
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -117,6 +117,7 @@ return [
     | Supported drivers: "file", "cache"
     |
     */
+
 
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),

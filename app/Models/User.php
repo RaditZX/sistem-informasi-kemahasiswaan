@@ -11,15 +11,21 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public $incrementing = true; // Laravel will still auto-increment this field
+    protected $keyType = 'int';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'id',
+        'nama_depan',
+        'nama_belakang',
         'email',
         'password',
+        'jenis_kelamin'
     ];
 
     /**
@@ -40,8 +46,9 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+
+
 }
