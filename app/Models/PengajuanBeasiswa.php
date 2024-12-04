@@ -18,16 +18,21 @@ class PengajuanBeasiswa extends Model
 
     public function Beasiswa()
     {
-        return $this->hasMany(Beasiswa::class);
+        return $this->belongsTo(Beasiswa::class);
     }
 
     public function Mahasiswa()
     {
-        return $this->hasMany(Mahasiswa::class);
+        return $this->belongsTo(Mahasiswa::class);
     }
 
     public function PengajuanDokumen()
     {
         return $this->hasMany(PengajuanDokumen::class);
+    }
+
+    public function Status()
+    {
+        return $this->belongsTo(KodeStatus::class, 'status');
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
 use Kreait\Firebase\Factory;
@@ -52,20 +53,29 @@ class AuthController extends Controller
 
             if ($firebaseUser->emailVerified) {
                 $user = User::where('email', $email)->firstOrFail();
-                $mhs = Mahasiswa::where('user_id',$user->user_id)->firstOrFail();
+                $mhs = Mahasiswa::where('user_id', $user->id)->firstOrFail();
                 if ($mhs) {
-                    Auth::login($user);
+                    // Store user data and 'mahasiswa' role in session
+                    session(['auth' => ['user' => $user, 'role' => 'mahasiswa', 'mhs' => $mhs]]);
+                    Auth::login($user);  // Log in the user
                 } else {
-                    $reviewer = Reviewer::where('user_id', $user->user_id)->first();
+                    // Check if the user is a Reviewer
+                    $reviewer = Reviewer::where('user_id', $user->id)->first();
                     if ($reviewer) {
-                        Auth::login($user);
+                        // Store user data and 'reviewer' role in session
+                        session(['auth' => ['user' => $user, 'role' => 'reviewer', 'reviewer' => $reviewer]]);
+                        Auth::login($user);  // Log in the user
                     } else {
+                        // If no valid role, redirect back with an error
                         return back()->withErrors(['email' => 'User not found or invalid role.'])->onlyInput('email');
                     }
                 }
+
+                // Regenerate the session ID to prevent session fixation attacks
                 $request->session()->regenerate();
 
-                return redirect()->intended('/beasiswa');
+
+                return $mhs ? redirect()->intended('/beasiswa') : redirect()->intended('/dashboard');
             } else {
                 return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
             }
@@ -120,8 +130,7 @@ class AuthController extends Controller
                 'email' => $firebaseUser->email,
             ]);
 
-            return redirect()->route('auth.register-information',['id'=>$user->id]);
-
+            return redirect()->route('auth.register-information', ['id' => $user->id]);
         } catch (FirebaseEmailExists $e) {
             return response()->json(['error' => 'Email already exists in Firebase'], 409);
         } catch (\Exception $e) {
@@ -134,9 +143,9 @@ class AuthController extends Controller
     public function insertMahasiswaData(Request $request, string $id)
     {
         $request->validate([
-            'nama_depan'=>'required|string',
-            'nama_belakang'=>'required|string',
-            'jenis_kelamin'=>'required|string',
+            'nama_depan' => 'required|string',
+            'nama_belakang' => 'required|string',
+            'jenis_kelamin' => 'required|string',
             'nim' => 'required|string|size:9|unique:mahasiswa,nim',
             'semester' => 'required|integer|min:1|max:8',
             'tgl_lahir' => 'required|date',
@@ -155,7 +164,7 @@ class AuthController extends Controller
             'angkatan' => $request->angkatan,
         ]);
 
-        User::where('id','=', $id)->update([
+        User::where('id', '=', $id)->update([
             'nama_depan' => $request->nama_depan,
             'nama_belakang' => $request->nama_belakang,
             'jenis_kelamin' => $request->jenis_kelamin,
@@ -224,12 +233,10 @@ class AuthController extends Controller
     {
 
         return view('pages.Auth.register-information');
-
     }
 
     public function showRegistrationForm()
     {
         return view('pages.Auth.register'); // Path to your registration view file
     }
-
 }

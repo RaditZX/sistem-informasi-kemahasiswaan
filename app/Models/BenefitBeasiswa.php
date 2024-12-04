@@ -13,8 +13,7 @@ class BenefitBeasiswa extends Model
 
     protected $fillable = ['benefit'];
 
-
-    // Relasi ke Beasiswa (many to one)
+    // Relasi ke Beasiswa (many to many)
     public function beasiswa()
     {
         return $this->belongsToMany(Beasiswa::class, 'beasiswa_benefit');

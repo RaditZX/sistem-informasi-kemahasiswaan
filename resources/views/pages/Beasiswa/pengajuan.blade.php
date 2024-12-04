@@ -5,43 +5,43 @@
 
 
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="px-4 py-6 sm:px-0">
+        <div class="container px-4 py-6 sm:px-0">
             <h2 class="text-3xl font-bold mb-6">Data Pribadi Mahasiswa</h2>
 
             <!-- Profile Card -->
-            <div class="bg-white p-6 rounded-lg border border-gray-300 mb-6">
+            <div class="bg-white p-6 border-2 border-t-0 border-r-0 border-l-0 border-orange-300 mb-6">
                 <div class="flex items-center">
                     <div class="w-20 h-20 rounded-full bg-gray-300 mr-6"></div>
                     <div>
-                        <h3 class="text-xl font-bold">Daiva Raditya Pradipa</h3>
-                        <p class="text-lg text-gray-700">D3 - Teknik Informatika</p>
-                        <p class="text-sm text-gray-500">Teknik Komputer dan Informatika</p>
+                        <h3 class="text-xl font-bold">{{ $user->nama_depan . $user->nama_belakang }}</h3>
+                        <p class="text-lg text-gray-700">{{ $prodi->nama_prodi }}</p>
+                        <p class="text-sm text-gray-500">{{ $jurusan->nama_jurusan }}</p>
                     </div>
                 </div>
             </div>
 
             <!-- Student Information -->
-            <div class="bg-white p-6 rounded-lg border border-gray-300 mb-6">
+            <div class="container p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700">Nama Depan</label>
-                        <p class="mt-1 text-base text-gray-800">Daiva Raditya</p>
+                        <p class="mt-1 text-base text-gray-800">{{ $user->nama_depan }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700">Nama Belakang</label>
-                        <p class="mt-1 text-base text-gray-800">Pradipa</p>
+                        <p class="mt-1 text-base text-gray-800">{{ $user->nama_belakang }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700">Alamat Email</label>
-                        <p class="mt-1 text-base text-gray-800">daiva.raditya.tif23@polban.ac.id</p>
+                        <p class="mt-1 text-base text-gray-800">{{ $user->email }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700">Nomor Telepon</label>
-                        <p class="mt-1 text-base text-gray-800">+62 821-212-212</p>
+                        <p class="mt-1 text-base text-gray-800">{{ $mhs->no_hp }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700">NIM</label>
-                        <p class="mt-1 text-base text-gray-800">231511038</p>
+                        <p class="mt-1 text-base text-gray-800">{{ $mhs->nim }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700">Status Mahasiswa</label>
@@ -242,107 +242,170 @@
         </div>
     </div>
 
-    <style>
-        .upload-section {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            margin: 10px 0;
-        }
 
-        .progress-bar {
-            width: 100%;
-            background-color: #f3f3f3;
-            border: 1px solid #ccc;
-        }
-
-        .progress {
-            height: 20px;
-            background-color: #4caf50;
-            width: 0;
-        }
-    </style>
 
     <script>
-        function toggleUpload(sectionNumber) {
-            const uploadSection = document.getElementById(`upload-section-${sectionNumber}`);
-            const progressBarContainer = document.getElementById(`progress-bar-container-${sectionNumber}`);
+        // Function to toggle visibility of the upload section and initially hide the progress bar
+        function toggleUpload(section) {
+            // Menampilkan atau menyembunyikan bagian upload berdasarkan section yang diklik
+            const uploadSection = document.getElementById(`upload-section-${section}`);
             uploadSection.classList.toggle('hidden');
-            progressBarContainer.classList.add('hidden'); // Hide progress bar by default
+
+            // Menyembunyikan file display dan progress bar ketika upload section ditampilkan
+            const fileDisplay = document.getElementById(`file-display-${section}`);
+            const progressBar = document.getElementById(`progress-bar-container-${section}`);
+            fileDisplay.classList.add('hidden');
+            progressBar.style.display = 'none';
         }
 
-        function checkDocumentsUploaded() {
-            const fileInputs = document.querySelectorAll('input[type="file"]');
-            const formData = new FormData();
+        function uploadFile(section) {
+            const fileInput = document.getElementById(`file-upload-${section}`);
+            const fileNameDisplay = document.getElementById(`file-name-display-${section}`);
+            const fileDisplay = document.getElementById(`file-display-${section}`);
+            const progressBar = document.getElementById(`progress-bar-container-${section}`);
+            const progress = document.getElementById(`progress-${section}`);
 
-            let filesToUpload = false;
+            const file = fileInput.files[0];
+            if (file) {
+                // Menampilkan nama file yang di-upload
+                fileNameDisplay.textContent = file.name;
+                fileDisplay.classList.remove('hidden');
 
-            // Get values of beasiswa_id and nim from input fields
-            const beasiswaId = 1;
-            const nim = 123456789;
+                // Menampilkan progress bar
+                progressBar.style.display = 'flex';
 
-            // Append beasiswa_id and nim to formData
-            formData.append('beasiswa_id', beasiswaId);
-            formData.append('nim', nim);
+                // Simulasi upload dengan progress
+                let progressValue = 0;
+                let interval = setInterval(() => {
+                    progressValue += 10;
+                    if (progressValue >= 100) {
+                        clearInterval(interval);
+                    }
+                    progress.style.width = `${progressValue}%`;
+                }, 20); // Progress bertambah setiap 500ms
+            }
 
-            fileInputs.forEach((input, index) => {
-                if (input.files.length > 0) {
-                    const progressBarContainer = document.getElementById(`progress-bar-container-${index + 1}`);
-                    progressBarContainer.classList.remove('hidden'); // Show progress bar
 
-                    // Append each file to the FormData object
-                    Array.from(input.files).forEach(file => {
-                        formData.append('files[]', file); // Use 'files[]' for multiple file uploads
-                        filesToUpload = true; // Mark that we have files to upload
-                    });
-                }
-            });
-
+            // If there are files to upload, proceed with the XMLHttpRequest
             if (filesToUpload) {
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', '/pengajuan/store'); // Update with your upload endpoint
+                xhr.open('POST', '/pengajuan/store'); // Update with your actual upload endpoint
 
+                // Show progress for each file upload
                 xhr.upload.addEventListener('progress', (event) => {
                     if (event.lengthComputable) {
                         const percentComplete = (event.loaded / event.total) * 100;
                         const progressBar = document.getElementById(`progress-1`); // Assuming you have one progress bar
                         const progressText = document.getElementById(`progress-text-1`);
 
-                        progressBar.style.width = percentComplete + '%';
-                        progressText.innerText = Math.round(percentComplete) + '%';
+                        // Update progress bars for each section
+                        fileInputs.forEach((_, index) => {
+                            const progressBar = document.getElementById(`progress-${index + 1}`);
+                            const progressText = document.getElementById(`progress-text-${index + 1}`);
+                            progressBar.style.width = percentComplete + '%';
+                            progressText.innerText = Math.round(percentComplete) + '%';
+                        });
                     }
                 });
 
+                // Handle successful upload response
                 xhr.onload = () => {
                     if (xhr.status === 200) {
-                        // Handle success response
+                        fileInputs.forEach((_, index) => {
+                            const progressBar = document.getElementById(`progress-${index + 1}`);
+                            progressBar.style.width = '100%'; // Ensure the progress bar is filled
+                        });
                         alert('Files uploaded successfully!');
                     } else {
-                        // Handle error response
                         alert('File upload failed: ' + xhr.responseText);
                     }
                 };
 
+                // Handle upload error
                 xhr.onerror = () => {
                     alert('An error occurred during the upload.');
                 };
 
+                // Send the FormData object with the files
                 xhr.send(formData);
             } else {
                 alert('No files selected for upload.');
             }
         }
 
-        document.getElementById('file-upload-1').addEventListener('change', function(event) {
-            const file = event.target.files[0];
+        function viewFile(id) {
+            // Mengambil nama file atau path file berdasarkan ID
+            const filePath = document.getElementById(`file-name-display-${id}`).innerText;
 
-            if (file && file.type === 'application/pdf') {
-                const uploadSection = document.getElementById('upload-section-1');
-                uploadSection.style.display = 'none'; // Hide upload section
-            } else {
-                alert('Harap pilih file PDF.');
-            }
+            // Mengatur src iframe ke path file PDF yang di-upload
+            const pdfIframe = document.getElementById('pdf-iframe');
+            pdfIframe.src = `/storage/uploads/${filePath}`; // Sesuaikan dengan path file yang disimpan di server
+
+            // Menampilkan modal PDF viewer
+            const pdfViewer = document.getElementById('pdf-viewer');
+            pdfViewer.classList.remove('hidden');
+        }
+
+        function closePdfViewer() {
+            const pdfViewer = document.getElementById('pdf-viewer');
+            pdfViewer.classList.add('hidden');
+            const pdfIframe = document.getElementById('pdf-iframe');
+            pdfIframe.src = '';
+        }
+
+        function deleteFile(fileNumber) {
+            // Reset progress bar
+            document.getElementById('progress-' + fileNumber).style.width = '0%';
+
+            // Sembunyikan elemen file display dan progress bar
+            document.getElementById('file-display-' + fileNumber).classList.add('hidden');
+            document.getElementById('progress-bar-container-' + fileNumber).classList.add('hidden');
+
+            // Tampilkan kembali upload section
+            document.getElementById('upload-section-' + fileNumber).classList.remove('hidden');
+
+            // Ganti input file dengan elemen baru untuk reset penuh
+            const oldInput = document.getElementById('file-upload-' + fileNumber);
+            const newInput = oldInput.cloneNode(true); // Buat elemen baru dengan atribut yang sama
+            oldInput.parentNode.replaceChild(newInput, oldInput);
+
+            // Tambahkan kembali event listener untuk elemen input baru
+            newInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file && file.type === 'application/pdf') {
+                    // Tampilkan progress bar dan sembunyikan upload section
+                    const uploadSection = document.getElementById(`upload-section-${fileNumber}`);
+                    uploadSection.classList.add('hidden');
+                    const progressBarContainer = document.getElementById(`progress-bar-container-${fileNumber}`);
+                    progressBarContainer.classList.remove('hidden');
+
+                    // Simulasikan unggahan dengan progress
+                    simulateUpload(fileNumber, file.name);
+                } else {
+                    // Beri peringatan jika file bukan PDF
+                    alert('Harap unggah file dengan format PDF.');
+                    event.target.value = ''; // Hapus seleksi file
+                }
+            });
+        }
+
+
+
+        // Set up file input change event listener to validate for PDF and hide upload section if file is valid
+        document.querySelectorAll('input[type="file"]').forEach((input, index) => {
+            input.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+
+                if (file && file.type === 'application/pdf') {
+                    const uploadSection = document.getElementById(`upload-section-${index + 1}`);
+                    uploadSection.style.display = 'none'; // Hide upload section after PDF selection
+                    const progressBarContainer = document.getElementById(`progress-bar-container-${index + 1}`);
+                    progressBarContainer.classList.remove('hidden'); // Show progress bar when PDF is selected
+                } else {
+                    alert('Please select a PDF file.');
+                    event.target.value = ''; // Clear selection if not a PDF
+                }
+            });
         });
     </script>
-
 @endsection

@@ -45,15 +45,6 @@ class PengajuanDokumenController extends Controller
             'nama_dokumen' => $validatedData['nama_dokumen'],
             'link_dokumen' => $validatedData['link_dokumen'],
         ]);
-        // if ($request->hasFile('file')) {
-        //     $file = $request->file('file');
-
-        //     $newRequest = new Request();
-        //     $newRequest->files->set('file', $file);
-
-        //     $fileController = new FileController();
-        //     return $fileController->uploadFile($newRequest);
-        // }
 
         return response()->json(['message' => 'succes'], 200);
     }
