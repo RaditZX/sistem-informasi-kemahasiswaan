@@ -63,7 +63,6 @@
                 <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Dashboard</span>
             </a>
         </li>
-        @endif
 
         <li class="mt-0.5 w-full">
             @if (session('auth')['role'] === 'reviewer')

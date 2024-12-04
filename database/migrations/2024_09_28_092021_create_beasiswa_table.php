@@ -61,6 +61,7 @@ return new class extends Migration
 
         // Table untuk jenjang_pendidikan ()
         Schema::create('jenjang_pendidikan', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('beasiswa_id');
             $table->string('jenjang');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

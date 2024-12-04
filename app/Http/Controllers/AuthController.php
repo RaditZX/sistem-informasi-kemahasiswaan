@@ -53,12 +53,12 @@ class AuthController extends Controller
 
             if ($firebaseUser->emailVerified) {
                 $user = User::where('email', $email)->firstOrFail();
-                $mhs = Mahasiswa::where('user_id', $user->id)->firstOrFail();
-                if ($mhs) {
-                    // Store user data and 'mahasiswa' role in session
-                    session(['auth' => ['user' => $user, 'role' => 'mahasiswa', 'mhs' => $mhs]]);
-                    Auth::login($user);  // Log in the user
-                } else {
+                // $mhs = Mahasiswa::where('user_id', $user->id)->firstOrFail();
+                // if ($mhs) {
+                //     // Store user data and 'mahasiswa' role in session
+                //     session(['auth' => ['user' => $user, 'role' => 'mahasiswa', 'mhs' => $mhs]]);
+                //     Auth::login($user);  // Log in the user
+                // } else {
                     // Check if the user is a Reviewer
                     $reviewer = Reviewer::where('user_id', $user->id)->first();
                     if ($reviewer) {
