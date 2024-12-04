@@ -13,6 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('notifikasi', function (Blueprint $table) {
+            $table->id();
             $table->integer("user_id");
             $table->integer("id_pengajuan_beasiswa");
             $table->integer("status");
