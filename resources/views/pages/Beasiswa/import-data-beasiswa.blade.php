@@ -8,14 +8,14 @@
         <p class="text-2xl lg:text-3xl font-bold text-black">Import Data Penerima Beasiswa</p>
     </div>
 
-    <form id="uploadForm" class="border border-gray-500 rounded-lg p-5 flex flex-col items-center justify-center gap-4 mr-10 ml-3 mt-8">
-        <!-- Drop Area -->
+    <form id="uploadForm" action="{{ route('penerimabeasiswa.import-data-beasiswa') }}" method="POST" enctype="multipart/form-data" class="border border-gray-500 rounded-lg p-5 flex flex-col items-center justify-center gap-4 mr-10 ml-3 mt-8">
+        @csrf
         <div id="dropArea" class="w-full h-48 border-2 border-dashed border-gray-400 rounded-lg flex flex-col justify-center items-center p-6 bg-gray-50 hover:bg-gray-100">
             <i class="fas fa-upload text-gray-500 text-3xl mb-3"></i>
             <p class="text-base font-light text-gray-500 text-center">
                 Seret dan letakkan atau klik untuk mengunggah berkas
             </p>
-            <input id="fileInput" name="file" type="file" class="hidden" />
+            <input id="fileInput" name="excelFile" type="file" class="hidden" />
         </div>
 
         <!-- Attached Files -->
@@ -33,38 +33,6 @@
             </button>
         </div>
     </form>
-
-    <!-- Alert Overlay with backdrop blur effect -->
-    <div id="alertOverlay" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center z-50">
-        <div id="alertPopup" class="w-80 bg-white shadow-lg rounded-lg border border-gray-200 flex items-center p-4 relative">
-            <div id="alertIcon" class="w-10 h-10 flex items-center justify-center rounded-full bg-green-100 text-green-600">
-                <i class="fas fa-check-circle text-2xl"></i>
-            </div>
-            <div class="ml-4 flex-grow">
-                <p id="alertTitle" class="font-semibold text-lg text-gray-800">Success</p>
-                <p id="alertMessage" class="text-sm text-gray-500">Action completed successfully.</p>
-            </div>
-            <button id="alertClose" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 focus:outline-none">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-
-    <div id="alertPopup" 
-        class="fixed inset-0 z-50 hidden w-full h-full flex items-center justify-center transition-all duration-300 ease-in-out">
-        <div class="w-80 bg-white shadow-lg rounded-lg border border-gray-200 flex items-center p-4 relative">
-            <div id="alertIcon" class="w-10 h-10 flex items-center justify-center rounded-full bg-green-100 text-green-600">
-                <i class="fas fa-check-circle text-2xl"></i>
-            </div>
-            <div class="ml-4 flex-grow">
-                <p id="alertTitle" class="font-semibold text-lg text-gray-800">Success</p>
-                <p id="alertMessage" class="text-sm text-gray-500">Action completed successfully.</p>
-            </div>
-            <button id="alertClose" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 focus:outline-none">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
 
     <!-- JavaScript -->
     <script>

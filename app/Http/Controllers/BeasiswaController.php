@@ -16,9 +16,12 @@ use Illuminate\Support\Facades\Log;
 
 class BeasiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function getBeasiswaDataBaseOnBeasiswaId(int $id){
+        $beasiswa = Beasiswa::findOrFail($id);
+        return $beasiswa;
+    }
+
     public function index(Request $request)
     {
         $query = Beasiswa::query();
@@ -59,33 +62,21 @@ class BeasiswaController extends Controller
         // Data pengguna untuk view
         $user = Auth::user();
 
-        // Pass data to the view
-        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa', 'notificationData'));
 
+
+        // Kirim data ke view
+        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa','notificationData'));
     }
     public function getListBeasiswaForStaff()
     {
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
         $beasiswa = Beasiswa::paginate(10);
+
+
+
         return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa', 'notificationData'));
 
-    }
-
-    public function getPengumumanBeasiswa()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('notificationData'));
-
-    }
-
-    public function getImportDataBeasiswa()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.import-data-beasiswa', compact('notificationData'));
     }
 
     public function getDetailBeasiswaKipk()
@@ -287,7 +278,7 @@ class BeasiswaController extends Controller
      */
     public function show(string $id)
     {
-        
+
         $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])->findorFail($id);
         $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
         $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
@@ -489,7 +480,7 @@ class BeasiswaController extends Controller
         $item->delete();
 
         // Redirect back with a success message
-        return redirect()->route('beasiswa.index')->with('success', 'Item deleted successfully!');
+        return redirect()->route('beasiswa.list-beasiswa-staff')->with('success', 'Item deleted successfully!');
 
     }
 
