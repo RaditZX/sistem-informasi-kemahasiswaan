@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
 use Kreait\Firebase\Factory;
