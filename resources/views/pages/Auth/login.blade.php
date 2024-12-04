@@ -11,7 +11,7 @@
                     Sistem Informasi Kemahasiswaan Polban
                 </h1>
             </div>
-        </div>        
+        </div>
 
         <!-- Second Column (Login, Forgot Password, and Reset Password Forms) -->
         <div class="w-full lg:w-1/2 flex flex-col p-10 bg-white relative">
@@ -37,6 +37,7 @@
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
                             <span class="pt-2 block">Forgot your password? <a href="#" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
+                            <span class="pt-2 block">Dont have account? <a href="/register" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
                         </div>
                     </div>
                     <div class="mt-6">
@@ -54,7 +55,7 @@
                 </div>
                 <form id="forgotPasswordFormSubmit">
                     @csrf
-                    <div class="space-y-5"> 
+                    <div class="space-y-5">
                         <div>
                             <label for="reset-email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
                             <input type="email" name="email" id="reset-email" class="focus:shadow-soft-primary-outline text-sm block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700" placeholder="example@polban.ac.id" required>

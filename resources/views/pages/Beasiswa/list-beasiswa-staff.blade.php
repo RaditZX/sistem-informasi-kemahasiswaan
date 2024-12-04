@@ -80,7 +80,7 @@
                     </td>
                     <td class="text-center">
                         <div class="border border-gray-300 rounded-lg shadow-lg p-3 ml-10 mr-10 ">
-                            <p class="text-xs sm:text-base text-black">{{ $b->jenis_waktu_beasiswa }}</p>
+                            <p class="text-xs sm:text-base text-black">Aktif</p>
                         </div>
                     </td>
                     <td>

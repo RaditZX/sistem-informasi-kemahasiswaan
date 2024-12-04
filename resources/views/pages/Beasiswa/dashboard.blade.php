@@ -43,11 +43,12 @@
                                                 </div>
 
                                             </div>
-
-                                            <div
-                                                class="rounded-3xl max-w-full lg:w-full h-10 border-2 flex items-center justify-center px-3 mt-5">
-                                                <p class="text-l ">Lihat lebih banyak</p>
-                                            </div>
+                                            <a href="/pengajuan/list-pengajuan">
+                                                <div
+                                                    class="rounded-3xl max-w-full lg:w-full h-10 border-2 flex items-center justify-center px-3 mt-5">
+                                                    <p class="text-l ">Lihat lebih banyak</p>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -308,9 +309,10 @@
             data: {
                 datasets: [{
                     label: 'My First Dataset',
-                    data: [300, 50, 100, 80],
+                    data: [@json($data->pengajuan_diajukan),1, 1, 1, 8],
                     // data: [@json($data->pengajuan_diterima), @json($data->pengajuan_diproses), @json($data->pengajuan_direvisi), @json($data->pengajuan_ditolak)],
                     backgroundColor: [
+                        'rgb(170, 0, 170)',
                         'rgb(0, 170, 0)',
                         'rgb(54, 162, 235)',
                         'rgb(255, 205, 86)',
@@ -333,7 +335,7 @@
                         anchor: 'end',
                         offset: 10,
                         formatter: (value, context) => {
-                            const customLabels = ['Diterima', 'Diproses', 'Direvisi', 'Ditolak'];
+                            const customLabels = ['Diajukan','Diterima', 'Diproses', 'Direvisi', 'Ditolak'];
                             return `${customLabels[context.dataIndex]}: ${value}`; // Custom label and value
                         }
                     }

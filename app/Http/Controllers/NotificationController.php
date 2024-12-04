@@ -16,7 +16,7 @@ class NotificationController extends Controller
         // Return the notifications as JSON
         return $notifikasi;
 
-        
+
     } catch (\Exception $e) {
         // Log the error and return an internal server error response
         \Log::error('Error fetching notifications: ' . $e->getMessage());

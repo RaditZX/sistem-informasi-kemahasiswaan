@@ -13,14 +13,14 @@
                     Sistem Informasi Kemahasiswaan Polban
                 </h1>
             </div>
-        </div>        
+        </div>
 
         <!-- Second Column (Sign-Up Form) -->
         <div class="w-full lg:w-1/2 flex flex-col p-10 bg-white">
             <div class="title mb-6">
                 <h1 class="text-2xl font-bold">Sign Up</h1>
             </div>
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('auth.register') }}">
                 @csrf
                 <div class="space-y-5">
                     <div>
