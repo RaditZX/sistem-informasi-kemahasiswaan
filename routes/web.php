@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PenerimaBeasiswaController;
 use App\Http\Controllers\PengajuanBeasiswaController;
+use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\PengaturanController;
 use Illuminate\Support\Facades\Route;
 

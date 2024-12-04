@@ -79,7 +79,6 @@ return new class extends Migration
 
             $table->timestamps();
         });
-
     }
 
     /**

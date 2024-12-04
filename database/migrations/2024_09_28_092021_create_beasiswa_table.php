@@ -125,5 +125,10 @@ return new class extends Migration
         Schema::dropIfExists('jenjang_pendidikan');
         Schema::dropIfExists('poster_beasiswa');
         Schema::dropIfExists('beasiswa');
+        Schema::dropIfExists('beasiswa_jenjang_pendidikan');
+        Schema::dropIfExists('beasiswa_benefit');
+        Schema::dropIfExists('beasiswa_syarat_dokumen');
+        Schema::dropIfExists('beasiswa_syarat_beasiswa');
+
     }
 };

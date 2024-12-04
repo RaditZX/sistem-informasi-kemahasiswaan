@@ -13,21 +13,26 @@ class PengajuanBeasiswa extends Model
     protected $table = 'pengajuan_beasiswa';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['beasiswa_id','nim','tanggal_pengajuan','status'];
+    protected $fillable = ['beasiswa_id','nim','tanggal_pengajuan','status', 'komentar'];
 
 
     public function Beasiswa()
     {
-        return $this->hasMany(Beasiswa::class);
+        return $this->belongsTo(Beasiswa::class);
     }
 
     public function Mahasiswa()
     {
-        return $this->hasMany(Mahasiswa::class);
+        return $this->belongsTo(Mahasiswa::class);
     }
 
     public function PengajuanDokumen()
     {
         return $this->hasMany(PengajuanDokumen::class);
+    }
+
+    public function Status()
+    {
+        return $this->belongsTo(KodeStatus::class, 'status');
     }
 }

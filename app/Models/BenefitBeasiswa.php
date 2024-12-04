@@ -11,7 +11,7 @@ class BenefitBeasiswa extends Model
 
     protected $table = 'benefit_beasiswa';
 
-    protected $fillable = ['beasiswa_id', 'benefit'];
+    protected $fillable = ['benefit'];
 
     // Relasi ke Beasiswa (many to many)
     public function beasiswa()

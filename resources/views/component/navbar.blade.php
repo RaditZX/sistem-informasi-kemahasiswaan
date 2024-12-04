@@ -1,5 +1,5 @@
-<!-- sidenav  -->
 
+<!-- sidenav  -->
 <style>
     .icon {
         background: white; /* Warna default latar belakang */
@@ -18,8 +18,6 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 </style>
-
-
 {{-- @dd($notificationData) --}}
 <aside
     class="max-w-62.5 h-screen ease-nav-brand z-990 fixed inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent">
@@ -37,7 +35,6 @@
        <div class="items-center
         block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
     <ul class="flex flex-col pl-0 mb-0">
-        @if (session('auth')['role'] === 'reviewer')
         <li class="mt-0.5 w-full">
 
 
@@ -95,7 +92,6 @@
             </a>
         </li>
 
-
         <li class="mt-0.5 w-full">
             <a id="beasiswa-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
             href="/pengajuan/list-pengajuan">
@@ -147,9 +143,6 @@
             </a>
         </li>
 
-
-
-
         <li class="w-full mt-4">
             <h6 class="pl-6 ml-2 text-xs font-bold leading-tight uppercase opacity-60">Account pages</h6>
         </li>
@@ -188,22 +181,22 @@
         <li class="mt-0.5 w-full">
             <form id="logout-form" action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit"
+                <button
+                    type="submit"
                     class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors hover:bg-gray-200 rounded-lg">
                     <div
                         class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white bg-center stroke-0 text-center xl:p-2.5">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
-                    <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Logout</span>
+                    <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">
+                        Logout
+                    </span>
                 </button>
             </form>
         </li>
 
-
     </ul>
     </div>
-
-
 </aside>
 
 <!-- end sidenav -->
@@ -274,7 +267,10 @@
                                                 </div>
                                                 <div class="flex flex-col justify-center">
                                                     <!-- Display status of the notification -->
-                                                    <h6 class="mb-1 text-sm font-normal leading-normal">{{ $notification->status }}</h6>
+                                                    <h6 class="mb-1 text-sm font-normal leading-normal">
+                                                        {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}
+                                                        {{ $notification->pengajuanBeasiswa->Status->isi_status }}
+                                                    </h6>
                                                     <p class="mb-0 text-xs leading-tight text-slate-400">
                                                         <i class="mr-1 fa fa-clock"></i>
                                                         {{ $notification->created_at }}
@@ -285,12 +281,14 @@
                                     </li>
                                 @endforeach
                             @else
+                                <!-- If there are no notifications, show this message -->
                                 <li class="relative mb-2">
                                     <p class="text-center text-gray-500 py-2">No new notifications</p>
                                 </li>
                             @endif
                         </ul>
                     </li>
+
                 </ul>
             </div>
         </div>

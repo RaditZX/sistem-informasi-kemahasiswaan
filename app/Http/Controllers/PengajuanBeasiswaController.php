@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\MailController;
@@ -27,11 +26,13 @@ class PengajuanBeasiswaController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $name = $user->name;
-        $email = $user->email;
-        $role_id = $user->role_id;
+        // $name = $user->name;
+        // $email = $user->email;
+        // $role_id = $user->role_id;
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
 
-        return view('pages.Pengajuan.tracking-pengajuan', compact('email', 'name', 'role_id'));
+        return view('pages.Pengajuan.tracking-pengajuan', compact('notificationData'));
     }
 
 
