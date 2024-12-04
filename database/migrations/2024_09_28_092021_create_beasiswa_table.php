@@ -59,25 +59,26 @@ return new class extends Migration
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
 
-        // Table untuk jenjang_pendidikan (pivot table)
+        // Table untuk jenjang_pendidikan ()
         Schema::create('jenjang_pendidikan', function (Blueprint $table) {
-            $table->id();
-            $table->enum('jenjang', ['D3', 'D4']);
-            $table->foreignId('jurusan')->constrained('jurusan')->onDelete('cascade')->nullable();
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-        });
-
-                // Tabel pivot untuk beasiswa dan jenjang_pendidikan
-        Schema::create('beasiswa_jenjang_pendidikan', function (Blueprint $table) {
             $table->unsignedBigInteger('beasiswa_id');
-            $table->unsignedBigInteger('jenjang_pendidikan_id');
+            $table->string('jenjang');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
-            $table->foreign('jenjang_pendidikan_id')->references('id')->on('jenjang_pendidikan')->onDelete('cascade');
         });
+
+        //         // Tabel pivot untuk beasiswa dan jenjang_pendidikan
+        // Schema::create('beasiswa_jenjang_pendidikan', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('beasiswa_id');
+        //     $table->unsignedBigInteger('jenjang_pendidikan_id');
+        //     $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        //     $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+
+        //     $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
+        //     $table->foreign('jenjang_pendidikan_id')->references('id')->on('jenjang_pendidikan')->onDelete('cascade');
+        // });
 
         // Tabel pivot untuk beasiswa dan benefit_beasiswa
         Schema::create('beasiswa_benefit', function (Blueprint $table) {
@@ -125,7 +126,7 @@ return new class extends Migration
         Schema::dropIfExists('jenjang_pendidikan');
         Schema::dropIfExists('poster_beasiswa');
         Schema::dropIfExists('beasiswa');
-        Schema::dropIfExists('beasiswa_jenjang_pendidikan');
+        // Schema::dropIfExists('beasiswa_jenjang_pendidikan');
         Schema::dropIfExists('beasiswa_benefit');
         Schema::dropIfExists('beasiswa_syarat_dokumen');
         Schema::dropIfExists('beasiswa_syarat_beasiswa');

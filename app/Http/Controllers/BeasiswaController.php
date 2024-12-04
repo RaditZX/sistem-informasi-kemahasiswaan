@@ -9,6 +9,7 @@ use App\Models\SyaratDokumen;
 use App\Models\BenefitBeasiswa;
 use App\Models\JenjangPendidikan;
 use App\Models\PosterBeasiswa;
+use App\Models\Prodi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -497,6 +498,28 @@ class BeasiswaController extends Controller
     {
         $search = $request->input('query');
         $tags = SyaratBeasiswa::where('syarat', 'LIKE', "%{$search}%")->distinct()->limit(10)->get(['syarat']);
+
+        return response()->json($tags);
+    }
+    public function search_dokumen(Request $request)
+    {
+        $search = $request->input('query');
+        $tags = SyaratDokumen::where('dokumen', 'LIKE', "%{$search}%")->distinct()->limit(10)->get(['dokumen']);
+
+        return response()->json($tags);
+    }
+    public function search_benefit(Request $request)
+    {
+        $search = $request->input('query');
+        $tags = BenefitBeasiswa::where('benefit', 'LIKE', "%{$search}%")->distinct()->limit(10)->get(['benefit']);
+
+        return response()->json($tags);
+    }
+
+    public function search_jenjang(Request $request)
+    {
+        $search = $request->input('query');
+        $tags = Prodi::where('nama_prodi', 'LIKE', "%{$search}%")->distinct()->limit(10)->get(['nama_prodi']);
 
         return response()->json($tags);
     }
