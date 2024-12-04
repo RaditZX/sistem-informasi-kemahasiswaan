@@ -63,32 +63,20 @@ class BeasiswaController extends Controller
         $user = Auth::user();
 
 
+
         // Kirim data ke view
-        return view('pages.Beasiswa.list-beasiswa', compact(    'beasiswa','notificationData'));
+        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa','notificationData'));
     }
     public function getListBeasiswaForStaff()
     {
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
         $beasiswa = Beasiswa::paginate(10);
+
+
+
         return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa', 'notificationData'));
 
-    }
-
-    public function getPengumumanBeasiswa()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('notificationData'));
-
-    }
-
-    public function getImportDataBeasiswa()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.import-data-beasiswa', compact('notificationData'));
     }
 
     public function getDetailBeasiswaKipk()
@@ -492,7 +480,7 @@ class BeasiswaController extends Controller
         $item->delete();
 
         // Redirect back with a success message
-        return redirect()->route('beasiswa.index')->with('success', 'Item deleted successfully!');
+        return redirect()->route('beasiswa.list-beasiswa-staff')->with('success', 'Item deleted successfully!');
 
     }
 

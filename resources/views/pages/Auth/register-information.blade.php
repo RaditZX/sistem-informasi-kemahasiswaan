@@ -54,6 +54,15 @@
                             <!-- Add more options as needed -->
                         </select>
                     </div>
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-gray-700">Prodi</label>
+                        <select name="jenis_kelamin" id="department" class="mt-1 block w-full rounded-md border border-gray-300 p-2 focus:border-orange-500 focus:ring-orange-500">
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="Pria">Pria</option>
+                            <option value="Wanita">Wanita</option>
+                            <!-- Add more options as needed -->
+                        </select>
+                    </div>
                 </div>
                 <!-- Submit Button -->
                 <div class="mt-6">

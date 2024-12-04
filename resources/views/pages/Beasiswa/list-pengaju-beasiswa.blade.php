@@ -36,7 +36,7 @@
                 @foreach ($listPengajuan as $pengajuan )
                 <tr class="border-2 rounded-3xl     ">
 
-                        <td class="text-center py-5">{{ $pengajuan->name }}</td>
+                        <td class="text-center py-5">{{ $pengajuan->nama_depan . $pengajuan->nama_belakang }}</td>
                         <td class="text-center py-5">{{ $pengajuan->nama_beasiswa }}</td>
                         <td class="text-center py-5">{{ $pengajuan->sumber }}</td>
                         <td class="text-center py-5">{{ $pengajuan->tanggal_pengajuan}}</td>
@@ -44,7 +44,7 @@
                     <td class="text-center py-5">
                         <div class="flex flex-row gap-2 justify-center items-center">
                             <div class="bg-orange-500 rounded-lg shadow-lg p-3 w-28">
-                                <p class="text-xs sm:text-base text-white">{{ $pengajuan->status }}</p>
+                                <p class="text-xs sm:text-base text-white">{{ $pengajuan->isi_status }}</p>
                             </div>
                     </td>
                     <td class="text-center py-5">

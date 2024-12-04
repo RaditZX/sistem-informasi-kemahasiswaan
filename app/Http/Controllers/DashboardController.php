@@ -15,10 +15,11 @@ class DashboardController extends Controller
             ->selectRaw('
         COUNT(DISTINCT b.id) AS total_beasiswa,
         COUNT(DISTINCT CASE WHEN now() < b.tanggal_berakhir THEN b.id END) AS beasiswa_on_going,
-        COUNT(CASE WHEN pb.status = \'diproses\' THEN 1 END) AS pengajuan_diproses,
-        COUNT(CASE WHEN pb.status = \'ditolak\' THEN 1 END) AS pengajuan_ditolak,
-        COUNT(CASE WHEN pb.status = \'diterima\' THEN 1 END) AS pengajuan_diterima,
-        COUNT(CASE WHEN pb.status = \'direvisi\' THEN 1 END) AS pengajuan_direvisi,
+        COUNT(CASE WHEN pb.status = 1 THEN 1 END) AS pengajuan_diajukan,
+        COUNT(CASE WHEN pb.status IN (8, 2, 4, 6) THEN 1 END) AS pengajuan_diproses,
+        COUNT(CASE WHEN pb.status = 11 THEN 1 END) AS pengajuan_ditolak,
+        COUNT(CASE WHEN pb.status = 10 THEN 1 END) AS pengajuan_diterima,
+        COUNT(CASE WHEN pb.status IN (3, 5, 7, 9) THEN 1 END) AS pengajuan_direvisi,
         COUNT(pb.id) AS total_pengajuan,
         SUM(CASE WHEN EXTRACT(YEAR FROM pb.tanggal_pengajuan) = EXTRACT(YEAR FROM CURRENT_DATE) THEN 1 ELSE 0 END) AS pengajuan_tahun_ini,
         SUM(CASE WHEN EXTRACT(YEAR FROM pb.tanggal_pengajuan) = EXTRACT(YEAR FROM CURRENT_DATE) - 1 THEN 1 ELSE 0 END) AS pengajuan_tahun_lalu,
@@ -67,8 +68,11 @@ class DashboardController extends Controller
 
         $jurusan = DB::table('jurusan')->selectRaw('nama_jurusan')->get();
 
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
 
 
-        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan'));
+
+        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan','notificationData'));
     }
 }
