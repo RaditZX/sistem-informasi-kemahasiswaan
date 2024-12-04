@@ -70,6 +70,6 @@ class DashboardController extends Controller
 
 
 
-        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan'));
+        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan', 'notificationData'));
     }
 }

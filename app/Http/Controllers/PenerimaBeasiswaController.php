@@ -16,7 +16,7 @@ class PenerimaBeasiswaController extends Controller
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
 
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa','notificationData' ));
+        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa','notificationData'));
     }
 
     /**
