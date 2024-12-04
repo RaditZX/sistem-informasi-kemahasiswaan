@@ -12,3 +12,4 @@ class KodeStatus extends Model
         return $this->hasMany(PengajuanBeasiswa::class);
     }
 }
+
