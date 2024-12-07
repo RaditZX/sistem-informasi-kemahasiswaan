@@ -31,7 +31,7 @@
         <!-- Right Side: Content Details -->
         <div class="basis-1/2 flex flex-col justify-start items-start p-5">
             <p class="text-2xl font-bold text-left">
-                Beasiswa LKPD
+                {{ $beasiswa->nama_beasiswa }}
             </p>
             <div class="flex flex-row gap-5 text-center mr-10 mt-3">
                 <div class="border-2 border-orange-500 rounded-lg w-30 h-8 flex items-center justify-center">
@@ -41,23 +41,30 @@
                 </div>
                 <div class="border-2 border-orange-500 rounded-lg w-30 h-8 flex items-center justify-center">
                     <p class="text-sm font-bold text-orange-500">
-                        Prestasi
+                        {{ $beasiswa->tipe_beasiswa }}
                     </p>
                 </div>
             </div>
 
             <p class="text-sm font-normal text-black mt-5">
-                Hai Sobat Beasiswa.ID! Program beasiswa ini ditawarkan oleh Badan Kepegawaian Negara (BKN)
-                melalui beasiswa pendidikan Ilmu Kepegawaian Angkatan XVIII bekerjasama dengan Universitas Negeri Jakarta (UNJ).
-                Beasiswa ini ditujukan bagi PNS di Tanah Air yang ingin melanjutkan studi jenjang S1 Program Studi Manajemen Konsentrasi
-                Manajemen Sumber Daya Manusia (MSDM) di UNJ.
+                {{ $beasiswa->deskripsi }}
             </p>
 
+            @php
+            $status =
+            $beasiswa->tanggal_mulai <= now() && $beasiswa->tanggal_berakhir >= now()
+                    ? 'Berlangsung'
+                    : ($beasiswa->tanggal_mulai > now()
+                        ? 'Upcoming'
+                        : 'Past');
+            @endphp
+            @if ($status === 'Berlangsung')
             <div class="bg-orange-500 rounded-lg w-60 h-20 flex justify-center items-center mt-5 cursor-pointer">
                 <p class="text-lg font-bold text-white text-center">
                     Daftar
                 </p>
             </div>
+            @endif
         </div>
     </div>
 

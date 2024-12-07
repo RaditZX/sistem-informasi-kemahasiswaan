@@ -170,7 +170,7 @@
                                         <p class="mb-0 font-sans text-sm font-semibold leading-normal">Total Penerima
                                             Beasiswa</p>
                                         <h5 class="mb-0 font-bold">
-                                            103,430
+                                            {{ $jmlPenerima }}
                                         </h5>
                                     </div>
                                 </div>
