@@ -6,18 +6,23 @@
     <!-- Main Section: Poster and Scholarship Info -->
     <div class="flex flex-col lg:flex-row gap-4">
         <!-- Poster Section (50%) -->
-        <div class="lg:basis-1/2">
-            <div class="swiper-container h-60">
+        <div class="basis-1/2 flex justify-center items-center overflow-hidden relative"> <!-- Centering Swiper -->
+            <div class="swiper-container w-3/4 h-56">
                 <div class="swiper-wrapper">
-                    @foreach($poster as $post)
-                    <div class="swiper-slide flex justify-center items-center">
-                        <img src="{{ $post }}" class="h-full w-auto object-contain rounded-lg" alt="poster">
+                    <div class="swiper-slide flex justify-center ">
+                        <img src="{{ asset('assets/img/kipk.png') }}" class="w-auto h-full object-contain rounded-lg" alt="kipk">
                     </div>
-                    @endforeach
+                    <div class="swiper-slide flex justify-center">
+                        <img src="{{ asset('assets/img/kipk.png') }}" class="w-auto h-full object-contain rounded-lg" alt="kipk2">
+                    </div>
+                    <div class="swiper-slide flex justify-center">
+                        <img src="{{ asset('assets/img/kipk.png') }}" class="w-auto h-full object-contain rounded-lg" alt="kipk3">
+                    </div>
                 </div>
                 <div class="swiper-pagination"></div>
-                <div class="swiper-button-next right-2"></div>
-                <div class="swiper-button-prev left-2"></div>
+                <!-- Position navigation buttons inside the swiper-container -->
+                <div class="swiper-button-next absolute right-20"></div>
+                <div class="swiper-button-prev absolute left-20"></div>
             </div>
         </div>
 

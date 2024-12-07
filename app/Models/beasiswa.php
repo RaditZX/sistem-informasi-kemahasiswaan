@@ -45,4 +45,5 @@ class beasiswa extends Model
     {
         return $this->hasMany(PosterBeasiswa::class);
     }
+
 }
