@@ -11,9 +11,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public $incrementing = true; // Laravel will still auto-increment this field
-    protected $keyType = 'int';
-
     /**
      * The attributes that are mass assignable.
      *

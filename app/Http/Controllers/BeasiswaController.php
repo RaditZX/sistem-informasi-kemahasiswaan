@@ -16,9 +16,12 @@ use Illuminate\Support\Facades\Log;
 
 class BeasiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function getBeasiswaDataBaseOnBeasiswaId(int $id){
+        $beasiswa = Beasiswa::findOrFail($id);
+        return $beasiswa;
+    }
+
     public function index(Request $request)
     {
         $query = Beasiswa::query();
@@ -59,55 +62,39 @@ class BeasiswaController extends Controller
         // Data pengguna untuk view
         $user = Auth::user();
 
-        // Pass data to the view
-        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa', 'notificationData'));
 
+
+        // Kirim data ke view
+        return view('pages.Beasiswa.list-beasiswa', compact('beasiswa','notificationData'));
     }
     public function getListBeasiswaForStaff()
     {
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
         $beasiswa = Beasiswa::paginate(10);
+
+
+
         return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa', 'notificationData'));
 
     }
 
-    public function getPengumumanBeasiswa()
+    public function getDetailBeasiswaKipk($id)
     {
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
-
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('notificationData'));
-
+        $beasiswa = Beasiswa::findOrFail($id);
+        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('notificationData','beasiswa'));
     }
 
-    public function getImportDataBeasiswa()
+    public function getDetailBeasiswaEksternal($id)
     {
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.import-data-beasiswa', compact('notificationData'));
+        $beasiswa = Beasiswa::findOrFail($id);
+        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('notificationData','beasiswa'));
     }
 
-    public function getDetailBeasiswaKipk()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('notificationData'));
-    }
-
-    public function getDetailBeasiswaEksternal()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('notificationData'));
-    }
-
-    public function getListPengajuBeasiswa()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('notificationData'));
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -126,7 +113,6 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         $messages = [
             'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
             'nama_beasiswa.string' => 'Nama beasiswa harus berupa teks.',
@@ -287,15 +273,20 @@ class BeasiswaController extends Controller
      */
     public function show(string $id)
     {
-        
-        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])->findorFail($id);
+
+        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])
+        ->findOrFail($id);
+
         $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
         $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
         $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
         $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
         $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
+
+        // Get notification data
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
+
 
         return view('pages.Beasiswa.detail-beasiswa', [
             'beasiswa' => $beasiswa,
@@ -306,6 +297,7 @@ class BeasiswaController extends Controller
             'dokumen' => $dokumen,
             'poster' => $poster
         ], compact('notificationData'));
+
     }
 
     /**
@@ -489,7 +481,7 @@ class BeasiswaController extends Controller
         $item->delete();
 
         // Redirect back with a success message
-        return redirect()->route('beasiswa.index')->with('success', 'Item deleted successfully!');
+        return redirect()->route('beasiswa.list-beasiswa-staff')->with('success', 'Item deleted successfully!');
 
     }
 
