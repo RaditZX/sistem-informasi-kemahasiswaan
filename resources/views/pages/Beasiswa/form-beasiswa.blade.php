@@ -699,7 +699,7 @@
                     <div class="relative">
                         <label for="jenjang_pendidikan" class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
                         <div id="selected-tags-jenjang" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="jenjang_pendidikan" name="jenjang_pendidikan" placeholder="Jenjang Pendidikan"
+                        <input type="search" id="jenjang_pendidikan" name="input_jenjang_pendidikan" placeholder="Jenjang Pendidikan"
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                         oninput="fetchJenjangTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); }">
                         <div id="jenjang-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto "></div>
@@ -710,7 +710,7 @@
                     <div class="relative">
                         <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
                         <div id="selected-tags-beasiswa" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="syarat_beasiswa" name="syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
+                        <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                         oninput="fetchBeasiswaTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBeasiswaTag(this.value); this.nextElementSibling.classList.add('hidden');}">
                         <div id="syarat-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
@@ -721,7 +721,7 @@
                     <div class="relative">
                         <label for="syarat_dokumen" class="block text-sm font-medium text-gray-700">Syarat-Syarat Dokumen Beasiswa</label>
                         <div id="selected-tags-dokumen" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="syarat_dokumen" name="syarat_dokumen" placeholder="Syarat-syarat Dokumen"
+                        <input type="search" id="syarat_dokumen" name="input_syarat_dokumen" placeholder="Syarat-syarat Dokumen"
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                         oninput="fetchDokumenTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addDokumenTag(this.value); this.nextElementSibling.classList.add('hidden');}">
                         <div id="syarat-suggestions-dokumen" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
@@ -732,7 +732,7 @@
                     <div class="relative">
                         <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
                         <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="benefit_beasiswa" name="benefit_beasiswa" placeholder="Benefit Beasiswa"
+                        <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                         oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
                         <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
@@ -1147,6 +1147,14 @@
                                 this.classList.add('hidden'); // Sembunyikan modal saat area luar gambar diklik
                             }
                         };
+
+                        $('form').on('submit', function(e) {
+                            let hiddenInputs = $('input[type="hidden"]');
+                            hiddenInputs.each(function() {
+                                console.log($(this).val()); // Check if hidden inputs have values
+                            });
+                        });
+
                     </script>
 
                     <div>

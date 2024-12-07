@@ -118,7 +118,7 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
         $messages = [
             'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
             'nama_beasiswa.string' => 'Nama beasiswa harus berupa teks.',
@@ -139,9 +139,6 @@ class BeasiswaController extends Controller
             'tanggal_berakhir.required' => 'Tanggal berakhir harus diisi.',
             'tanggal_berakhir.date' => 'Tanggal berakhir harus berupa tanggal yang valid.',
             'tanggal_berakhir.after' => 'Tanggal berakhir harus setelah tanggal mulai.',
-            'ipk_min.numeric' => 'IPK minimal harus berupa angka.',
-            'ipk_min.min' => 'IPK minimal tidak boleh kurang dari 0.',
-            'ipk_min.max' => 'IPK minimal tidak boleh lebih dari 4.',
             'poster.required' => 'Poster Beasiswa wajib ada.',
             'poster.max' => 'Poster Beasiswa tidak boleh lebih dari 3.'
         ];
@@ -156,22 +153,17 @@ class BeasiswaController extends Controller
             'sumber_beasiswa' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date|before:tanggal_berakhir',
             'tanggal_berakhir' => 'required|date|after:tanggal_mulai',
-            'ipk_min' => 'numeric|max:4|min:1',
             'syarat_beasiswa' => 'array',
             'syarat_beasiswa.*' => 'string|nullable',
+            'syarat_dokumen' => 'array',
+            'syarat_dokumen.*' => 'string|nullable',
             'benefit_beasiswa' => 'array',
-            'benefit_beasiswa.*' => 'string|max:255',
+            'benefit_beasiswa.*' => 'string|max:255|nullable',
             'jenjang_pendidikan' => 'array',
-            'jenjang_pendidikan.*' => 'string|max:100',
+            'jenjang_pendidikan.*' => 'string|max:100|nullable',
             'poster' => 'required|array|max:3',
             'poster.*' => 'image|mimes:jpeg,png,jpg'
         ], $messages);
-
-        // menambahkan ipk_min ke array syarat
-        if (isset($validatedData['ipk_min'])) {
-            // Anda bisa menambahkan ipk_min ke dalam syarat_beasiswa
-            $validatedData['syarat_beasiswa'][] = $validatedData['ipk_min'];
-        }
 
         // Handle file uploads
         $fileUrls = []; // Initialize an empty array to store file URLs
@@ -230,32 +222,16 @@ class BeasiswaController extends Controller
                 BenefitBeasiswa::create([
                     'beasiswa_id' => $beasiswa->id,
                     'benefit' => $benefit,
-                    'deskripsi_benefit' => $benefit
                 ]);
             }
         }
 
-        $syarat_dokumen = [
-            "Esai",
-            "Surat Keterangan Penghasilan Orangtua",
-            "Transkrip Nilai",
-            "Surat Keterangan Tidak Mampu",
-            "Proposal",
-            "Sertifikat Prestasi",
-            "Surat Rekomendasi"
-        ];
-
-        if (isset($validatedData['syarat_beasiswa'])) {
-            foreach ($validatedData['syarat_beasiswa'] as $syarat){
-                foreach ($syarat_dokumen as $dokumen){
-                    if ($syarat == $dokumen) {
-                        SyaratDokumen::create([
-                            'beasiswa_id' => $beasiswa->id,
-                            'dokumen' => $dokumen,
-                            'deskripsi_dokumen' => $dokumen
-                        ]);
-                    }
-                }
+        if (isset($validatedData['syarat_dokumen'])) {
+            foreach ($validatedData['syarat_dokumen'] as $dokumen) {
+                SyaratDokumen::create([
+                    'beasiswa_id' => $beasiswa->id,
+                    'dokumen' => $dokumen,
+                ]);
             }
         }
 
@@ -511,6 +487,7 @@ class BeasiswaController extends Controller
     {
         $search = $request->input('query');
         $tags = Prodi::where('nama_prodi', 'LIKE', "%{$search}%")->distinct()->limit(10)->get(['nama_prodi']);
+        $tags->prepend(['nama_prodi' => 'Semua Jenjang']);
 
         return response()->json($tags);
     }
