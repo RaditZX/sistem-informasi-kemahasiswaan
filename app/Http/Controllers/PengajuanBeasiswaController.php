@@ -9,6 +9,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PengajuanDokumenController;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
+use App\Models\beasiswa;
 use App\Models\PengajuanBeasiswa;
 use App\Models\PengajuanDokumen;
 use App\Models\Prodi;
@@ -43,7 +44,7 @@ class PengajuanBeasiswaController extends Controller
         $notificationData = $notifController->getNotifData();
 
         $user = Auth::user();
-        $mhs = Mahasiswa::where('user_id',$user->id)->firstOrFail();
+        $mhs = Mahasiswa::where('user_id',$user->id)->first();
 
         if($mhs){
             $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
@@ -61,7 +62,9 @@ class PengajuanBeasiswaController extends Controller
             ->get();
         }
 
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan','notificationData'));
+        $namaBeasiswa = Beasiswa::pluck('nama_beasiswa');
+
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan','notificationData', 'namaBeasiswa'));
     }
 
     public function create(string $id)
@@ -144,7 +147,7 @@ class PengajuanBeasiswaController extends Controller
             $request = new Request($email->reviewerPengajuanMessage($mhs->nim,$id));
             $email->sendMail($request, true);
 
-            return redirect()->route('pengajuan.create', ['id' => $id])->with('success', 'Item created successfully.');
+            return redirect()->route('pengajuan.create', ['id' => $id])->with('success', 'Beasiswa created successfully.');
 
         } catch (\Exception $e) {
             // Rollback the transaction if any error occurs
@@ -153,7 +156,7 @@ class PengajuanBeasiswaController extends Controller
             // Optionally log the exception for debugging purposes
             Log::error("Error creating Pengajuan Beasiswa: {$e->getMessage()}", ['exception' => $e]);
 
-            return redirect()->route('pengajuan.create', ['id' => $id])->with('failed', 'Failed to create item. Please try again.');
+            return redirect()->route('pengajuan.create', ['id' => $id])->with('failed', 'Failed to create Beasiswa . Please try again.');
         }
     }
 

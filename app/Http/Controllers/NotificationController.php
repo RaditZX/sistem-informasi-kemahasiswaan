@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 // NotificationController.php
 use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+
 
 class NotificationController extends Controller
 {
@@ -19,7 +22,7 @@ class NotificationController extends Controller
 
     } catch (\Exception $e) {
         // Log the error and return an internal server error response
-        \Log::error('Error fetching notifications: ' . $e->getMessage());
+        Log::error('Error fetching notifications: ' . $e->getMessage());
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }

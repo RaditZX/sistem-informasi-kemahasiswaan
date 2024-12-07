@@ -2,24 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\NotificationController;
 use App\Models\beasiswa;
 use App\Models\PenerimaBeasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Support\Facades\Auth;
 
 class PenerimaBeasiswaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $penerima_beasiswa = PenerimaBeasiswa::All();
+        $query = Beasiswa::query();
+
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
 
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'notificationData'));
+        // Filter `search` berdasarkan `nama_beasiswa`
+        if ($request->has('search') && $request->input('search') !== '') {
+            $searchTerm = $request->input('search');
+            $query->where('nama_beasiswa', 'ilike', "%{$searchTerm}%");
+        }
+
+        // Filter `jenis_beasiswa`
+        if ($request->has('jenis_beasiswa') && !empty($request->input('jenis_beasiswa'))) {
+            $jenisBeasiswa = $request->input('jenis_beasiswa');
+            foreach ($jenisBeasiswa as $jenis) {
+                $query->orWhere('jenis_beasiswa', $jenis);
+            }
+        }
+
+        // Filter `tipe_beasiswa`
+        if ($request->has('tipe_beasiswa') && !empty($request->input('tipe_beasiswa'))) {
+            $query->where('tipe_beasiswa', $request->input('tipe_beasiswa'));
+        }
+
+        // Filter `jurusan` dalam `syarat_beasiswa`
+        if ($request->has('jurusan') && !empty($request->input('jurusan'))) {
+            $jurusan = $request->input('jurusan');
+            $query->whereHas('syaratBeasiswa', function ($q) use ($jurusan) {
+                $q->where('syarat', 'like', "%{$jurusan}%");
+            });
+        }
+
+        // Jalankan query dan paginasi hasilnya
+        $beasiswa = $query->paginate(8);
+
+        // Data pengguna untuk view
+        $user = Auth::user();
+
+
+
+        // Kirim data ke view
+        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa','notificationData'));
     }
 
     /**
@@ -73,18 +113,10 @@ class PenerimaBeasiswaController extends Controller
             });
 
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Data successfully imported',
-                'data' => $penerima
-            ]);
+            return redirect()->route('beasiswa.import-data-beasiswa', )->with('success', 'Beasiswa created successfully.');
         } catch (\Throwable $e) {
             // Tangani error
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred during import',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('beasiswa.import-data-beasiswa',)->with('success', 'Beasiswa created successfully.');
         }
     }
 
@@ -92,9 +124,23 @@ class PenerimaBeasiswaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PenerimaBeasiswa $penerimaBeasiswa)
+    public function show($id)
     {
-        //
+        $penerima_beasiswa = PenerimaBeasiswa::join('mahasiswa', 'penerima_beasiswa.nim', '=', 'mahasiswa.nim')
+        ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+        ->join('prodi', 'mahasiswa.prodi_id', '=', 'prodi.id')
+        ->join('jurusan', 'prodi.jurusan_id', '=', 'jurusan.id')
+        ->where('beasiswa_id', '=', $id)
+        ->get();
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
+
+        $pdf = new FileController();
+        $pdfUrl = $pdf->getPdfUrlFromDatabaseUrl("https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/dokumen%2Fpraktikum+Design+pattern.pdf?alt=media
+");
+
+        $beasiswa = Beasiswa::findOrFail($id);
+        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'notificationData', 'beasiswa','pdfUrl'));
     }
 
     /**
