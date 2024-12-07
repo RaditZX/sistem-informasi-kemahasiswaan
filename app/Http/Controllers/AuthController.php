@@ -69,7 +69,7 @@ class AuthController extends Controller
                         // If no valid role, redirect back with an error
                         return back()->withErrors(['email' => 'User not found or invalid role.'])->onlyInput('email');
                     }
-                }
+                
 
                 // Regenerate the session ID to prevent session fixation attacks
                 $request->session()->regenerate();

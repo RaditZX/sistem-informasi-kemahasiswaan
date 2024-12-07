@@ -118,7 +118,7 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        dd($request);
         $messages = [
             'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
             'nama_beasiswa.string' => 'Nama beasiswa harus berupa teks.',
@@ -151,7 +151,7 @@ class BeasiswaController extends Controller
             'nama_beasiswa' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'jenis_beasiswa' => 'required|string|in:full,setengah',
-            'tipe_beasiswa' => 'required|string|in:prestasi,ekonomi,external',
+            'tipe_beasiswa' => 'required|string|in:kipk,internal,eksternal',
             'kuota_beasiswa' => 'required|integer|min:1',
             'sumber_beasiswa' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date|before:tanggal_berakhir',

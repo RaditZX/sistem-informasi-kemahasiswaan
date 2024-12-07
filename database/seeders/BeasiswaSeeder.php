@@ -60,5 +60,7 @@ class BeasiswaSeeder extends Seeder
 
         // Buat data jenjang pendidikan
         $beasiswa->jenjangPendidikan()->create(['beasiswa_id' => $beasiswa->id, 'jenjang' => 'D-3 Teknik Informatika']);
+
+        $beasiswa->posterBeasiswa()->create(['beasiswa_id' => $beasiswa->id, 'link_poster' => 'example.jpg']);
     }
 }
