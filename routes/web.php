@@ -54,6 +54,7 @@ Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::get('/tracking-pengajuan/{id}', [PengajuanBeasiswaController::class, 'showTracking'])->name('pengajuan.tracking');
     Route::patch('/pengajuan/progress/{id}', [PengajuanBeasiswaController::class, 'progressPengajuan'])->name('pengajuan.update-progress');
+    Route::delete('/tracking-pengajuan/{id}', [PengajuanBeasiswaController::class, 'batalkanPengajuan'])->name('pengajuan.batalkan-pengajuan');
 });
 
 Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');

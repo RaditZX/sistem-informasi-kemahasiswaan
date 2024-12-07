@@ -3,7 +3,7 @@
 @extends('layouts.main')
 @section('content')
 @include('component.navbar', [
-    'path' => "Tracking Beasiswa > " . $dataPengajuan[0]->nama_beasiswa,
+    'path' => "Tracking Beasiswa > " . $dataPengajuan->nama_beasiswa,
     'id' => null
 ])
 
@@ -12,10 +12,9 @@
         <section class="timeline mx-auto py-6 sm:px-6 lg:px-8">
             <ol class="flex justify-between items-center w-full relative">
                 @php
-                    $statusss = $dataStatus;
-                    $idStatuses = $statusss->pluck('id_status'); // Extract 'id_status' values from the collection
+                    $idStatuses = $dataStatus->pluck('id_status'); // Extract 'id_status' values from the collection
                     $idStatusesArray = $idStatuses->toArray(); // Convert the collection to an array
-                    $whatIndex = array_search($dataPengajuan[0]->status, $idStatusesArray);
+                    $whatIndex = array_search($dataPengajuan->status, $idStatusesArray);
                 @endphp
                     
                 <!-- Timeline Steps -->
@@ -53,7 +52,7 @@
 
         <!-- Timer Section -->
         <section class="timer my-8">
-            <h1 class="text-center text-xl font-semibold mb-4">ESTIMASI {{ $dataPengajuan[0]->status }}</h1>
+            <h1 class="text-center text-xl font-semibold mb-4">ESTIMASI {{ $dataPengajuan->status }}</h1>
             <div class="timer-block">
                 <div class="mx-auto w-1/2 grid grid-cols-4 justify-items-center items-center mb-4">
                     <p>Hari</p>
@@ -78,9 +77,9 @@
                         alt="Beasiswa LKPD" class="rounded-xl w-full h-auto max-w-sm object-cover">
                 </div>
                 <div class="beasiswa-content md:col-span-3 mt-6 md:mt-0">
-                    <h1 class="text-2xl font-semibold mb-4 text-gray-900">{{ $dataPengajuan[0]->nama_beasiswa }}</h1>
+                    <h1 class="text-2xl font-semibold mb-4 text-gray-900">{{ $dataPengajuan->nama_beasiswa }}</h1>
                     <p class="text-gray-700 leading-relaxed">
-                        {{ $dataPengajuan[0]->deskripsi }}
+                        {{ $dataPengajuan->deskripsi }}
                     </p>
                 </div>
             </div>
@@ -117,8 +116,8 @@
             </div>
         </section>
 
-        @if ($reviewer[0] != NULL)
-            <form action="{{ route('pengajuan.update-progress', $dataPengajuan[0]->id) }}" method="POST" class="my-8 px-4">
+        @if ($dataReviewer != NULL)
+            <form action="{{ route('pengajuan.update-progress', $dataPengajuan->id) }}" method="POST" class="my-8 px-4">
                 @csrf
                 @method('PATCH')
                 <div>
@@ -132,9 +131,10 @@
                 </div>
 
                 <!-- Hidden input field for role_id -->
-                <input type="hidden" name="role_id" value="{{ $reviewer[1] }}">
+                <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
+                <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
             </form>        
-        @elseif ($dataPengajuan[0]->status < 1)
+        @elseif (($dataPengajuan->status <= 1) && ($dataReviewer == NULL))
             <form action="#" method="POST" class="my-8 px-4">
                 @csrf
                 <div class="flex flex-col items-center justify-end">
