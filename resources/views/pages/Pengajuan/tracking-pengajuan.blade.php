@@ -21,22 +21,40 @@
                 @foreach ($dataStatus as $index => $step)
                     @if (in_array($index, [0, 1, 3, 5, 7, 9]))
                         <li class="flex flex-col items-center w-full relative">
-                            @if ($index <= $whatIndex)
+                            @if ($dataPengajuan->status == 10)
                                 <!-- Completed Step -->
-                                <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 {{ (($whatIndex % 2 == 0) && ($index == $whatIndex - 1)) ? 'bg-yellow-500' : 'bg-green-500' }}">
+                                <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 bg-green-500">
                                     <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
                                     </svg>
                                 </span>
-                                <div class="absolute top-1/2 right-0 w-full h-1 {{ (($whatIndex % 2 == 0) && ($index == $whatIndex - 1)) ? 'bg-yellow-500' : 'bg-green-500' }} transform -translate-y-4 z-0" style="top: 40px"></div>
+                                <div class="absolute top-1/2 right-0 w-full h-1 bg-green-500 transform -translate-y-4 z-0" style="top: 40px"></div>
+                            @elseif ($dataPengajuan->status == 11)
+                                <!-- Completed Step -->
+                                <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 bg-red-500">
+                                    <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </span>
+                                <div class="absolute top-1/2 right-0 w-full h-1 bg-red-500 transform -translate-y-4 z-0" style="top: 40px"></div>
                             @else
-                                <!-- Upcoming or In-Progress Steps -->
-                                <span class="flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4">
-                                    <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                    </svg>
-                                </span>
-                                <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-300 dark:bg-gray-700 transform -translate-y-4 z-0" style="top: 40px"></div>
+                                @if ($index < $dataPengajuan->status-1)
+                                    <!-- Completed Step -->
+                                    <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 {{ ($index == $dataPengajuan->status-2) ? 'bg-yellow-500' : 'bg-green-500' }}">
+                                        <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                        </svg>
+                                    </span>
+                                    <div class="absolute top-1/2 right-0 w-full h-1 {{ ($index == $dataPengajuan->status-2)  ? 'bg-yellow-500' : 'bg-green-500' }} transform -translate-y-4 z-0" style="top: 40px"></div>
+                                @else
+                                    <!-- Upcoming or In-Progress Steps -->
+                                    <span class="flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4">
+                                        <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                        </svg>
+                                    </span>
+                                    <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-300 dark:bg-gray-700 transform -translate-y-4 z-0" style="top: 40px"></div>
+                                @endif
                             @endif
                             <div>
                                 <!-- Step Text with Fixed Max Height and Clipping Overflow -->
@@ -104,12 +122,19 @@
                         </button>
                         <div class="accordion-content hidden p-4 bg-gray-50 transition-all duration-200 max-h-0 overflow-hidden">
                             <p class="text-sm text-gray-500 mb-4">Preview for {{ $document }}:</p>
-                            <iframe src="https://docs.google.com/gview?url=https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/dokumen%2F3-a.pdf?alt=media&embedded=true" 
+                            {{-- <iframe src="https://docs.google.com/gview?url=https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/dokumen%2F3-a.pdf?alt=media&embedded=true" 
                                     width="1000px" 
                                     height="600px" 
                                     class="w-full rounded-lg border" 
                                     frameborder="0">
-                            </iframe>
+                            </iframe> --}}
+                            @php
+                                $n = 0;
+                            @endphp
+                            <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="500" height="375" type="application/pdf">
+                            @php
+                                $n += 1;
+                            @endphp
                         </div>                        
                     </div>
                 @endforeach

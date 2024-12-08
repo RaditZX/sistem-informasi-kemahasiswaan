@@ -304,11 +304,19 @@ class PengajuanBeasiswaController extends Controller
             )
             ->where('pengajuan_beasiswa.id', $id)
             ->first(); // Use `first()` to fetch a single record.
+        
+        $dataPengajuanID = $dataPengajuan->id;
+        $dataDokumenPengajuan = PengajuanDokumen::join('pengajuan_beasiswa', 'pengajuan_beasiswa.id', '=', 'dokumen.id_pengajuan_beasiswa')
+            ->select(
+                'dokumen.*'
+            )
+            ->where('dokumen.id_pengajuan_beasiswa', $dataPengajuanID)
+            ->get();
 
         // Fetch all status codes
         $dataStatus = KodeStatus::all();
 
-        return view('pages.Pengajuan.tracking-pengajuan', compact('dataPengajuan', 'userData', 'dataStatus', 'dataReviewer'));
+        return view('pages.Pengajuan.tracking-pengajuan', compact('dataPengajuan', 'dataDokumenPengajuan', 'userData', 'dataStatus', 'dataReviewer'));
     }
 
     public function progressPengajuan(Request $request, string $id) {
