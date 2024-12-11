@@ -147,7 +147,7 @@ class BeasiswaController extends Controller
         $validatedData = $request->validate([
             'nama_beasiswa' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'jenis_beasiswa' => 'required|string|in:full,setengah',
+            'jenis_beasiswa' => 'required|string|in:full,half',
             'tipe_beasiswa' => 'required|string|in:kipk,internal,eksternal',
             'kuota_beasiswa' => 'required|integer|min:1',
             'sumber_beasiswa' => 'required|string|max:255',
@@ -209,29 +209,42 @@ class BeasiswaController extends Controller
         // Simpan syarat-syarat beasiswa, jika ada
         if (isset($validatedData['syarat_beasiswa'])) {
             foreach ($validatedData['syarat_beasiswa'] as $syarat) {
-                SyaratBeasiswa::create([
-                    'beasiswa_id' => $beasiswa->id,
-                    'syarat' => $syarat
-                ]);
+                // Cari syarat dalam tabel syarat_beasiswa
+                $existingSyarat = SyaratBeasiswa::where('syarat', $syarat)->first();
+        
+                // Jika syarat tidak ditemukan, tambahkan ke tabel syarat_beasiswa
+                if (!$existingSyarat) {
+                    $existingSyarat = SyaratBeasiswa::create(['syarat' => $syarat]);
+                }
+        
+                // Hubungkan beasiswa dengan syarat (tabel pivot)
+                $beasiswa->syaratBeasiswa()->attach($existingSyarat->id);
             }
         }
+        
 
         // Simpan benefit beasiswa, jika ada
         if (isset($validatedData['benefit_beasiswa'])) {
             foreach ($validatedData['benefit_beasiswa'] as $benefit) {
-                BenefitBeasiswa::create([
-                    'beasiswa_id' => $beasiswa->id,
-                    'benefit' => $benefit,
-                ]);
+                $existingBenefit = BenefitBeasiswa::where('benefit', $benefit)->first();
+
+                if(!$existingBenefit){
+                    $existingBenefit = BenefitBeasiswa::create(['benefit' => $benefit]);
+                }
+
+                $beasiswa->benefitBeasiswa()->attach($existingBenefit->id);
             }
         }
 
         if (isset($validatedData['syarat_dokumen'])) {
             foreach ($validatedData['syarat_dokumen'] as $dokumen) {
-                SyaratDokumen::create([
-                    'beasiswa_id' => $beasiswa->id,
-                    'dokumen' => $dokumen,
-                ]);
+                $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
+
+                if(!$existingDokumen){
+                    $existingDokumen = SyaratDokumen::create(['dokumen' => $dokumen]);
+                }
+
+                $beasiswa->syaratDokumen()->attach($existingDokumen->id);
             }
         }
 
