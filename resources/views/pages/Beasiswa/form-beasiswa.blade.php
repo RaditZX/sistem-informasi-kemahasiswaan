@@ -2,6 +2,7 @@
 @section('content')
     @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null, 'notificationData'=>$notificationData])
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 @if ($beasiswa != null)
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -180,7 +181,7 @@
                             <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <i class="fa-duotone fa-solid fa-paperclip"></i>
                                 <span id="file-name" class="ml-2 text-gray-600">Pilih file</span>
-                                <input type="file" id="poster_beasiswa" name="input_poster" class="hidden" accept="image/*" multiple onchange="displayFileNamesAndPreview()">
+                                <input type="file" id="poster_beasiswa" name="input_poster[]" class="hidden" accept="image/*" multiple onchange="displayFileNamesAndPreview()">
                             </label>
                             @error('poster')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -639,7 +640,7 @@
 
         function addDokumenTag(tagText) {
             tagText = tagText.trim();
-
+            console.log(tagText);
             if (dokumen_tags.includes(tagText)) {
                 $('#syarat_dokumen').val('');
                 return;
@@ -830,6 +831,9 @@
             const fileUrls = JSON.parse(sessionStorage.getItem('uploadedFiles'));
             if (!fileUrls) {
                 console.log('No uploaded files found in sessionStorage');
+                if (selectedFiles) {
+                    return selectedFiles;
+                }
                 return;
             }
 
@@ -977,33 +981,42 @@
         }
 
         @foreach (old('syarat_dokumen', []) as $old_dokumen_tag )
-            dokumen_tags.push(@json($old_dokumen_tag));
-            updateDokumenCounter();
+            addDokumenTag(@json(@$old_dokumen_tag));
+            // dokumen_tags.push(@json($old_dokumen_tag));
+            // updateDokumenCounter();
         @endforeach
         @foreach (old('syarat_beasiswa', []) as $old_syarat_tag )
-            syarat_tags.push(@json($old_syarat_tag));
-            updateBeasiswaCounter();
+            addBeasiswaTag(@json(@$old_syarat_tag));
         @endforeach
         @foreach (old('benefit_beasiswa', []) as $old_benefit_tag )
-            benefit_tags.push(@json($old_benefit_tag));
-            updateBenefitCounter();
+            addBenefitTag(@json(@$old_benefit_tag));
         @endforeach
         @foreach (old('jenjang_pendidikan', []) as $old_jenjang_tag )
-            jenjang_tags.push(@json($old_jenjang_tag));
-            updateJenjangCounter();
+            addJenjangTag(@json(@$old_jenjang_tag));
         @endforeach
+
         @if ($errors->any())
+            console.log("B");
             selectedFiles = (convertDataUrlsToFilesAndAddToInput());
             renderPreviews(selectedFiles);
-            updateDokumenCounter();
-            updateBeasiswaCounter();
-            updateBenefitCounter();
-            updateJenjangCounter();
+            @foreach (old('syarat_dokumen', []) as $old_dokumen_tag )
+                addDokumenTag(@json(@$old_dokumen_tag));
+            @endforeach
+            @foreach (old('syarat_beasiswa', []) as $old_syarat_tag )
+                addBeasiswaTag(@json(@$old_syarat_tag));
+            @endforeach
+            @foreach (old('benefit_beasiswa', []) as $old_benefit_tag )
+                addBenefitTag(@json(@$old_benefit_tag));
+            @endforeach
+            @foreach (old('jenjang_pendidikan', []) as $old_jenjang_tag )
+                addJenjangTag(@json(@$old_jenjang_tag));
+            @endforeach
         @endif
         </script>
 
-@if ($beasiswa != null)
+@if (($beasiswa != null) && (!$errors->any()))
 <script>
+    console.log("A");
     var beasiswa =  {!! json_encode($beasiswa, JSON_HEX_TAG) !!} 
     var syarat =  {!! json_encode($syarat, JSON_HEX_TAG) !!} 
     var jenjang =  {!! json_encode($jenjang, JSON_HEX_TAG) !!} 
@@ -1041,24 +1054,14 @@
 
         // Tambahkan selectedFiles ke input tersembunyi
         selectedFiles.forEach((file, index) => {
-            const hiddenInput = document.createElement('input');
-            
-            hiddenInput.name = 'poster[]';
-
             if (typeof file === "string") {
                 // Jika file adalah URL, tambahkan URL
+                const hiddenInput = document.createElement('input');
+                hiddenInput.name = 'poster[]';
                 hiddenInput.type = 'hidden';
                 hiddenInput.value = file;
-            } else {
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-
-                hiddenInput.type = 'file';
-                hiddenInput.files = dataTransfer.files;
-                hiddenInput.hidden = true;
+                hiddenContainer.appendChild(hiddenInput);
             }
-
-            hiddenContainer.appendChild(hiddenInput);
         });
         // dd(selectedFiles);
     }
