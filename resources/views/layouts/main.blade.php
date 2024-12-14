@@ -44,10 +44,12 @@
 
 <body class="overflow-hidden">
     <main class="min-h-screen overflow-y-auto">
+        @include('component.alert')
         @yield('content')
+
     </main>
 
-    <!-- JavaScript Plugins -->
+    <script src="{{ asset('assets/js/alert.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/chartjs.min.js') }}" async></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}" async></script>
     <script src="https://buttons.github.io/buttons.js" async defer></script>

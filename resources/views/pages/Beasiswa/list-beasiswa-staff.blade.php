@@ -78,9 +78,17 @@
                             </form>
                         </div>
                     </td>
+                    @php
+                    $status =
+                        $b->tanggal_mulai <= now() && $b->tanggal_berakhir >= now()
+                            ? 'Berlangsung'
+                            : ($b->tanggal_mulai > now()
+                                ? 'Upcoming'
+                                : 'Past');
+                    @endphp
                     <td class="text-center">
                         <div class="border border-gray-300 rounded-lg shadow-lg p-3 ml-10 mr-10 ">
-                            <p class="text-xs sm:text-base text-black">Aktif</p>
+                            <p class="text-xs sm:text-base text-black">{{ $status }}</p>
                         </div>
                     </td>
                     <td>

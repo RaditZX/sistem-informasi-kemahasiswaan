@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Beasiswa;
+use App\Models\PenerimaBeasiswa;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -71,8 +72,10 @@ class DashboardController extends Controller
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
 
+        $jmlPenerima = PenerimaBeasiswa::count();
 
 
-        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan','notificationData'));
+
+        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan','notificationData', 'jmlPenerima'));
     }
 }

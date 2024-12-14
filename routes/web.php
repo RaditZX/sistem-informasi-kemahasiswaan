@@ -39,7 +39,7 @@ Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {
         Route::get('/pengajuan-beasiswa/edit/{id}',[PengajuanBeasiswaController::class, 'show'])->name('pengajuan.show');
         Route::post('/pengajuan/store/{id}', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
         Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
-        Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
+
     });
     Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 });
@@ -52,7 +52,6 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
     Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
     Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
-    Route::get('/pengumuman-beasiswa', [PenerimaBeasiswaController::class, 'index'])->name('beasiswa.pengumuman-beasiswa');
     Route::get('/import-data-penerima', [PenerimaBeasiswaController::class, 'create'])->name('beasiswa.import-data-beasiswa');
     Route::post('/import-data-penerima', [PenerimaBeasiswaController::class, 'store'])->name('penerimabeasiswa.import-data-beasiswa');
     Route::get('/beasiswa/search-syarat', [BeasiswaController::class, 'search_syarat'])->name('Beasiswa.search_syarat');
@@ -64,10 +63,11 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('tracking-pengajuan', PengajuanBeasiswaController::class);
-    Route::get('/pengumuman-beasiswa', [PenerimaBeasiswaController::class, 'index'])->name('beasiswa.pengumuman-beasiswa');
+    Route::get('/pengumuman-beasiswa/{id}', [PenerimaBeasiswaController::class, 'show'])->name('beasiswa.pengumuman-beasiswa');
+    Route::get('/pengumuman-beasiswa', [PenerimaBeasiswaController::class, 'index'])->name('pengumuman-beasiswa.index');
     Route::get('/get-notif-data', [NotificationController::class, 'getNotifData'])->name('notifications');
-    Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
-    Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
+    Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
+    Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
     Route::resource('beasiswa', BeasiswaController::class);
     Route::get('/detail-beasiswa', function () {
         return view('pages.Beasiswa.detail-beasiswa');
@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('pengaturan', PengaturanController::class);
     Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
 });
 
 

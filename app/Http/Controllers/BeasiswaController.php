@@ -82,26 +82,22 @@ class BeasiswaController extends Controller
 
     }
 
-    public function getDetailBeasiswaKipk()
+    public function getDetailBeasiswaKipk($id)
     {
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('notificationData'));
+        $beasiswa = Beasiswa::findOrFail($id);
+        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('notificationData','beasiswa'));
     }
 
-    public function getDetailBeasiswaEksternal()
+    public function getDetailBeasiswaEksternal($id)
     {
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('notificationData'));
+        $beasiswa = Beasiswa::findOrFail($id);
+        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('notificationData','beasiswa'));
     }
 
-    public function getListPengajuBeasiswa()
-    {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('notificationData'));
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -120,7 +116,6 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         $messages = [
             'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
             'nama_beasiswa.string' => 'Nama beasiswa harus berupa teks.',
@@ -278,14 +273,19 @@ class BeasiswaController extends Controller
     public function show(string $id)
     {
 
-        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])->findorFail($id);
+        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])
+        ->findOrFail($id);
+
         $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
         $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
         $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
         $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
         $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
+
+        // Get notification data
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
+
 
         return view('pages.Beasiswa.detail-beasiswa', [
             'beasiswa' => $beasiswa,
@@ -296,6 +296,7 @@ class BeasiswaController extends Controller
             'dokumen' => $dokumen,
             'poster' => $poster
         ], compact('notificationData'));
+
     }
 
     /**

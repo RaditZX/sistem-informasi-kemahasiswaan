@@ -72,7 +72,7 @@
             <!-- Slide 1 -->
             @foreach ($beasiswa->benefitBeasiswa as $bf)
                 <div class="swiper-slide p-10 bg-white">
-                    <div class="rounded flex items-center bg-white-100 shadow-xl max-h-44">
+                    <div class="rounded flex items-center bg-white-100 shadow-xl ">
                         <div class="basis-1/4 h-full overflow-hidden rounded-t-lg md:rounded-t-none md:rounded-l-lg">
                             <img class="w-full h-full object-cover object-center"
                                 src="https://th.bing.com/th/id/OIP.DmPQAB4t3Na-Xf7Vy2TGCQHaE8?rs=1&pid=ImgDetMain"

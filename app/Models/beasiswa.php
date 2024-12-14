@@ -33,6 +33,7 @@ class beasiswa extends Model
     {
         return $this->belongsToMany(SyaratDokumen::class,'beasiswa_syarat_dokumen');
     }
+
     public function jenjangPendidikan()
     {
         return $this->hasMany(JenjangPendidikan::class);

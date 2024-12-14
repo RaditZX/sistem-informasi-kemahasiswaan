@@ -1,7 +1,7 @@
 @extends('layouts.filter')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null,'notificationData'=>$notificationData])
+    @include('component.navbar', ['path' => 'Pengumuman Beasiswa', 'id' => null,'notificationData'=>$notificationData])
 
     {{-- Filter Button and Search Column --}}
     <div class="p-2">
@@ -22,34 +22,23 @@
                            value="{{ request('search') }}">
                 </form>
             </div>
+            @if (session('auth')['role'] === 'reviewer')
+            <div class=" basis-1/12 flex rounded p-5">
+            <a href="/import-data-penerima">
+                <div class="border border-black-500 rounded-lg text-center p-2 px-4 basis-1/2">
+                    <p class="text-black font-bold">+</p>
+                </div>
+            </a>
+            </div>
+            @endif
         </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-5">
 
         @foreach ($beasiswa as $ba)
-        @php
-        $status = ($ba->tanggal_mulai <= now() && $ba->tanggal_berakhir >= now())
-            ? "Berlangsung"
-            : ($ba->tanggal_mulai > now()
-                ? "Upcoming"
-                : "Past");
-        @endphp
-        @if($ba->tipe_beasiswa === "kipk")
-        <a href="/detail-beasiswa-kipk/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
-        @elseif($ba->tipe_beasiswa === "eksternal")
-        <a href="/detail-beasiswa-eksternal/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
-        @else
-        <a href="/beasiswa/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
-        @endif
-            <div class="p-2 relative">
-                @if($status === 'Upcoming' || $status === 'Past')
-                <div class="absolute inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center rounded-lg">
-                    <div class="w-max border border-white rounded-xl p-2 px-5">
-                    <p class="text-white font-bold text-xl">{{ $status }}</p>
-                    </div>
-                </div>
-                @endif
+        <a href="/pengumuman-beasiswa/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
+            <div class="p-2">
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEik4McHhDC2otgAFVVxX1_9KI4xqY0KLdkThGiFYjsfN720_z_kIvi2TARm24mA68XO1CbMBSILOHFfy0HIQVO9Hn1qXFxSVfTC54ZaoHKLi6Yj-fd6Lm02syaeQ_Q3nkaGu4LpM6JSk-MwEEzzYqjZMbMNDyQiP8InBNz7sFn00DMJXQQBakiNtx8qBw/s1080/Beasiswa-Creativa-Feed.png"
                     style="border-radius: 15px;" class="mb-3 h-400" alt="beasiswa">
                 <div class="flex justify-center gap-2 mb-1" style="max-height: 35px">
