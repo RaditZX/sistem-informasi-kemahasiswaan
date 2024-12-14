@@ -763,15 +763,15 @@
         function displayFileNamesAndPreview() {
             const input = document.getElementById('poster_beasiswa');
             
-            if (selectedFiles.length > 2) {
-                alert("Anda hanya dapat mengupload maksimal 3 file.");
-                input.value = "";
-                return;
-            }
-                // Tambahkan file yang baru dipilih ke dalam array selectedFiles
+            // Tambahkan file yang baru dipilih ke dalam array selectedFiles
             for (let i = 0; i < input.files.length; i++) {
                 const file = input.files[i];
-
+                
+                if (selectedFiles.length > 2) {
+                    alert("Anda hanya dapat mengupload maksimal 3 file.");
+                    input.value = "";
+                    break;
+                }
                 // Pastikan file belum ada di array
                 if (!selectedFiles.some(item => item.name === file.name && item.lastModified === file.lastModified)) {
                     selectedFiles.push(file);
@@ -791,19 +791,40 @@
             
             // Ambil data URL dari setiap file dan simpan ke sessionStorage
             Array.from(files).forEach(file => {
-                if (file instanceof File){
+                if (file instanceof File) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         fileUrls.push(e.target.result);
-                        // Setelah semua file di proses, simpan ke sessionStorage
+                        // Setelah semua file diproses, simpan ke sessionStorage
                         if (fileUrls.length === files.length) {
                             sessionStorage.setItem('uploadedFiles', JSON.stringify(fileUrls));
+                            
+                            // Lakukan operasi penambahan (misalnya mengirim data ke server)
+                            addFilesToServer(fileUrls).then(() => {
+                                // Hapus data dari sessionStorage setelah operasi selesai
+                                sessionStorage.removeItem('uploadedFiles');
+                            }).catch(error => {
+                                console.error("Error during file upload:", error);
+                            });
                         }
                     };
                     reader.readAsDataURL(file);
                 }
             });
         }
+
+        // Contoh fungsi untuk menambahkan file ke server
+        async function addFilesToServer(fileUrls) {
+            // Gantikan dengan logika pengiriman file ke server
+            return new Promise((resolve, reject) => {
+                // Simulasi pengiriman ke server
+                setTimeout(() => {
+                    console.log("Files uploaded:", fileUrls);
+                    resolve();
+                }, 1000);
+            });
+        }
+
 
         function convertDataUrlsToFilesAndAddToInput() {
             const fileUrls = JSON.parse(sessionStorage.getItem('uploadedFiles'));
@@ -992,11 +1013,9 @@
     
     window.onload = function() {
         poster.forEach(poster => {
-            @if (!($errors->any()))
             selectedFiles.push(poster);
             console.log(selectedFiles);
             renderPreviews(selectedFiles);  // Tampilkan pratinjau untuk file yang dipilih
-            @endif
         });
         syarat.forEach(item => addBeasiswaTag(item));
         dokumen.forEach(item => addDokumenTag(item));
@@ -1007,8 +1026,9 @@
 
     const form = document.getElementById('beasiswa-form');
     form.addEventListener('submit', function(event) {
-        createHiddenInput();
         event.preventDefault();
+        createHiddenInput();
+        console.log(selectedFiles);
         form.submit();
     })
 
@@ -1040,7 +1060,7 @@
 
             hiddenContainer.appendChild(hiddenInput);
         });
-        dd(selectedFiles);
+        // dd(selectedFiles);
     }
 
 

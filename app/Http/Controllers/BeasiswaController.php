@@ -360,28 +360,28 @@ class BeasiswaController extends Controller
             'benefit_beasiswa.*' => 'string|max:255|nullable',
             'jenjang_pendidikan' => 'array',
             'jenjang_pendidikan.*' => 'string|max:100|nullable',
-            'poster' => 'required|array|max:3',
-            'poster.*' => [
-                'sometimes', 
-                'nullable', 
-                function($attribute, $value, $fail) {
-                    if (is_string($value)) {
-                        // Validasi jika nilai adalah string (URL)
-                        if (!filter_var($value, FILTER_VALIDATE_URL)) {
-                            $fail("The {$attribute} must be a valid URL.");
-                        }
-                    } elseif ($value instanceof \Illuminate\Http\UploadedFile) {
-                        // Validasi jika nilai adalah file (image)
-                        $rules = 'image|mimes:jpeg,png,jpg|max:2048';
-                        $validator = Validator::make([$attribute => $value], [
-                            $attribute => $rules,
-                        ]);
-                        if ($validator->fails()) {
-                            $fail($validator->errors()->first($attribute));
-                        }
-                    }
-                }
-            ],
+            // 'poster' => 'required|array|max:3',
+            // 'poster.*' => [
+            //     'sometimes', 
+            //     'nullable', 
+            //     function($attribute, $value, $fail) {
+            //         if (is_string($value)) {
+            //             // Validasi jika nilai adalah string (URL)
+            //             if (!filter_var($value, FILTER_VALIDATE_URL)) {
+            //                 $fail("The {$attribute} must be a valid URL.");
+            //             }
+            //         } elseif ($value instanceof \Illuminate\Http\UploadedFile) {
+            //             // Validasi jika nilai adalah file (image)
+            //             $rules = 'image|mimes:jpeg,png,jpg|max:2048';
+            //             $validator = Validator::make([$attribute => $value], [
+            //                 $attribute => $rules,
+            //             ]);
+            //             if ($validator->fails()) {
+            //                 $fail($validator->errors()->first($attribute));
+            //             }
+            //         }
+            //     }
+            // ],
         ], $messages);
         
 
@@ -399,7 +399,8 @@ class BeasiswaController extends Controller
         $beasiswa->save();
         $fileUrls = [];  // Array untuk menyimpan URL file
 
-        if (isset($validatedData['poster'])) {
+        dd($request->poster);
+        if (isset($request->poster)) {
             // Memeriksa jika ada file yang diupload
             if ($request->hasFile('poster')) {
                 foreach ($request->file('poster') as $file) {
@@ -416,10 +417,16 @@ class BeasiswaController extends Controller
                     // dd($fileUrls);
                 }
             }
-        
-            foreach ($validatedData['poster'] as $poster) {
-                $fileUrls[] = $poster; 
+            
+            dd($request->poster);
+            foreach ($request->poster as $poster) {
+                if (filter_var($poster, FILTER_VALIDATE_URL)) {
+                    // dd($poster);
+                    $fileUrls[] = $poster; 
+                }
             }
+            
+            // dd($fileUrls);
             // Menghapus poster yang ada jika ada perubahan
             $existingPoster = PosterBeasiswa::where('beasiswa_id', $id)->get();
             if (!($fileUrls == $existingPoster)) {
@@ -427,10 +434,17 @@ class BeasiswaController extends Controller
             }
 
             foreach ($fileUrls as $poster) {
-                $beasiswa->posterBeasiswa()->create([
-                    'link_poster' => $poster,
-                ]);
+                // Memastikan hanya link yang valid dimasukkan
+                if (filter_var($poster, FILTER_VALIDATE_URL)) {
+                    $beasiswa->posterBeasiswa()->create([
+                        'link_poster' => $poster,
+                    ]);
+                } else {
+                    // Anda bisa log atau memberikan notifikasi jika ada link yang tidak valid
+                    Log::warning("Invalid URL skipped: $poster");
+                }
             }
+            
         
         }
         
@@ -503,7 +517,7 @@ class BeasiswaController extends Controller
 
         // Log the updated scholarship data
         Log::info('Beasiswa updated successfully: ', [$beasiswa]);
-        // dd($beasiswa->syaratBeasiswa, $beasiswa->benefitBeasiswa, $beasiswa->syaratDokumen, $beasiswa->jenjangPendidikan, $beasiswa->posterBeasiswa, $beasiswa);
+        dd($beasiswa->syaratBeasiswa, $beasiswa->benefitBeasiswa, $beasiswa->syaratDokumen, $beasiswa->jenjangPendidikan, $beasiswa->posterBeasiswa, $beasiswa);
 
         return redirect()->route('beasiswa.index')->with('success', 'Data beasiswa berhasil diperbarui.');
     }
