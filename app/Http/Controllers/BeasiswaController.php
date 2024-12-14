@@ -430,7 +430,7 @@ class BeasiswaController extends Controller
                 // Menghapus poster yang ada jika ada perubahan
                 $existingPoster = PosterBeasiswa::where('beasiswa_id', $id)->get();
                 if (!($fileUrls == $existingPoster)) {
-                    PosterBeasiswa::where('beasiswa_id', $id)->delete();
+                    $beasiswa->posterBeasiswa()->delete();
                 }
                 
             }
@@ -461,6 +461,8 @@ class BeasiswaController extends Controller
                     // Hubungkan beasiswa dengan syarat (tabel pivot)
                     $beasiswa->syaratBeasiswa()->syncWithoutDetaching([$existingSyarat->id]);
                 }
+            } else {
+                $beasiswa->syaratBeasiswa()->detach();
             }
     
             // Simpan atau update benefit beasiswa, jika ada
@@ -477,6 +479,8 @@ class BeasiswaController extends Controller
                     // Hubungkan beasiswa dengan benefit (tabel pivot)
                     $beasiswa->benefitBeasiswa()->syncWithoutDetaching([$existingBenefit->id]);
                 }
+            } else {
+                $beasiswa->benefitBeasiswa()->detach();
             }
     
             // Simpan atau update syarat dokumen, jika ada
@@ -493,6 +497,8 @@ class BeasiswaController extends Controller
                     // Hubungkan beasiswa dengan syarat dokumen (tabel pivot)
                     $beasiswa->syaratDokumen()->syncWithoutDetaching([$existingDokumen->id]);
                 }
+            } else {
+                $beasiswa->syaratDokumen()->detach();
             }
     
             // Simpan atau update jenjang pendidikan, jika ada
@@ -511,6 +517,8 @@ class BeasiswaController extends Controller
                         ]);
                     }
                 }
+            } else {
+                $beasiswa->jenjangPendidikan()->delete();
             }
     
             // Log the updated scholarship data

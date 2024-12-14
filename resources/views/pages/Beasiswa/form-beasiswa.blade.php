@@ -996,9 +996,10 @@
         @endforeach
 
         @if ($errors->any())
-            console.log("B");
-            selectedFiles = (convertDataUrlsToFilesAndAddToInput());
-            renderPreviews(selectedFiles);
+            selectedFiles = {!! json_encode($poster, JSON_HEX_TAG) !!};
+            if (selectedFiles){
+                renderPreviews(selectedFiles);
+            }
             @foreach (old('syarat_dokumen', []) as $old_dokumen_tag )
                 addDokumenTag(@json(@$old_dokumen_tag));
             @endforeach
