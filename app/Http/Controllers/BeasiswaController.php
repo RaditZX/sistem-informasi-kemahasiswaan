@@ -10,6 +10,7 @@ use App\Models\BenefitBeasiswa;
 use App\Models\JenjangPendidikan;
 use App\Models\PosterBeasiswa;
 use App\Models\Prodi;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -166,6 +167,13 @@ class BeasiswaController extends Controller
             'poster.*' => 'image|mimes:jpeg,png,jpg'
         ], $messages);
 
+         // Modifikasi tanggal_berakhir
+        $tanggal_berakhir = Carbon::parse($request->tanggal_berakhir)->subDays(5);
+
+        // Validasi tambahan untuk memastikan tanggal_mulai sesuai dengan tanggal_berakhir yang telah dimodifikasi
+        if ($tanggal_berakhir->lte(Carbon::parse($request->tanggal_mulai))) {
+            return back()->withErrors(['tanggal_mulai' => 'Tanggal mulai harus sebelum tanggal berakhir - 5 hari.'])->withInput();
+        }
         // Handle file uploads
         $fileUrls = []; // Initialize an empty array to store file URLs
 
@@ -384,6 +392,13 @@ class BeasiswaController extends Controller
             // ],
         ], $messages);
         
+        // Modifikasi tanggal_berakhir
+        $tanggal_berakhir = Carbon::parse($request->tanggal_berakhir)->subDays(5);
+
+        // Validasi tambahan untuk memastikan tanggal_mulai sesuai dengan tanggal_berakhir yang telah dimodifikasi
+        if ($tanggal_berakhir->lte(Carbon::parse($request->tanggal_mulai))) {
+            return back()->withErrors(['tanggal_mulai' => 'Tanggal mulai harus sebelum tanggal berakhir - 5 hari.'])->withInput();
+        }
 
         try {
             $beasiswa = Beasiswa::findOrFail($id);
