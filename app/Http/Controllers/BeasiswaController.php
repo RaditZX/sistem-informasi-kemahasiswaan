@@ -316,7 +316,7 @@ class BeasiswaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd($request);
+        // dd($request);
         // validasi
         $messages = [
             'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',
@@ -399,31 +399,26 @@ class BeasiswaController extends Controller
         $beasiswa->save();
         $fileUrls = [];  // Array untuk menyimpan URL file
 
-        // Memeriksa jika ada file yang diupload
-        if ($request->hasFile('input_poster')) {
-            foreach ($request->file('input_poster') as $file) {
-                $newRequest = new Request();
-                $newRequest->files->set('file', $file);
-                $newRequest->merge(['path' => 'poster']);
-
-                // Call the uploadFile method from FileController
-                $fileController = new FileController();
-                $uploadedFileUrl = $fileController->uploadFile($newRequest);
-
-                // Store the uploaded file URL in the array
-                $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
-                dd($fileUrls);
-            }
-        }
         if (isset($validatedData['poster'])) {
-            // Memeriksa jika ada URL poster yang dikirimkan
-            if (isset($validatedData['poster']) && is_array($validatedData['poster'])) {
-                foreach ($validatedData['poster'] as $poster) {
-                    // Memproses jika poster adalah URL (bukan file)
-                    if (filter_var($poster, FILTER_VALIDATE_URL)) {
-                        $fileUrls[] = $poster;  // Menambahkan URL poster ke array fileUrls
-                    } else if ($poster instanceof File)
+            // Memeriksa jika ada file yang diupload
+            if ($request->hasFile('poster')) {
+                foreach ($request->file('poster') as $file) {
+                    $newRequest = new Request();
+                    $newRequest->files->set('file', $file);
+                    $newRequest->merge(['path' => 'poster']);
+
+                    // Call the uploadFile method from FileController
+                    $fileController = new FileController();
+                    $uploadedFileUrl = $fileController->uploadFile($newRequest);
+
+                    // Store the uploaded file URL in the array
+                    $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
+                    // dd($fileUrls);
                 }
+            }
+        
+            foreach ($validatedData['poster'] as $poster) {
+                $fileUrls[] = $poster; 
             }
             // Menghapus poster yang ada jika ada perubahan
             $existingPoster = PosterBeasiswa::where('beasiswa_id', $id)->get();
@@ -431,11 +426,9 @@ class BeasiswaController extends Controller
                 PosterBeasiswa::where('beasiswa_id', $id)->delete();
             }
 
-            // Menyimpan URL file atau URL poster yang baru ke database
             foreach ($fileUrls as $poster) {
-                PosterBeasiswa::create([
-                    'beasiswa_id' => $beasiswa->id,
-                    'link_poster' => $poster
+                $beasiswa->posterBeasiswa()->create([
+                    'link_poster' => $poster,
                 ]);
             }
         
@@ -510,7 +503,7 @@ class BeasiswaController extends Controller
 
         // Log the updated scholarship data
         Log::info('Beasiswa updated successfully: ', [$beasiswa]);
-        dd($beasiswa->syaratBeasiswa, $beasiswa->benefitBeasiswa, $beasiswa->syaratDokumen, $beasiswa->jenjangPendidikan, $beasiswa->posterBeasiswa, $beasiswa);
+        // dd($beasiswa->syaratBeasiswa, $beasiswa->benefitBeasiswa, $beasiswa->syaratDokumen, $beasiswa->jenjangPendidikan, $beasiswa->posterBeasiswa, $beasiswa);
 
         return redirect()->route('beasiswa.index')->with('success', 'Data beasiswa berhasil diperbarui.');
     }

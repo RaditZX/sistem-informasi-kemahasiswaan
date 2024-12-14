@@ -200,6 +200,7 @@
                         </div>
                     <div>
                         <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
+                        {{-- <button type="button" onclick="createHiddenInput()" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Buttton</button> --}}
                     </div>
                 </form>
             </div>
@@ -971,7 +972,7 @@
             updateJenjangCounter();
         @endforeach
         @if ($errors->any())
-            selectedFiles = Array.from(convertDataUrlsToFilesAndAddToInput());
+            selectedFiles = (convertDataUrlsToFilesAndAddToInput());
             renderPreviews(selectedFiles);
             updateDokumenCounter();
             updateBeasiswaCounter();
@@ -1029,8 +1030,11 @@
                 hiddenInput.type = 'hidden';
                 hiddenInput.value = file;
             } else {
-                hiddenInput.type = 'file'
-                hiddenInput.files = file;
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+
+                hiddenInput.type = 'file';
+                hiddenInput.files = dataTransfer.files;
                 hiddenInput.hidden = true;
             }
 
