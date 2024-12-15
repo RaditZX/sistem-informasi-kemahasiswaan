@@ -24,6 +24,7 @@ class BeasiswaController extends Controller
 
     public function index(Request $request)
     {
+
         $query = Beasiswa::query();
 
         $notifController = new NotificationController();
@@ -58,12 +59,6 @@ class BeasiswaController extends Controller
 
         // Jalankan query dan paginasi hasilnya
         $beasiswa = $query->paginate(8);
-
-        // Data pengguna untuk view
-        $user = Auth::user();
-
-
-
         // Kirim data ke view
         return view('pages.Beasiswa.list-beasiswa', compact('beasiswa','notificationData'));
     }
@@ -145,7 +140,7 @@ class BeasiswaController extends Controller
             'nama_beasiswa' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'jenis_beasiswa' => 'required|string|in:full,setengah',
-            'tipe_beasiswa' => 'required|string|in:prestasi,ekonomi,external',
+            'tipe_beasiswa' => 'required|string|in:internal,kipk,eksternal',
             'kuota_beasiswa' => 'required|integer|min:1',
             'sumber_beasiswa' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date|before:tanggal_berakhir',
@@ -186,6 +181,7 @@ class BeasiswaController extends Controller
         }
         // Simpan data beasiswa ke database dan dapatkan objek Beasiswa
         $beasiswa = Beasiswa::create([
+            'id'=> 2,
             'nama_beasiswa' => $validatedData['nama_beasiswa'],
             'deskripsi' => $validatedData['deskripsi'],
             'jenis_beasiswa' => $validatedData['jenis_beasiswa'],
@@ -258,7 +254,8 @@ class BeasiswaController extends Controller
             foreach ($validatedData['jenjang_pendidikan'] as $jenjang){
                 JenjangPendidikan::create([
                     'beasiswa_id' => $beasiswa->id,
-                    'jenjang' => $jenjang
+                    'jenjang' => $jenjang,
+                    'jurusan' => 1
                 ]);
             }
         }
@@ -359,7 +356,7 @@ class BeasiswaController extends Controller
             'nama_beasiswa' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'jenis_beasiswa' => 'required|string|in:full,setengah',
-            'tipe_beasiswa' => 'required|string|in:prestasi,ekonomi,external',
+            'tipe_beasiswa' => 'required|string|in:internal,kipk,eksternal',
             'kuota_beasiswa' => 'required|integer|min:1',
             'sumber_beasiswa' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date|before:tanggal_berakhir',
@@ -380,21 +377,8 @@ class BeasiswaController extends Controller
             // Anda bisa menambahkan ipk_min ke dalam syarat_beasiswa
             $validatedData['syarat_beasiswa'][] = $validatedData['ipk_min'];
         }
-        // jenis_waktu_beasiswa
-        $tgl_mulai = strtotime($validatedData['tanggal_mulai']);
-        $tgl_akhir = strtotime($validatedData['tanggal_berakhir']);
-        $tgl_skrg = time();
 
-        // current = tgl_mulai <= tgl_skrg <= tgl_akhir
-        // upcoming = tgl_skrg < tgl_mulai
-        // last = tgl_skrg > tgl_akhir
-        if ($tgl_skrg < $tgl_mulai){
-            $jenis_waktu = 'upcoming';
-        } elseif ($tgl_mulai <= $tgl_skrg && $tgl_skrg <= $tgl_akhir){
-            $jenis_waktu = 'current';
-        } else {
-            $jenis_waktu = 'last';
-        }
+
 
         $beasiswa = Beasiswa::findOrFail($id);
         $beasiswa->fill([
@@ -422,7 +406,7 @@ class BeasiswaController extends Controller
                 // Store the uploaded file URL in the array
                 $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
             }
-            dd($fileUrls);
+
             PosterBeasiswa::where('beasiswa_id', $id)->delete();
             foreach ($fileUrls as $poster) {
                 PosterBeasiswa::create([
@@ -431,7 +415,7 @@ class BeasiswaController extends Controller
                 ]);
             }
         }
-        dd($beasiswa);
+
         SyaratDokumen::where('beasiswa_id', $id)->delete();
 
         SyaratBeasiswa::where('beasiswa_id', $id)->delete();

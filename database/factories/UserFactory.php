@@ -28,8 +28,6 @@ class UserFactory extends Factory
             'nama_depan' => $this->faker->firstName,
             'nama_belakang' => $this->faker->lastName,
             'jenis_kelamin' => $this->faker->randomElement(['Pria', 'Wanita']),
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
             'foto' => 'path/to/foto.jpg',
             'created_at' => now(),
             'updated_at' => now(),

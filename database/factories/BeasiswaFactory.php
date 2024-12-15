@@ -16,9 +16,12 @@ class BeasiswaFactory extends Factory
      */
     public function definition()
     {
+        static $id = 2; // Mulai ID dari 2
+
         return [
-            'nama_beasiswa' => 'LKPD'. ' Scholarship',
-            'deskripsi' => 'Beasiswa LPDP adalah program beasiswa yang dibiayai oleh pemerintah, dan dikelola oleh LPDP (Lembaga Pengelola Dana Pendidikan). Beasiswa LPDP ini diberikan khusus kepada mereka yang ingin melanjutkan pendidikan ke jenjang magister (S2) atau doktor (S3).', // Menghasilkan 3 kalimat,
+            'id' => $id++, // Tetapkan ID secara increment
+            'nama_beasiswa' => 'LKPD' . ' Scholarship',
+            'deskripsi' => 'Beasiswa LPDP adalah program beasiswa yang dibiayai oleh pemerintah, dan dikelola oleh LPDP (Lembaga Pengelola Dana Pendidikan). Beasiswa LPDP ini diberikan khusus kepada mereka yang ingin melanjutkan pendidikan ke jenjang magister (S2) atau doktor (S3).', // Menghasilkan 3 kalimat
             'sumber' => 'KEMENDIKBUD',
             'tipe_beasiswa' => $this->faker->randomElement([
                 'kipk',
@@ -32,3 +35,4 @@ class BeasiswaFactory extends Factory
         ];
     }
 }
+

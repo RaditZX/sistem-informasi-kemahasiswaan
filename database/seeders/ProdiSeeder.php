@@ -16,28 +16,28 @@ class ProdiSeeder extends Seeder
             [
                 'id'=>1,
                 'nama_prodi' => 'Teknik Informatika',
-                'jurusan_id' => 1, 
+                'jurusan_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>2,
                 'nama_prodi' => 'Konstruksi Sipil',
-                'jurusan_id' => 2, 
+                'jurusan_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>3,
                 'nama_prodi' => 'Teknik Kimia Produksi Bersih',
-                'jurusan_id' => 3, 
+                'jurusan_id' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>4,
                 'nama_prodi' => 'Analis Kimia',
-                'jurusan_id' => 3, 
+                'jurusan_id' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

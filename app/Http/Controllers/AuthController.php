@@ -113,7 +113,6 @@ class AuthController extends Controller
             'email.regex' => 'Gunakan email polban!',
         ]);
 
-        $method = $request->input('method');
         $email = $request->input('email');
         $password = $request->input('password');
 
