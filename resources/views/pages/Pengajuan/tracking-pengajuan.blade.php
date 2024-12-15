@@ -169,6 +169,8 @@
             <form action="{{ route('pengajuan.update-progress', $dataPengajuan->id) }}" method="POST" class="my-8 px-4">
                 @csrf
                 @method('PATCH')
+                
+                @if ($dataPengajuan->status != 11)
                 <div>
                     <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Your message</label>
                     <textarea id="message" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Tambahkan komentar disini..." name="reviewerComment"></textarea>
@@ -178,6 +180,7 @@
                     <button type="submit" class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="revise">Revisi</button>
                     <button type="submit" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="approve">Terima</button>
                 </div>
+                @endif
 
                 <!-- Hidden input field for role_id -->
                 <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
