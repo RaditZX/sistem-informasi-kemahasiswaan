@@ -6,7 +6,7 @@
     <div class="p-3 mt-10">
         <div class="flex flex-col lg:flex-row">
             <div class="flex flex-col gap-3 mt-16 lg:basis-1/2">
-                <p class="text-2xl lg:text-3xl font-bold text-black">Pengumuman Beasiswa Kartu Indonesia Pintar - Kuliah</p>
+                <p class="text-2xl lg:text-3xl font-bold text-black">Pengumuman Beasiswa LKPD</p>
                 <p class="text-xs lg:text-sm font-normal text-gray-500">
                     Berikut merupakan daftar mahasiswa penerima beasiswa Kartu Indonesia Pintar - Kuliah. Selamat dan semangat untuk seluruh mahasiswa!
                 </p>
@@ -14,9 +14,11 @@
                     <div class="text-center bg-orange-500 rounded-lg shadow-lg p-2 basis-1/2">
                         <p class="text-white">Download PDF</p>
                     </div>
-                    <div class="border border-orange-500 rounded-lg text-center p-2 basis-1/2">
-                        <p class="text-orange-500">Konfirmasi Penerimaan</p>
-                    </div>
+                    <a href="/import-data-penerima">
+                        <div class="border border-orange-500 rounded-lg text-center p-2 basis-1/2">
+                            <p class="text-orange-500">Tambah Data</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="flex justify-center lg:basis-1/2 mt-5 lg:mt-0">
@@ -39,6 +41,6 @@
 
         <div class="overflow-x-auto">
             <iframe src ="{{ asset('/laraview/pdf/cek.pdf') }}" width="1000px" height="1000px" class="mt-5 mx-auto w-full max-w-4xl " frameborder="0"></iframe>
-        </div> 
+        </div>
     </div>
 @endsection

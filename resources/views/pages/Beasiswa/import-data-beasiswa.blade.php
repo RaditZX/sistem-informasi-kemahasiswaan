@@ -8,14 +8,14 @@
         <p class="text-2xl lg:text-3xl font-bold text-black">Import Data Penerima Beasiswa</p>
     </div>
 
-    <form id="uploadForm" class="border border-gray-500 rounded-lg p-5 flex flex-col items-center justify-center gap-4 mr-10 ml-3 mt-8">
-        <!-- Drop Area -->
+    <form id="uploadForm" action="{{ route('penerimabeasiswa.import-data-beasiswa') }}" method="POST" enctype="multipart/form-data" class="border border-gray-500 rounded-lg p-5 flex flex-col items-center justify-center gap-4 mr-10 ml-3 mt-8">
+        @csrf
         <div id="dropArea" class="w-full h-48 border-2 border-dashed border-gray-400 rounded-lg flex flex-col justify-center items-center p-6 bg-gray-50 hover:bg-gray-100">
             <i class="fas fa-upload text-gray-500 text-3xl mb-3"></i>
             <p class="text-base font-light text-gray-500 text-center">
                 Seret dan letakkan atau klik untuk mengunggah berkas
             </p>
-            <input id="fileInput" name="file" type="file" class="hidden" />
+            <input id="fileInput" name="excelFile" type="file" class="hidden" />
         </div>
 
         <!-- Attached Files -->

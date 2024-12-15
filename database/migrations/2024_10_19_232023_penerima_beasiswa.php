@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penerima_beasiswa', function (Blueprint $table) {
+            $table->id();
             $table->string('nim',9);
             $table->unsignedBigInteger('beasiswa_id');
             $table->timestamps();
