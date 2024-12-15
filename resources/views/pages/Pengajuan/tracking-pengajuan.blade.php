@@ -255,19 +255,19 @@
 </script>
 
 <script>
-    // Data dari backend
+    // Data from backend
     const waktuSisa = {
-        days: {{ $waktuSisa->d }},
-        hours: {{ $waktuSisa->h }},
-        minutes: {{ $waktuSisa->i }},
-        seconds: {{ $waktuSisa->s }}
+        days: {{ $waktuSisa['days'] }},
+        hours: {{ $waktuSisa['hours'] }},
+        minutes: {{ $waktuSisa['minutes'] }},
+        seconds: {{ $waktuSisa['seconds'] }}
     };
 
     function startCountdown() {
         let { days, hours, minutes, seconds } = waktuSisa;
 
         const timerInterval = setInterval(() => {
-            // Hitung mundur
+            // Countdown logic
             if (seconds > 0) {
                 seconds--;
             } else if (minutes > 0) {
@@ -282,10 +282,6 @@
                 hours = 23;
                 minutes = 59;
                 seconds = 59;
-            } else {
-                clearInterval(timerInterval);
-                alert('Estimasi waktu telah habis!');
-                return;
             }
 
             // Update DOM
@@ -293,9 +289,9 @@
             document.getElementById('hours').innerText = hours;
             document.getElementById('minutes').innerText = minutes;
             document.getElementById('seconds').innerText = seconds;
-        }, 1000); // Update setiap detik
+        }, 1000); // Update every second
     }
 
-    // Jalankan timer saat halaman dimuat
+    // Start the timer when the page loads
     window.onload = startCountdown;
 </script>

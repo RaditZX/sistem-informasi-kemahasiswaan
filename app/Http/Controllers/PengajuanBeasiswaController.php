@@ -7,6 +7,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PengajuanDokumenController;
+use App\Mail\NotificationMail;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
 use App\Models\beasiswa;
@@ -21,7 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Mail;
 
 class PengajuanBeasiswaController extends Controller
 {
@@ -329,7 +330,7 @@ class PengajuanBeasiswaController extends Controller
         // Check if the user is a Reviewer
         $dataReviewer = Reviewer::join('users', 'reviewer.user_id', '=', 'users.id')
             ->join('role', 'role.id', '=', 'reviewer.role_id')
-            ->select('reviewer.nip', 'reviewer.role_id')
+            ->select('reviewer.nip', 'reviewer.role_id', 'users.email as reviewer_email')
             ->where('users.id', $user_id)
             ->first();
 
@@ -342,6 +343,7 @@ class PengajuanBeasiswaController extends Controller
                 'beasiswa.*',
                 'users.nama_depan',
                 'pengajuan_beasiswa.id',
+                'pengajuan_beasiswa.nim',
                 'pengajuan_beasiswa.status',
                 'pengajuan_beasiswa.komentar',
                 'pengajuan_beasiswa.tanggal_pengajuan',
@@ -360,13 +362,65 @@ class PengajuanBeasiswaController extends Controller
             ->where('dokumen.id_pengajuan_beasiswa', $dataPengajuan->id)
             ->get();
 
-        // Calculate estimated end date
-        $tanggalMulai = Carbon::parse($dataPengajuan->tanggal_pengajuan);
-        $tanggalAkhirEstimasi = $tanggalMulai->copy()->addDays(5);
+        // Input dates from $dataPengajuan
+        $tglAkhirBeasiswa = Carbon::parse($dataPengajuan->tanggal_berakhir);
 
-        // Adjust the end date if it exceeds beasiswa's end date (H-2)
-        $tanggalBerakhirBeasiswa = Carbon::parse($dataPengajuan->tanggal_berakhir)->subDays(2);
-        $waktuSisa = Carbon::now()->diff($tanggalAkhirEstimasi);
+        // Set $tglToleransiReviewer directly to $tglAkhirBeasiswa
+        $tglToleransiReviewer = $tglAkhirBeasiswa;
+
+        // Calculate remaining time
+        $currentDate = Carbon::now();
+        $totalSeconds = $currentDate->diffInSeconds($tglToleransiReviewer, false);
+
+        $daysRemaining = $hoursRemaining = $minutesRemaining = $secondsRemaining = 0;
+
+        if ($totalSeconds > 0) {
+            $daysRemaining = intdiv($totalSeconds, 86400); // 1 day = 86400 seconds
+            $hoursRemaining = intdiv($totalSeconds % 86400, 3600); // Remaining hours
+            $minutesRemaining = intdiv($totalSeconds % 3600, 60); // Remaining minutes
+            $secondsRemaining = $totalSeconds % 60; // Remaining seconds
+        } else {
+            // Notify the reviewer if the deadline has passed
+            if ($dataReviewer && !empty($dataReviewer->reviewer_email)) {
+                // Check if a notification has already been sent
+                $existingNotification = DB::table('notifikasi')
+                    ->where('id_pengajuan_beasiswa', $dataPengajuan->id)
+                    ->where('user_id', $user_id)
+                    ->where('status', 12) // Status for "Sent"
+                    ->exists(); // Use `exists()` for a faster query if you don't need the full record.
+            
+                if (!$existingNotification) {
+                    $data = [
+                        'name' => "Reminder Review Pengajuan - " . $dataPengajuan->nim,
+                        'message' => "The deadline for reviewing pengajuan by mahasiswa with NIM: {$dataPengajuan->nim} has passed. Please review it as soon as possible.",
+                    ];
+
+                    try {
+                        // Insert a new notification record
+                        DB::table('notifikasi')->insert([
+                            'user_id' => $user_id,
+                            'id_pengajuan_beasiswa' => $dataPengajuan->id,
+                            'status' => 12, // "Sent"
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+
+                        // Send email
+                        Mail::to($dataReviewer->reviewer_email)->send(new NotificationMail($data));
+                    } catch (\Exception $e) {
+                        Log::error('Failed to send review notification: ' . $e->getMessage());
+                    }
+                }
+            }            
+        }
+
+        // Prepare waktuSisa as an array
+        $waktuSisa = [
+            'days' => $daysRemaining,
+            'hours' => $hoursRemaining,
+            'minutes' => $minutesRemaining,
+            'seconds' => $secondsRemaining,
+        ];
 
         // Fetch all status codes
         $dataStatus = KodeStatus::all();
