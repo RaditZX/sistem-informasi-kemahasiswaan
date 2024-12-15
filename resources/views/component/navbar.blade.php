@@ -243,7 +243,6 @@
                     </li>
 
                     <!-- notifications -->
-
                     <li class="relative flex items-center pr-2">
                         <p class="hidden transform-dropdown-show"></p>
                         <a href="javascript:;" class="block p-0 text-sm transition-all ease-nav-brand text-slate-500"
@@ -252,15 +251,16 @@
                         </a>
 
                         <ul dropdown-menu class="text-sm transform-dropdown before:font-awesome before:leading-default before:duration-350 before:ease-soft lg:shadow-soft-3xl duration-250 min-w-44 before:sm:right-7.5 before:text-5.5 pointer-events-none absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 opacity-0 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8'] sm:-mr-6 lg:absolute lg:right-0 lg:left-auto lg:mt-2 lg:block lg:cursor-pointer">
-                            <!-- Looping through notifications -->
-
-                            {{-- @if(isset($notificationData))
+                            
+                            <!-- Check if notifications are available -->
+                            @if(isset($notificationData) && count($notificationData) > 0)
+                                <!-- Looping through notifications -->
                                 @foreach ($notificationData as $notification)
                                     <li class="relative mb-2">
                                         <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" href="javascript:;">
                                             <div class="flex py-1">
                                                 <div class="my-auto">
-                                                    <img src="{{ asset('path/to/default-image.jpg') }}" class="inline-flex items-center justify-center mr-4 text-sm text-white h-9 w-9 max-w-none rounded-xl" alt="Notification Image" />
+                                                <i class="cursor-pointer fa fa-bell inline-flex items-center justify-center mr-4 text-sm text-grey h-9 w-9 max-w-none rounded-xl" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="flex flex-col justify-center">
                                                     <!-- Display status of the notification -->
@@ -276,14 +276,14 @@
                                             </div>
                                         </a>
                                     </li>
-                                @endforeach --}}
-                            {{-- @else --}}
+                                @endforeach
+                            @else
                                 <!-- If there are no notifications, show this message -->
                                 <li class="relative mb-2">
                                     <p class="text-center text-gray-500 py-2">No new notifications</p>
                                 </li>
-                            {{-- @endif --}}
-                        </ul>
+                            @endif
+                        </ul>   
                     </li>
 
                 </ul>
