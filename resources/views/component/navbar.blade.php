@@ -17,7 +17,6 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 </style>
-{{-- @dd($notificationData) --}}
 <aside
     class="max-w-62.5 h-screen ease-nav-brand z-990 fixed inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent">
     <div class="h-19.5">
@@ -30,9 +29,6 @@
         </a>
     </div>
 
-    <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-t<<<<<<< HEAD
-       <div class="items-center
-        block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
     <ul class="flex flex-col pl-0 mb-0">
         @if (session('auth')['role'] === 'reviewer')
         <li class="mt-0.5 w-full">

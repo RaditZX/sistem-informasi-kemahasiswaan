@@ -14,7 +14,9 @@ class NotificationController extends Controller
 {
     try {
         // Get all notifications
-        $notifikasi = Notifikasi::all();
+        $notifikasi = Notifikasi::where('user_id', auth()->id())  // Filter berdasarkan user_id
+                                    ->with('pengajuanBeasiswa.Beasiswa', 'pengajuanBeasiswa.Status') // Eager load relasi untuk menghindari N+1 query
+                                    ->get();
         // dd($notifikasi);
         // Return the notifications as JSON
         return $notifikasi;
