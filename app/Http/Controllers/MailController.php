@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Mail\NotificationMail;
+use App\Models\PengajuanBeasiswa;
+use App\Models\Reviewer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -115,6 +117,39 @@ class MailController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function notifyReviewer(Request $request)
+    {
+        $request->validate([
+            'pengajuanId' => 'required|integer',
+            'reviewerId' => 'required|integer',
+        ]);
+
+        // Retrieve Pengajuan and Reviewer details
+        $pengajuan = PengajuanBeasiswa::find($request->pengajuanId);
+        $reviewer = Reviewer::find($request->reviewerId);
+
+        if (!$pengajuan || !$reviewer) {
+            return response()->json(['message' => 'Pengajuan or Reviewer not found'], 404);
+        }
+
+        // Prepare email data
+        $data = [
+            'name' => 'Pemberitahuan Pengajuan Beasiswa',
+            'message' => "Pengajuan beasiswa oleh mahasiswa dengan NIM: {$pengajuan->nim} telah selesai diproses.",
+        ];
+
+        // Fetch the reviewer's email
+        $user = User::find($reviewer->user_id);
+        if ($user && $user->email) {
+            // Send email using NotificationMail
+            Mail::to($user->email)->send(new NotificationMail($data));
+
+            return response()->json(['message' => 'Notification email sent successfully']);
+        }
+
+        return response()->json(['message' => 'Reviewer email not found'], 404);
     }
 
 }

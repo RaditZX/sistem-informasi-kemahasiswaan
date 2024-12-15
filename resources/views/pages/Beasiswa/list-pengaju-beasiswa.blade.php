@@ -43,12 +43,22 @@
 
                     <td class="text-center py-5">
                         <div class="flex flex-row gap-2 justify-center items-center">
-                            <div class="bg-orange-500 rounded-lg shadow-lg p-3 w-28">
-                                <p class="text-xs sm:text-base text-white">{{ $pengajuan->isi_status }}</p>
-                            </div>
+                            @if ($pengajuan->status <= 9)
+                                <div class="bg-orange-500 rounded-lg shadow-lg p-3 w-28">
+                                    <p class="text-xs sm:text-base text-white">Diproses</p>
+                                </div>
+                            @elseif ($pengajuan->status == 10)
+                                <div class="bg-green-500 rounded-lg shadow-lg p-3 w-28">
+                                    <p class="text-xs sm:text-base text-white">Diterima</p>
+                                </div>
+                            @else
+                                <div class="bg-red-500 rounded-lg shadow-lg p-3 w-28">
+                                    <p class="text-xs sm:text-base text-white">Ditolak</p>
+                                </div>
+                            @endif
                     </td>
                     <td class="text-center py-5">
-                        <a href="{{ url('tracking-pengajuan') }}">
+                        <a href="{{ url('tracking-pengajuan/' . $pengajuan->id) }}">
                             <i class="fas fa-arrow-right text-black text-lg" onclick=""></i>
                         </a>
                     </td>

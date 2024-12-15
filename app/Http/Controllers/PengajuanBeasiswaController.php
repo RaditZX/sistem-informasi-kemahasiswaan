@@ -7,17 +7,22 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PengajuanDokumenController;
+use App\Mail\NotificationMail;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
 use App\Models\beasiswa;
+use App\Models\KodeStatus;
 use App\Models\PengajuanBeasiswa;
 use App\Models\PengajuanDokumen;
 use App\Models\Prodi;
+use App\Models\Reviewer;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Mail;
 
 class PengajuanBeasiswaController extends Controller
 {
@@ -39,32 +44,82 @@ class PengajuanBeasiswaController extends Controller
 
     public function listPengajuanStaff()
     {
-
+        // Fetch notification data
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
 
         $user = Auth::user();
-        $mhs = Mahasiswa::where('user_id',$user->id)->first();
 
-        if($mhs){
-            $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
-            ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
-            ->join('users', 'mahasiswa.user_id', '=', 'users.id')
-            ->join('kode_status', 'kode_status.id','=','pengajuan_beasiswa.status')
-            ->select('beasiswa.*', 'users.nama_depan', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan','kode_status.isi_status')->where('mahasiswa.nim','=',$mhs->nim)
-            ->get();
-        }else{
+        // Determine user type (Mahasiswa, Kajur, or other staff)
+        $mhs = Mahasiswa::where('user_id', $user->id)->first();
+        $listPengajuan = collect(); // Initialize an empty collection for listPengajuan
 
+        if ($mhs) {
+            // If user is a Mahasiswa, fetch their submissions
             $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
-            ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
-            ->join('users', 'mahasiswa.user_id', '=', 'users.id')
-            ->select('beasiswa.*', 'users.nama_depan', 'pengajuan_beasiswa.status', 'pengajuan_beasiswa.tanggal_pengajuan')
-            ->get();
+                ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+                ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+                ->join('kode_status', 'kode_status.id', '=', 'pengajuan_beasiswa.status')
+                ->select(
+                    'beasiswa.*',
+                    'users.nama_depan',
+                    'pengajuan_beasiswa.status',
+                    'pengajuan_beasiswa.tanggal_pengajuan',
+                    'kode_status.isi_status'
+                )
+                ->where('mahasiswa.nim', '=', $mhs->nim)
+                ->get();
+        } else {
+            // Check the role
+            $reviewer = Reviewer::where('user_id', $user->id)->first();
+
+            if ($reviewer->role_id === 2) {
+                $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+                ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+                ->join('prodi', 'prodi.id', '=', 'mahasiswa.prodi_id')
+                ->join('jurusan', 'jurusan.id', '=', 'prodi.jurusan_id')
+                ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+                ->select(
+                    'beasiswa.*',
+                    'users.nama_depan',
+                    'pengajuan_beasiswa.status',
+                    'pengajuan_beasiswa.tanggal_pengajuan'
+                )
+                ->where('jurusan.kajur_id', $user->id)
+                ->whereIn('pengajuan_beasiswa.status', [4, 5])
+                ->get();
+            } else {
+                if ($reviewer->role_id === 1) {
+                    $statusCode = [1, 2, 3];
+                } elseif ($reviewer->role_id === 3) {
+                    $statusCode = [6, 7];
+                } else {
+                    $statusCode = [8, 9];
+                }
+
+                $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+                ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+                ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+                ->select(
+                    'beasiswa.*',
+                    'users.nama_depan',
+                    'pengajuan_beasiswa.status',
+                    'pengajuan_beasiswa.tanggal_pengajuan'
+                )
+                ->whereIn('pengajuan_beasiswa.status', $statusCode)
+                ->get();
+            }
+
+            // $isKajur = Reviewer::join('jurusan', 'jurusan.kajur_id', '=', 'reviewer.user_id')
+            //     ->where('user_id', $user->id)
+            //     ->exists();
         }
 
+        // Fetch names of all Beasiswa
         $namaBeasiswa = Beasiswa::pluck('nama_beasiswa');
 
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan','notificationData', 'namaBeasiswa'));
+        // Return the view with the data
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan', 'notificationData', 'namaBeasiswa'));
     }
 
     public function create(string $id)
@@ -259,5 +314,186 @@ class PengajuanBeasiswaController extends Controller
     public function destroy(PengajuanBeasiswa $pengajuanBeasiswa)
     {
         //
+    }
+
+    public function showTracking(string $id)
+    {
+        // Get authenticated user ID
+        $user_id = Auth::id();
+
+        // Check if the user is a Mahasiswa
+        $userData = User::join('mahasiswa', 'users.id', '=', 'mahasiswa.user_id')
+            ->select('users.email', 'mahasiswa.nim')
+            ->where('users.id', $user_id)
+            ->first();
+
+        // Check if the user is a Reviewer
+        $dataReviewer = Reviewer::join('users', 'reviewer.user_id', '=', 'users.id')
+            ->join('role', 'role.id', '=', 'reviewer.role_id')
+            ->select('reviewer.nip', 'reviewer.role_id', 'users.email as reviewer_email')
+            ->where('users.id', $user_id)
+            ->first();
+
+        // Get detail data of pengajuan beasiswa
+        $dataPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+            ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+            ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+            ->join('kode_status', 'kode_status.id', '=', 'pengajuan_beasiswa.status')
+            ->select(
+                'beasiswa.*',
+                'users.nama_depan',
+                'pengajuan_beasiswa.id',
+                'pengajuan_beasiswa.nim',
+                'pengajuan_beasiswa.status',
+                'pengajuan_beasiswa.komentar',
+                'pengajuan_beasiswa.tanggal_pengajuan',
+                'kode_status.isi_status'
+            )
+            ->where('pengajuan_beasiswa.id', $id)
+            ->first();
+
+        if (!$dataPengajuan) {
+            abort(404, 'Pengajuan not found');
+        }
+
+        // Fetch dokumen pengajuan
+        $dataDokumenPengajuan = PengajuanDokumen::join('pengajuan_beasiswa', 'pengajuan_beasiswa.id', '=', 'dokumen.id_pengajuan_beasiswa')
+            ->select('dokumen.*')
+            ->where('dokumen.id_pengajuan_beasiswa', $dataPengajuan->id)
+            ->get();
+
+        // Input dates from $dataPengajuan
+        $tglAkhirBeasiswa = Carbon::parse($dataPengajuan->tanggal_berakhir);
+
+        // Set $tglToleransiReviewer directly to $tglAkhirBeasiswa
+        $tglToleransiReviewer = $tglAkhirBeasiswa;
+
+        // Calculate remaining time
+        $currentDate = Carbon::now();
+        $totalSeconds = $currentDate->diffInSeconds($tglToleransiReviewer, false);
+
+        $daysRemaining = $hoursRemaining = $minutesRemaining = $secondsRemaining = 0;
+
+        if ($totalSeconds > 0) {
+            $daysRemaining = intdiv($totalSeconds, 86400); // 1 day = 86400 seconds
+            $hoursRemaining = intdiv($totalSeconds % 86400, 3600); // Remaining hours
+            $minutesRemaining = intdiv($totalSeconds % 3600, 60); // Remaining minutes
+            $secondsRemaining = $totalSeconds % 60; // Remaining seconds
+        } else {
+            // Notify the reviewer if the deadline has passed
+            if ($dataReviewer && !empty($dataReviewer->reviewer_email)) {
+                // Check if a notification has already been sent
+                $existingNotification = DB::table('notifikasi')
+                    ->where('id_pengajuan_beasiswa', $dataPengajuan->id)
+                    ->where('user_id', $user_id)
+                    ->where('status', 12) // Status for "Sent"
+                    ->exists(); // Use `exists()` for a faster query if you don't need the full record.
+            
+                if (!$existingNotification) {
+                    $data = [
+                        'name' => "Reminder Review Pengajuan - " . $dataPengajuan->nim,
+                        'message' => "The deadline for reviewing pengajuan by mahasiswa with NIM: {$dataPengajuan->nim} has passed. Please review it as soon as possible.",
+                    ];
+
+                    try {
+                        // Insert a new notification record
+                        DB::table('notifikasi')->insert([
+                            'user_id' => $user_id,
+                            'id_pengajuan_beasiswa' => $dataPengajuan->id,
+                            'status' => 12, // "Sent"
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+
+                        // Send email
+                        Mail::to($dataReviewer->reviewer_email)->send(new NotificationMail($data));
+                    } catch (\Exception $e) {
+                        Log::error('Failed to send review notification: ' . $e->getMessage());
+                    }
+                }
+            }            
+        }
+
+        // Prepare waktuSisa as an array
+        $waktuSisa = [
+            'days' => $daysRemaining,
+            'hours' => $hoursRemaining,
+            'minutes' => $minutesRemaining,
+            'seconds' => $secondsRemaining,
+        ];
+
+        // Fetch all status codes
+        $dataStatus = KodeStatus::all();
+
+        return view('pages.Pengajuan.tracking-pengajuan', [
+            'dataPengajuan' => $dataPengajuan,
+            'dataDokumenPengajuan' => $dataDokumenPengajuan,
+            'userData' => $userData,
+            'dataStatus' => $dataStatus,
+            'dataReviewer' => $dataReviewer,
+            'waktuSisa' => $waktuSisa,
+        ]);
+    }
+
+    public function progressPengajuan(Request $request, string $id) {
+        $validatedData = $request->validate([
+            'reviewerComment' => 'nullable',
+            'role_id' => 'required|integer'
+        ]);
+
+        $role_id = $validatedData['role_id'];
+    
+        $dataPengajuan = PengajuanBeasiswa::find($id);
+        if (!$dataPengajuan) {
+            return redirect()->route('pengajuan.tracking', ['id' => $id])
+                             ->with('error', 'Data Pengajuan not found.');
+        }
+    
+        // Set data komentar
+        $dataPengajuan->komentar = $validatedData['reviewerComment'] ?? null;
+
+        if ($role_id == 1) {
+            $reviseStatus = 3;
+            $approveStatus = 4;
+        } elseif ($role_id == 2) {
+            $reviseStatus = 5;
+            $approveStatus = 6;
+        } elseif ($role_id == 3) {
+            $reviseStatus = 7;
+            $approveStatus = 8;
+        } elseif ($role_id == 4) {
+            $reviseStatus = 9;
+            $approveStatus = 10;
+        }
+    
+        // Update status based button input
+        switch ($request->input('action')) {
+            case 'reject':
+                $dataPengajuan->status = 11;
+                break;
+            case 'revise':
+                $dataPengajuan->status = $reviseStatus;
+                break;
+            case 'approve':
+                $dataPengajuan->status = $approveStatus;
+                if ($dataPengajuan->komentar) {
+                    $dataPengajuan->komentar = "";
+                }
+                break;
+            default:
+                return redirect()->route('pengajuan.tracking', ['id' => $id])
+                                 ->with('error', 'Invalid action.');
+        }
+    
+        $dataPengajuan->save();
+    
+        return redirect()->route('pengajuan.tracking', ['id' => $id])
+                         ->with('success', 'Status updated successfully.');
+    }
+
+    public function batalkanPengajuan(string $id) {
+        PengajuanBeasiswa::where('id', $id)->delete();
+
+        return redirect()->route('pengajuan.list-pengajuan')->with('msg', 'Pengajuan mu telah di batalkan');
     }
 }

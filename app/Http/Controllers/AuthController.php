@@ -48,10 +48,10 @@ class AuthController extends Controller
         $password = $request->input('password');
 
         try {
-            $signInResult = $this->firebaseAuth->signInWithEmailAndPassword($email, $password);
-            $firebaseUser = $this->firebaseAuth->getUser($signInResult->firebaseUserId());
+            // $signInResult = $this->firebaseAuth->signInWithEmailAndPassword($email, $password);
+            // $firebaseUser = $this->firebaseAuth->getUser($signInResult->firebaseUserId());
 
-            if ($firebaseUser->emailVerified) {
+            //if ($firebaseUser->emailVerified) {
                 $user = User::where('email', $email)->firstOrFail();
                 $mhs = Mahasiswa::where('user_id', $user->id)->firstOrFail();
                 if ($mhs) {
@@ -77,9 +77,15 @@ class AuthController extends Controller
 
 
                 return $mhs ? redirect()->intended('/beasiswa') : redirect()->intended('/dashboard');
-            } else {
-                return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
-            }
+            // } else {
+            //     return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
+            // }
+            $request->session()->regenerate();
+
+            return redirect()->intended('/beasiswa');
+            // } else {
+            //     return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
+            // }
         } catch (\Kreait\Firebase\Exception\Auth\InvalidPassword $e) {
             return back()->withErrors(['email' => 'Invalid email or password.'])->onlyInput('email');
         } catch (\Kreait\Firebase\Exception\Auth\FailedToVerifyToken $e) {
@@ -108,8 +114,7 @@ class AuthController extends Controller
                 'required',
                 'email',
                 'regex:/^[a-zA-Z0-9._%+-]+@polban\.ac\.id$/',
-            ],
-            'password' => 'required|min:6',
+            ]
         ], [
             'email.regex' => 'Gunakan email polban!',
         ]);
