@@ -38,7 +38,15 @@
                                 </span>
                                 <div class="absolute top-1/2 right-0 w-full h-1 bg-red-500 transform -translate-y-4 z-0" style="top: 40px"></div>
                             @else
-                                @if ($index < $dataPengajuan->status-1)
+                                @if ($index == $dataPengajuan->status-1)
+                                    <!-- Completed Step -->
+                                    <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 bg-yellow-500">
+                                        <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                        </svg>
+                                    </span>
+                                    <div class="absolute top-1/2 right-0 w-full h-1 bg-yellow-500 transform -translate-y-4 z-0" style="top: 40px"></div>
+                                @elseif ($index < $dataPengajuan->status-1)
                                     <!-- Completed Step -->
                                     <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 {{ ($index == $dataPengajuan->status-2) ? 'bg-yellow-500' : 'bg-green-500' }}">
                                         <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
@@ -70,7 +78,7 @@
 
         <!-- Timer Section -->
         <section class="timer my-8">
-            <h1 class="text-center text-xl font-semibold mb-4">ESTIMASI {{ $dataPengajuan->status }}</h1>
+            <h1 class="text-center text-xl font-semibold mb-4">ESTIMASI</h1>
             <div class="timer-block">
                 <div class="mx-auto w-1/2 grid grid-cols-4 justify-items-center items-center mb-4">
                     <p>Hari</p>
@@ -79,13 +87,29 @@
                     <p>Detik</p>
                 </div>
                 <div class="mx-auto w-1/2 grid grid-cols-4 justify-items-center items-center">
-                    <h3>XX</h3>
-                    <h3>XX</h3>
-                    <h3>XX</h3>
-                    <h3>XX</h3>
+                    <h3 id="days">0</h3>
+                    <h3 id="hours">0</h3>
+                    <h3 id="minutes">0</h3>
+                    <h3 id="seconds">0</h3>
                 </div>
             </div>
-        </section>
+        </section>        
+
+        @if (($dataReviewer == NULL))
+            @if ($dataPengajuan->status == 3 || $dataPengajuan->status == 5 || $dataPengajuan->status == 7 || $dataPengajuan->status == 9)
+            <section class="reminderAlert px-4">
+                <div class="flex items-center p-4 mb-4 text-sm border border-yellow-300 rounded-lg bg-yellow-300  dark:border-yellow-800" role="alert">
+                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                    <span class="font-medium">Revisi Data Pengajuan!</span> Cek komentar untuk mengetahui lebih lanjut
+                    </div>
+                </div>
+            </section>
+            @endif
+        @endif
 
         <!-- Scholarship Section -->
         <section class="beasiswa my-8 px-4">
@@ -131,7 +155,7 @@
                             @php
                                 $n = 0;
                             @endphp
-                            <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="500" height="375" type="application/pdf">
+                                <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="500" height="375" type="application/pdf">
                             @php
                                 $n += 1;
                             @endphp
@@ -160,14 +184,50 @@
                 <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
             </form>        
         @elseif (($dataPengajuan->status <= 1) && ($dataReviewer == NULL))
-            <form action="#" method="POST" class="my-8 px-4">
-                @csrf
-                <div class="flex flex-col items-center justify-end">
-                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Ingin membatalkan pengajuan?</label>
-                    <button type="button" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Batalkan</button>
+            <div class="flex justify-center items-center">
+                <form action="{{ route('pengajuan.batalkan-pengajuan', $dataPengajuan->id)  }}" method="POST" class="my-8 px-4" onsubmit="return confirm('Are you sure you want to delete this?');">
+                    @csrf
+                    @method('DELETE')
+                    <div class="flex flex-col items-center justify-end">
+                        <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Ingin membatalkan pengajuan?</label>
+                        <button type="submit" class="btn btn-danger text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Batalkan</button>
+                    </div>
+                </form>
+                <div class="flex flex-col items-center justify-center">
+                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Ingin mengubah data pengajuan?</label>
+                    <a href="{{ url('/pengajuan-beasiswa/edit/') . $dataPengajuan->id }}" class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
+                        Edit
+                    </a>
                 </div>
-            </form>
+            </div>
         @else
+            @if (($dataPengajuan->status == 3 || $dataPengajuan->status == 5 || $dataPengajuan->status == 7 || $dataPengajuan->status == 9) )
+                <div class="px-4">
+                    <h1 class="text-xl font-semibold mb-4">Komentar Revisi</h1>
+                    <p>
+                        @if ($dataPengajuan->komentar)
+                        <section class="reminderAlert">
+                            <div class="flex items-center p-4 mb-4 text-sm border border-yellow-300 rounded-lg  dark:border-yellow-800" role="alert">
+                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <div>
+                                  <p>{{ $dataPengajuan->komentar }}</p>
+                                </div>
+                            </div>
+                        </section>
+                        @endif
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center justify-center">
+                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Perbaiki data pengajuan?</label>
+                    <a href="{{ url('/pengajuan-beasiswa/edit/') . $dataPengajuan->id }}" class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
+                        Edit
+                    </a>
+                </div>
+            @endif
             <div class="flex flex-col items-center justify-end">
                 <p><b>Pengajuan hanya dapat dibatalkan jika masih dalam proses "Diajukan"!</b></p>
             </div>
@@ -192,4 +252,50 @@
         // Rotate icon
         icon.classList.toggle('rotate-180');
     }
+</script>
+
+<script>
+    // Data dari backend
+    const waktuSisa = {
+        days: {{ $waktuSisa->d }},
+        hours: {{ $waktuSisa->h }},
+        minutes: {{ $waktuSisa->i }},
+        seconds: {{ $waktuSisa->s }}
+    };
+
+    function startCountdown() {
+        let { days, hours, minutes, seconds } = waktuSisa;
+
+        const timerInterval = setInterval(() => {
+            // Hitung mundur
+            if (seconds > 0) {
+                seconds--;
+            } else if (minutes > 0) {
+                minutes--;
+                seconds = 59;
+            } else if (hours > 0) {
+                hours--;
+                minutes = 59;
+                seconds = 59;
+            } else if (days > 0) {
+                days--;
+                hours = 23;
+                minutes = 59;
+                seconds = 59;
+            } else {
+                clearInterval(timerInterval);
+                alert('Estimasi waktu telah habis!');
+                return;
+            }
+
+            // Update DOM
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hours;
+            document.getElementById('minutes').innerText = minutes;
+            document.getElementById('seconds').innerText = seconds;
+        }, 1000); // Update setiap detik
+    }
+
+    // Jalankan timer saat halaman dimuat
+    window.onload = startCountdown;
 </script>

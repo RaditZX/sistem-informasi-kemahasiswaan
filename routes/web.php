@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PenerimaBeasiswaController;
 use App\Http\Controllers\PengajuanBeasiswaController;
@@ -112,3 +113,4 @@ Route::middleware('auth')->group(function () {
 
 
 
+Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
