@@ -11,16 +11,15 @@ class JenjangPendidikan extends Model
 
     protected $table = 'jenjang_pendidikan';
 
-    protected $fillable = ['jenjang', 'jurusan'];
+    protected $fillable = ['beasiswa_id','jenjang'];
+
+    protected $primaryKey = ['beasiswa_id','jenjang'];
+
+    public $incrementing = false;
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()
     {
-        return $this->belongsToMany(Beasiswa::class, 'beasiswa_jenjang_pendidikan');
-    }
-
-    public function jurusan()
-    {
-        return $this->belongsTo(Jurusan::class, 'jurusan');
+        return $this->belongsTo(Beasiswa::class);
     }
 }

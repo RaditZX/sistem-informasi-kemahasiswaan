@@ -40,13 +40,6 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-
-<body>
-    <main class="min-h-screen overflow-y-auto">
-        @yield('content')
-    </main>
-
     <!-- JavaScript Plugins -->
     <script src="{{ asset('assets/js/plugins/chartjs.min.js') }}" async></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}" async></script>
@@ -55,7 +48,14 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+</head>
 
+<body>
+    <main class="overflow-y-auto">
+    </main>
+    
+    
 </body>
+@yield('content')
 
 </html>

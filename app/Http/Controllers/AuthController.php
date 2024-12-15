@@ -53,7 +53,7 @@ class AuthController extends Controller
 
             //if ($firebaseUser->emailVerified) {
                 $user = User::where('email', $email)->firstOrFail();
-                $mhs = Mahasiswa::where('user_id', $user->id)->first();
+                $mhs = Mahasiswa::where('user_id', $user->id)->firstOrFail();
                 if ($mhs) {
                     // Store user data and 'mahasiswa' role in session
                     session(['auth' => ['user' => $user, 'role' => 'mahasiswa', 'mhs' => $mhs]]);
@@ -70,6 +70,7 @@ class AuthController extends Controller
                         return back()->withErrors(['email' => 'User not found or invalid role.'])->onlyInput('email');
                     }
                 }
+                
 
                 // Regenerate the session ID to prevent session fixation attacks
                 $request->session()->regenerate();

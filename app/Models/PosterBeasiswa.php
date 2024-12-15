@@ -13,9 +13,8 @@ class PosterBeasiswa extends Model
 
     protected $fillable = ['beasiswa_id', 'link_poster'];
 
-    public $incrementing = false; // Karena tidak menggunakan auto-increment ID
-    
-    protected $primaryKey = ['beasiswa_id', 'link_poster']; // Menggunakan composite key
+    protected $primaryKey = ['beasiswa_id', 'link_poster'];
+    public $incrementing = false;
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()
