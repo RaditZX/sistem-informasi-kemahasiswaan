@@ -136,7 +136,9 @@ class UsersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+
             [
+
                 'id' => 13,
                 'nama_depan' => 'Kepala Jurusan',
                 'nama_belakang' => 'Bahasa Inggris',
@@ -146,7 +148,6 @@ class UsersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
             [
                 'id'=>14,
                 'nama_depan' => 'Koordinator Layanan Eksternal',
@@ -218,6 +219,18 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+
+                'id'=>21,
+                'nama_depan' => 'Yani',
+                'nama_belakang' => 'Rahmawati',
+                'email' => 'yani.rahmawati.tif23@polban.ac.id',
+                'jenis_kelamin' => 'Wanita',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+
                 'id'=>100,
                 'nama_depan' => 'Dummy',
                 'nama_belakang' => 'Dummy',

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 
 
+
 class BeasiswaController extends Controller
 {
 
@@ -197,8 +198,6 @@ class BeasiswaController extends Controller
             'tanggal_berakhir' => $validatedData['tanggal_berakhir']
         ]);
 
-
-
         // Simpan poster beasiswa
         foreach ($fileUrls as $url){
             PosterBeasiswa::create([
@@ -222,6 +221,7 @@ class BeasiswaController extends Controller
                 $beasiswa->syaratBeasiswa()->attach($existingSyarat->id);
             }
         }
+        
 
 
         // Simpan benefit beasiswa, jika ada
@@ -236,10 +236,11 @@ class BeasiswaController extends Controller
                 $beasiswa->benefitBeasiswa()->attach($existingBenefit->id);
             }
         }
-
+        
         if (isset($validatedData['syarat_dokumen'])) {
             foreach ($validatedData['syarat_dokumen'] as $dokumen) {
                 $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
+
 
                 if(!$existingDokumen){
                     $existingDokumen = SyaratDokumen::create(['dokumen' => $dokumen]);
@@ -373,6 +374,7 @@ class BeasiswaController extends Controller
             // 'poster.*' => [
             //     'sometimes',
             //     'nullable',
+
             //     function($attribute, $value, $fail) {
             //         if (is_string($value)) {
             //             // Validasi jika nilai adalah string (URL)
@@ -392,6 +394,10 @@ class BeasiswaController extends Controller
             //     }
             // ],
         ], $messages);
+        
+        // Modifikasi tanggal_berakhir
+        $tanggal_berakhir = Carbon::parse($request->tanggal_berakhir)->subDays(5);
+
 
         // Modifikasi tanggal_berakhir
         $tanggal_berakhir = Carbon::parse($request->tanggal_berakhir)->subDays(5);
@@ -428,6 +434,7 @@ class BeasiswaController extends Controller
                     $fileController = new FileController();
                     $uploadedFileUrl = $fileController->uploadFile($newRequest);
 
+
                     // Store the uploaded file URL in the array
                     $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
                     // dd($fileUrls);
@@ -439,9 +446,11 @@ class BeasiswaController extends Controller
                 foreach ($request->poster as $poster) {
                     if (filter_var($poster, FILTER_VALIDATE_URL)) {
                         // dd($poster);
-                        $fileUrls[] = $poster;
+
+                        $fileUrls[] = $poster; 
                     }
                 }
+                
 
                 // Menghapus poster yang ada jika ada perubahan
                 $existingPoster = PosterBeasiswa::where('beasiswa_id', $id)->get();
@@ -525,7 +534,6 @@ class BeasiswaController extends Controller
                     $existingJenjang = JenjangPendidikan::where('beasiswa_id', $beasiswa->id)
                                                         ->where('jenjang', $jenjang)
                                                         ->first();
-
                     if (!$existingJenjang) {
                         JenjangPendidikan::create([
                             'beasiswa_id' => $beasiswa->id,
@@ -537,6 +545,7 @@ class BeasiswaController extends Controller
                 $beasiswa->jenjangPendidikan()->delete();
             }
 
+
             // Log the updated scholarship data
             Log::info('Beasiswa updated successfully: ', [$beasiswa]);
             // dd($beasiswa->syaratBeasiswa, $beasiswa->benefitBeasiswa, $beasiswa->syaratDokumen, $beasiswa->jenjangPendidikan, $beasiswa->posterBeasiswa, $beasiswa);
@@ -546,12 +555,13 @@ class BeasiswaController extends Controller
         } catch (\Exception $e) {
             Log::error('Error updating scholarship: ', ['error' => $e->getMessage()]);
 
+
             return redirect()->back();
                 // ->withInput($request->all())
                 // ->withErrors(['msg' => 'Terjadi kesalahan saat memperbarui data beasiswa.']);
         }
     }
-
+        
     /**
      * Remove the specified resource from storage.
      */

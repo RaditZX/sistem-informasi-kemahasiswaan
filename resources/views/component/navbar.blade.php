@@ -279,7 +279,8 @@
                                     <p class="text-center text-gray-500 py-2">No new notifications</p>
                                 </li>
                             @endif
-                        </ul>
+
+                        </ul>   
                     </li>
 
                 </ul>
