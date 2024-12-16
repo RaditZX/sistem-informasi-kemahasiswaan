@@ -39,7 +39,7 @@
                                                     @endfor
                                                 </div>
                                                 <div>
-                                                    <p class="text-3xl mr-3">+7</p>
+                                                    <p class="text-3xl mr-3">+{{ $data->total_pengajuan }}</p>
                                                 </div>
 
                                             </div>

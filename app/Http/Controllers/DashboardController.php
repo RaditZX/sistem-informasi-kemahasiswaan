@@ -63,9 +63,10 @@ class DashboardController extends Controller
 
 
 
-        $beasiswa = Beasiswa::where('tanggal_berakhir', '>', now())
-            ->where('tanggal_mulai', '<', now())
+        $beasiswa = Beasiswa::where('tanggal_berakhir', '>=', now())
+            ->where('tanggal_mulai', '<=', now())
             ->paginate(6);
+
 
         $jurusan = DB::table('jurusan')->selectRaw('nama_jurusan')->get();
 

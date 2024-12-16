@@ -140,10 +140,10 @@
                                     <div
                                         class="relative w-full max-w-4xl h-full p-4 bg-white rounded shadow-lg overflow-x-auto">
                                         <!-- Close Button -->
-                                        <button onclick="closePdfViewer(1)" class="absolute top-2 right-2 text-gray-600">
+                                        <div onclick="closePdfViewer(1)" class="absolute top-2 right-2 text-gray-600">
                                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAA7hJREFUWEfVl1moTlEYhh9TZpnHG6TMuZGiDCFDmYuQKSHzVJJc4EZyYZ6HiMwkInNRhjKmhCRkiMwyJtN+9S2ts+z97/8cdc6x6r/4917rW8/6hvdbuwiFbBQpZDz8N0CdgZMF4b04D80F5gArgEn5DRUC9QIOeBArgYn5CRXnoVXAOA9iPTAmv6CSklrhmpDiqSpAd6CBzXsL3AceAPeA93k5RKYqi4PaDMwGWgG1Uza8buE/CFzJFi6t7MPwZWs3nHcOGAQ8SjOQBqT3d7yw+Pa+AlctRA+jyvwJ1AFqAG2AssHmnywN5OXEkQmoBLAFGBiz+gLQEfiSYLkk0AUYFUGrcv2xBJhuB/hreRKQTncI6OCteA1U9v7vA84CfYBmBnce2BZIR0tgqXnNLd8ZeX5wHFQS0I7AMyr9yYAM9U7LA2BrVGnDvHnaZwqwCP60qwXArNBWHNBwwI+zYt/UcqU4sAvolwJV3yQgnDYC2OQ97Bp57rg/KQRSSKQlFQJLT4B2pi+C2g30zQDV0IohbsoyryWpYBoDP9zEEEhunGkvJW4Vvbx5ajklI8WA7cCABKjLwAmgDDA1mFPaDq1q1FDib4wDKhr1rZdRAlayl0pWQZ32oJ4b1K0soGTmTVAIbl+1JmmchiSjnvOS7yEBPQOq2USdfg/QPIB6YSV/w6CUwBK9uKG51WNeqGEvt+faU/r1O2xhyJT1823iTaAF8M2gTnmwkgDpkNqDwpcEpYRV4vqjpuVXeXuo6868pBwqZWGqZRMWm4jpr5LvjAelcHSKZOCaQUlEpS3+kOckFf5Qlbrce2Xh+tOI48p+qCm0MyKllpE4qHcGpeYpW4Ia4u0ukZSMfLdnC4EZ3vv+kaju9WmThFEhcIbVsyRqa2yhSloKXdX+f7DwXTIoVZ/fbvabLdn09WttlLNjw/xKAlIfO2Knd2t0jZABlX8jg9KdSENQuhsJVDYlfvKMGwqvq149O2Yt569emKm5SkOOAm09w/KWKk+tRBcyJa2roo9AN4MqZ+9ahx6wsI70wphjStr1Q012Q0LHV/UpKZ3AyfDnSOge23UlzvbtSOWbJHV6GUgDcvTtLYcUqn8dq4HxSUayBXLwCkFP81jdDGS6rF20a4huDqosHyLxayY3QOH+SlJBuZ8g1GrUnO9a+Pw1flPV89jvvn8Bykvo1gGjvYW6PU7LRofyslm2a8KvmR7AYbc4vz3k9nWeytHHclNl2Z4+N/P0EZDjtljQQLHwBRWyRE8WOqBf1NW6JS3K+t8AAAAASUVORK5CYII="
                                                 alt="View PDF" class="h-6 w-6" />
-                                        </button>
+                                        </div>
                                         <!-- PDF iframe -->
                                         <embed id="pdf-iframe" src="{{ $dokumen_pengajauan[0]->link_dokumen }}"
                                             width="100%" height="600px" frameborder="0" class="w-full h-full"
@@ -218,10 +218,10 @@
                                     <div
                                         class="relative w-full max-w-4xl h-full p-4 bg-white rounded shadow-lg overflow-x-auto">
                                         <!-- Close Button -->
-                                        <button onclick="closePdfViewer(2)" class="absolute top-2 right-2 text-gray-600">
+                                        <div onclick="closePdfViewer(2)" class="absolute top-2 right-2 text-gray-600">
                                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAA7hJREFUWEfVl1moTlEYhh9TZpnHG6TMuZGiDCFDmYuQKSHzVJJc4EZyYZ6HiMwkInNRhjKmhCRkiMwyJtN+9S2ts+z97/8cdc6x6r/4917rW8/6hvdbuwiFbBQpZDz8N0CdgZMF4b04D80F5gArgEn5DRUC9QIOeBArgYn5CRXnoVXAOA9iPTAmv6CSklrhmpDiqSpAd6CBzXsL3AceAPeA93k5RKYqi4PaDMwGWgG1Uza8buE/CFzJFi6t7MPwZWs3nHcOGAQ8SjOQBqT3d7yw+Pa+AlctRA+jyvwJ1AFqAG2AssHmnywN5OXEkQmoBLAFGBiz+gLQEfiSYLkk0AUYFUGrcv2xBJhuB/hreRKQTncI6OCteA1U9v7vA84CfYBmBnce2BZIR0tgqXnNLd8ZeX5wHFQS0I7AMyr9yYAM9U7LA2BrVGnDvHnaZwqwCP60qwXArNBWHNBwwI+zYt/UcqU4sAvolwJV3yQgnDYC2OQ97Bp57rg/KQRSSKQlFQJLT4B2pi+C2g30zQDV0IohbsoyryWpYBoDP9zEEEhunGkvJW4Vvbx5ajklI8WA7cCABKjLwAmgDDA1mFPaDq1q1FDib4wDKhr1rZdRAlayl0pWQZ32oJ4b1K0soGTmTVAIbl+1JmmchiSjnvOS7yEBPQOq2USdfg/QPIB6YSV/w6CUwBK9uKG51WNeqGEvt+faU/r1O2xhyJT1823iTaAF8M2gTnmwkgDpkNqDwpcEpYRV4vqjpuVXeXuo6868pBwqZWGqZRMWm4jpr5LvjAelcHSKZOCaQUlEpS3+kOckFf5Qlbrce2Xh+tOI48p+qCm0MyKllpE4qHcGpeYpW4Ia4u0ukZSMfLdnC4EZ3vv+kaju9WmThFEhcIbVsyRqa2yhSloKXdX+f7DwXTIoVZ/fbvabLdn09WttlLNjw/xKAlIfO2Knd2t0jZABlX8jg9KdSENQuhsJVDYlfvKMGwqvq149O2Yt569emKm5SkOOAm09w/KWKk+tRBcyJa2roo9AN4MqZ+9ahx6wsI70wphjStr1Q012Q0LHV/UpKZ3AyfDnSOge23UlzvbtSOWbJHV6GUgDcvTtLYcUqn8dq4HxSUayBXLwCkFP81jdDGS6rF20a4huDqosHyLxayY3QOH+SlJBuZ8g1GrUnO9a+Pw1flPV89jvvn8Bykvo1gGjvYW6PU7LRofyslm2a8KvmR7AYbc4vz3k9nWeytHHclNl2Z4+N/P0EZDjtljQQLHwBRWyRE8WOqBf1NW6JS3K+t8AAAAASUVORK5CYII="
                                                 alt="View PDF" class="h-6 w-6" />
-                                        </button>
+                                        </div>
                                         <!-- PDF iframe -->
                                         <embed id="pdf-iframe" src="{{ $dokumen_pengajauan[1]->link_dokumen }}"
                                             width="100%" height="600px" frameborder="0" class="w-full h-full"
@@ -297,10 +297,10 @@
                                     <div
                                         class="relative w-full max-w-4xl h-full p-4 bg-white rounded shadow-lg overflow-x-auto">
                                         <!-- Close Button -->
-                                        <button onclick="closePdfViewer()" class="absolute top-2 right-2 text-gray-600">
+                                        <div onclick="closePdfViewer()" class="absolute top-2 right-2 text-gray-600">
                                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAA7hJREFUWEfVl1moTlEYhh9TZpnHG6TMuZGiDCFDmYuQKSHzVJJc4EZyYZ6HiMwkInNRhjKmhCRkiMwyJtN+9S2ts+z97/8cdc6x6r/4917rW8/6hvdbuwiFbBQpZDz8N0CdgZMF4b04D80F5gArgEn5DRUC9QIOeBArgYn5CRXnoVXAOA9iPTAmv6CSklrhmpDiqSpAd6CBzXsL3AceAPeA93k5RKYqi4PaDMwGWgG1Uza8buE/CFzJFi6t7MPwZWs3nHcOGAQ8SjOQBqT3d7yw+Pa+AlctRA+jyvwJ1AFqAG2AssHmnywN5OXEkQmoBLAFGBiz+gLQEfiSYLkk0AUYFUGrcv2xBJhuB/hreRKQTncI6OCteA1U9v7vA84CfYBmBnce2BZIR0tgqXnNLd8ZeX5wHFQS0I7AMyr9yYAM9U7LA2BrVGnDvHnaZwqwCP60qwXArNBWHNBwwI+zYt/UcqU4sAvolwJV3yQgnDYC2OQ97Bp57rg/KQRSSKQlFQJLT4B2pi+C2g30zQDV0IohbsoyryWpYBoDP9zEEEhunGkvJW4Vvbx5ajklI8WA7cCABKjLwAmgDDA1mFPaDq1q1FDib4wDKhr1rZdRAlayl0pWQZ32oJ4b1K0soGTmTVAIbl+1JmmchiSjnvOS7yEBPQOq2USdfg/QPIB6YSV/w6CUwBK9uKG51WNeqGEvt+faU/r1O2xhyJT1823iTaAF8M2gTnmwkgDpkNqDwpcEpYRV4vqjpuVXeXuo6868pBwqZWGqZRMWm4jpr5LvjAelcHSKZOCaQUlEpS3+kOckFf5Qlbrce2Xh+tOI48p+qCm0MyKllpE4qHcGpeYpW4Ia4u0ukZSMfLdnC4EZ3vv+kaju9WmThFEhcIbVsyRqa2yhSloKXdX+f7DwXTIoVZ/fbvabLdn09WttlLNjw/xKAlIfO2Knd2t0jZABlX8jg9KdSENQuhsJVDYlfvKMGwqvq149O2Yt569emKm5SkOOAm09w/KWKk+tRBcyJa2roo9AN4MqZ+9ahx6wsI70wphjStr1Q012Q0LHV/UpKZ3AyfDnSOge23UlzvbtSOWbJHV6GUgDcvTtLYcUqn8dq4HxSUayBXLwCkFP81jdDGS6rF20a4huDqosHyLxayY3QOH+SlJBuZ8g1GrUnO9a+Pw1flPV89jvvn8Bykvo1gGjvYW6PU7LRofyslm2a8KvmR7AYbc4vz3k9nWeytHHclNl2Z4+N/P0EZDjtljQQLHwBRWyRE8WOqBf1NW6JS3K+t8AAAAASUVORK5CYII="
                                                 alt="View PDF" class="h-6 w-6" />
-                                        </button>
+                                        </div>
                                         <!-- PDF iframe -->
                                         <embed id="pdf-iframe" src="{{ $dokumen_pengajauan[2]->link_dokumen }}"
                                             width="100%" height="600px" frameborder="0" class="w-full h-full"
@@ -375,10 +375,10 @@
                                     <div
                                         class="relative w-full max-w-4xl h-full p-4 bg-white rounded shadow-lg overflow-x-auto">
                                         <!-- Close Button -->
-                                        <button onclick="closePdfViewer()" class="absolute top-2 right-2 text-gray-600">
+                                        <div onclick="closePdfViewer()" class="absolute top-2 right-2 text-gray-600">
                                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAA7hJREFUWEfVl1moTlEYhh9TZpnHG6TMuZGiDCFDmYuQKSHzVJJc4EZyYZ6HiMwkInNRhjKmhCRkiMwyJtN+9S2ts+z97/8cdc6x6r/4917rW8/6hvdbuwiFbBQpZDz8N0CdgZMF4b04D80F5gArgEn5DRUC9QIOeBArgYn5CRXnoVXAOA9iPTAmv6CSklrhmpDiqSpAd6CBzXsL3AceAPeA93k5RKYqi4PaDMwGWgG1Uza8buE/CFzJFi6t7MPwZWs3nHcOGAQ8SjOQBqT3d7yw+Pa+AlctRA+jyvwJ1AFqAG2AssHmnywN5OXEkQmoBLAFGBiz+gLQEfiSYLkk0AUYFUGrcv2xBJhuB/hreRKQTncI6OCteA1U9v7vA84CfYBmBnce2BZIR0tgqXnNLd8ZeX5wHFQS0I7AMyr9yYAM9U7LA2BrVGnDvHnaZwqwCP60qwXArNBWHNBwwI+zYt/UcqU4sAvolwJV3yQgnDYC2OQ97Bp57rg/KQRSSKQlFQJLT4B2pi+C2g30zQDV0IohbsoyryWpYBoDP9zEEEhunGkvJW4Vvbx5ajklI8WA7cCABKjLwAmgDDA1mFPaDq1q1FDib4wDKhr1rZdRAlayl0pWQZ32oJ4b1K0soGTmTVAIbl+1JmmchiSjnvOS7yEBPQOq2USdfg/QPIB6YSV/w6CUwBK9uKG51WNeqGEvt+faU/r1O2xhyJT1823iTaAF8M2gTnmwkgDpkNqDwpcEpYRV4vqjpuVXeXuo6868pBwqZWGqZRMWm4jpr5LvjAelcHSKZOCaQUlEpS3+kOckFf5Qlbrce2Xh+tOI48p+qCm0MyKllpE4qHcGpeYpW4Ia4u0ukZSMfLdnC4EZ3vv+kaju9WmThFEhcIbVsyRqa2yhSloKXdX+f7DwXTIoVZ/fbvabLdn09WttlLNjw/xKAlIfO2Knd2t0jZABlX8jg9KdSENQuhsJVDYlfvKMGwqvq149O2Yt569emKm5SkOOAm09w/KWKk+tRBcyJa2roo9AN4MqZ+9ahx6wsI70wphjStr1Q012Q0LHV/UpKZ3AyfDnSOge23UlzvbtSOWbJHV6GUgDcvTtLYcUqn8dq4HxSUayBXLwCkFP81jdDGS6rF20a4huDqosHyLxayY3QOH+SlJBuZ8g1GrUnO9a+Pw1flPV89jvvn8Bykvo1gGjvYW6PU7LRofyslm2a8KvmR7AYbc4vz3k9nWeytHHclNl2Z4+N/P0EZDjtljQQLHwBRWyRE8WOqBf1NW6JS3K+t8AAAAASUVORK5CYII="
                                                 alt="View PDF" class="h-6 w-6" />
-                                        </button>
+                                        </div>
                                         <!-- PDF iframe -->
                                         <embed id="pdf-iframe" src="{{ $dokumen_pengajauan[3]->link_dokumen }}"
                                             width="100%" height="600px" frameborder="0" class="w-full h-full"
@@ -454,10 +454,10 @@
                                     <div
                                         class="relative w-full max-w-4xl h-full p-4 bg-white rounded shadow-lg overflow-x-auto">
                                         <!-- Close Button -->
-                                        <button onclick="closePdfViewer()" class="absolute top-2 right-2 text-gray-600">
+                                        <div onclick="closePdfViewer()" class="absolute top-2 right-2 text-gray-600">
                                             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAA7hJREFUWEfVl1moTlEYhh9TZpnHG6TMuZGiDCFDmYuQKSHzVJJc4EZyYZ6HiMwkInNRhjKmhCRkiMwyJtN+9S2ts+z97/8cdc6x6r/4917rW8/6hvdbuwiFbBQpZDz8N0CdgZMF4b04D80F5gArgEn5DRUC9QIOeBArgYn5CRXnoVXAOA9iPTAmv6CSklrhmpDiqSpAd6CBzXsL3AceAPeA93k5RKYqi4PaDMwGWgG1Uza8buE/CFzJFi6t7MPwZWs3nHcOGAQ8SjOQBqT3d7yw+Pa+AlctRA+jyvwJ1AFqAG2AssHmnywN5OXEkQmoBLAFGBiz+gLQEfiSYLkk0AUYFUGrcv2xBJhuB/hreRKQTncI6OCteA1U9v7vA84CfYBmBnce2BZIR0tgqXnNLd8ZeX5wHFQS0I7AMyr9yYAM9U7LA2BrVGnDvHnaZwqwCP60qwXArNBWHNBwwI+zYt/UcqU4sAvolwJV3yQgnDYC2OQ97Bp57rg/KQRSSKQlFQJLT4B2pi+C2g30zQDV0IohbsoyryWpYBoDP9zEEEhunGkvJW4Vvbx5ajklI8WA7cCABKjLwAmgDDA1mFPaDq1q1FDib4wDKhr1rZdRAlayl0pWQZ32oJ4b1K0soGTmTVAIbl+1JmmchiSjnvOS7yEBPQOq2USdfg/QPIB6YSV/w6CUwBK9uKG51WNeqGEvt+faU/r1O2xhyJT1823iTaAF8M2gTnmwkgDpkNqDwpcEpYRV4vqjpuVXeXuo6868pBwqZWGqZRMWm4jpr5LvjAelcHSKZOCaQUlEpS3+kOckFf5Qlbrce2Xh+tOI48p+qCm0MyKllpE4qHcGpeYpW4Ia4u0ukZSMfLdnC4EZ3vv+kaju9WmThFEhcIbVsyRqa2yhSloKXdX+f7DwXTIoVZ/fbvabLdn09WttlLNjw/xKAlIfO2Knd2t0jZABlX8jg9KdSENQuhsJVDYlfvKMGwqvq149O2Yt569emKm5SkOOAm09w/KWKk+tRBcyJa2roo9AN4MqZ+9ahx6wsI70wphjStr1Q012Q0LHV/UpKZ3AyfDnSOge23UlzvbtSOWbJHV6GUgDcvTtLYcUqn8dq4HxSUayBXLwCkFP81jdDGS6rF20a4huDqosHyLxayY3QOH+SlJBuZ8g1GrUnO9a+Pw1flPV89jvvn8Bykvo1gGjvYW6PU7LRofyslm2a8KvmR7AYbc4vz3k9nWeytHHclNl2Z4+N/P0EZDjtljQQLHwBRWyRE8WOqBf1NW6JS3K+t8AAAAASUVORK5CYII="
                                                 alt="View PDF" class="h-6 w-6" />
-                                        </button>
+                                        </div>
                                         <!-- PDF iframe -->
                                         <embed id="pdf-iframe" src="{{ $dokumen_pengajauan[4]->link_dokumen }}"
                                             width="100%" height="600px" frameborder="0" class="w-full h-full"

@@ -3,7 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Beasiswa;
+use App\Models\SyaratBeasiswa;
+use App\Models\SyaratDokumen;
+use App\Models\JenjangPendidikan;
+use App\Models\BenefitBeasiswa;
+use App\Models\PosterBeasiswa;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class BeasiswaFactory extends Factory
 {
@@ -34,5 +41,36 @@ class BeasiswaFactory extends Factory
             'tanggal_berakhir' => $this->faker->date(),
         ];
     }
+
+    /**
+     * Configure the factory to include related models.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Beasiswa $beasiswa) {
+            // Generate related Syarat Beasiswa and attach them
+            $syaratBeasiswas = SyaratBeasiswa::factory()->count(2)->create();
+            $beasiswa->syaratBeasiswa()->attach($syaratBeasiswas->pluck('id')->toArray());
+            $syaratDokumen = SyaratDokumen::factory()->count(2)->create();
+            $beasiswa->syaratDokumen()->attach($syaratDokumen->pluck('id')->toArray());
+            $benefitBeasiswas = BenefitBeasiswa::factory()->count(2)->create();
+            $beasiswa->benefitBeasiswa()->attach($benefitBeasiswas->pluck('id')->toArray());
+
+
+            // Generate related Posters
+            Storage::fake('gcs'); // Simulate cloud storage
+
+            foreach (['poster1.jpg', 'poster2.jpg'] as $posterName) {
+                $path = UploadedFile::fake()->image($posterName)->store('posters', 'gcs');
+                PosterBeasiswa::create([
+                    'beasiswa_id' => $beasiswa->id,
+                    'link_poster' => Storage::disk('gcs')->url($path),
+                ]);
+            }
+        });
+    }
+
 }
 

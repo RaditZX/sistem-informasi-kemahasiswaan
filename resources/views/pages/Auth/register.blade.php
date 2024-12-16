@@ -25,21 +25,21 @@
                 <div class="space-y-5">
                     <div>
                         <label for="email" class="block pb-3 text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" name="email" id="email" class="text-sm block w-full rounded-lg border-gray-300 px-3 py-2 text-gray-700 focus:outline-none" placeholder="example@polban.ac.id">
+                        <input type="email" name="email" id="email" class="text-sm block w-full rounded-lg border-gray-300 px-3 py-2 text-gray-700 focus:outline-none" placeholder="example@polban.ac.id" required>
                         @error('email')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div>
                         <label for="password" class="block pb-3 text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="password" id="password" class="text-sm block w-full rounded-lg border-gray-300 px-3 py-2 text-gray-700 focus:outline-none" placeholder="********">
+                        <input type="password" name="password" id="password" class="text-sm block w-full rounded-lg border-gray-300 px-3 py-2 text-gray-700 focus:outline-none" placeholder="********" required>
                         @error('password')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div>
                         <label for="password_confirmation" class="block pb-3 text-sm font-medium text-gray-700">Konfirmasi Password</label>
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="text-sm block w-full rounded-lg border-gray-300 px-3 py-2 text-gray-700 focus:outline-none" placeholder="********">
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="text-sm block w-full rounded-lg border-gray-300 px-3 py-2 text-gray-700 focus:outline-none" placeholder="********" required>
                         @error('password_confirmation')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror

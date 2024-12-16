@@ -49,8 +49,11 @@
                         <label for="department" class="block text-sm font-medium text-gray-700">Prodi</label>
                         <select name="prodi_id" id="department" class="mt-1 block w-full rounded-md border border-gray-300 p-2 focus:border-orange-500 focus:ring-orange-500">
                             <option value="">Pilih Prodi</option>
-                            <option value="{{ 1 }}">Informatika</option>
-                            <option value="{{ 2 }}">Teknik Mesin</option>
+                            @foreach ( $prodi as $p  )
+                            <option value="{{ $p->id }}">{{ $p->nama_prodi }}</option>
+
+                            @endforeach
+
                             <!-- Add more options as needed -->
                         </select>
                     </div>

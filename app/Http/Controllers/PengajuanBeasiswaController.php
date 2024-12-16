@@ -32,9 +32,6 @@ class PengajuanBeasiswaController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // $name = $user->name;
-        // $email = $user->email;
-        // $role_id = $user->role_id;
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
 
@@ -110,9 +107,6 @@ class PengajuanBeasiswaController extends Controller
                 ->get();
             }
 
-            // $isKajur = Reviewer::join('jurusan', 'jurusan.kajur_id', '=', 'reviewer.user_id')
-            //     ->where('user_id', $user->id)
-            //     ->exists();
         }
 
         // Fetch names of all Beasiswa
@@ -399,7 +393,7 @@ class PengajuanBeasiswaController extends Controller
                     ->where('user_id', $user_id)
                     ->where('status', 12) // Status for "Sent"
                     ->exists(); // Use `exists()` for a faster query if you don't need the full record.
-            
+
                 if (!$existingNotification) {
                     $data = [
                         'name' => "Reminder Review Pengajuan - " . $dataPengajuan->nim,
@@ -422,7 +416,7 @@ class PengajuanBeasiswaController extends Controller
                         Log::error('Failed to send review notification: ' . $e->getMessage());
                     }
                 }
-            }            
+            }
         }
 
         // Prepare waktuSisa as an array
@@ -453,13 +447,13 @@ class PengajuanBeasiswaController extends Controller
         ]);
 
         $role_id = $validatedData['role_id'];
-    
+
         $dataPengajuan = PengajuanBeasiswa::find($id);
         if (!$dataPengajuan) {
             return redirect()->route('pengajuan.tracking', ['id' => $id])
                              ->with('error', 'Data Pengajuan not found.');
         }
-    
+
         // Set data komentar
         $dataPengajuan->komentar = $validatedData['reviewerComment'] ?? null;
 
@@ -476,7 +470,7 @@ class PengajuanBeasiswaController extends Controller
             $reviseStatus = 9;
             $approveStatus = 10;
         }
-    
+
         // Update status based button input
         switch ($request->input('action')) {
             case 'reject':
@@ -495,9 +489,9 @@ class PengajuanBeasiswaController extends Controller
                 return redirect()->route('pengajuan.tracking', ['id' => $id])
                                  ->with('error', 'Invalid action.');
         }
-    
+
         $dataPengajuan->save();
-    
+
         return redirect()->route('pengajuan.tracking', ['id' => $id])
                          ->with('success', 'Status updated successfully.');
     }

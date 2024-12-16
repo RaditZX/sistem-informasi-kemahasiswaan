@@ -12,6 +12,7 @@ use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
 use Kreait\Firebase\Factory;
 use App\Models\Mahasiswa;
+use App\Models\Prodi;
 use App\Models\Reviewer;
 
 class AuthController extends Controller
@@ -48,10 +49,10 @@ class AuthController extends Controller
         $password = $request->input('password');
 
         try {
-            // $signInResult = $this->firebaseAuth->signInWithEmailAndPassword($email, $password);
-            // $firebaseUser = $this->firebaseAuth->getUser($signInResult->firebaseUserId());
+            $signInResult = $this->firebaseAuth->signInWithEmailAndPassword($email, $password);
+            $firebaseUser = $this->firebaseAuth->getUser($signInResult->firebaseUserId());
 
-            //if ($firebaseUser->emailVerified) {
+            if ($firebaseUser->emailVerified) {
                 $user = User::where('email', $email)->firstOrFail();
                 $mhs = Mahasiswa::where('user_id', $user->id)->first();
                 if ($mhs) {
@@ -76,15 +77,9 @@ class AuthController extends Controller
 
 
                 return $mhs ? redirect()->intended('/beasiswa') : redirect()->intended('/dashboard');
-            // } else {
-            //     return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
-            // }
-            $request->session()->regenerate();
-
-            return redirect()->intended('/beasiswa');
-            // } else {
-            //     return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
-            // }
+            } else {
+                return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
+            }
         } catch (\Kreait\Firebase\Exception\Auth\InvalidPassword $e) {
             return back()->withErrors(['email' => 'Invalid email or password.'])->onlyInput('email');
         } catch (\Kreait\Firebase\Exception\Auth\FailedToVerifyToken $e) {
@@ -235,8 +230,8 @@ class AuthController extends Controller
 
     public function getRegisterInformation()
     {
-
-        return view('pages.Auth.register-information');
+        $prodi = Prodi::all();
+        return view('pages.Auth.register-information', compact('prodi'));
     }
 
     public function showRegistrationForm()

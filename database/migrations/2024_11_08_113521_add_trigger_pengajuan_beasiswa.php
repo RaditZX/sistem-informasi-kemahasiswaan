@@ -90,15 +90,15 @@ class AddTriggerPengajuanBeasiswa extends Migration
                 FROM mahasiswa
                 WHERE nim = NEW.nim;
 
-                INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status) 
+                INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status)
                 VALUES (user_id_mahasiswa, NEW.id, 1);
 
                 FOR user_id_reviewer IN
-                    SELECT user_id 
-                    FROM reviewer 
+                    SELECT user_id
+                    FROM reviewer
                     WHERE role_id = 1
                 LOOP
-                    INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status) 
+                    INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status)
                     VALUES (user_id_reviewer, NEW.id, 1);
                 END LOOP;
 
@@ -117,59 +117,67 @@ class AddTriggerPengajuanBeasiswa extends Migration
 
         // Trigger function for status update notification
         DB::statement("
-            CREATE OR REPLACE FUNCTION kirim_notif_saat_update_status()
-            RETURNS TRIGGER
-            LANGUAGE PLPGSQL AS $$
-            DECLARE
-                user_id_reviewer INTEGER;
-                user_id_mahasiswa INTEGER;
-                lid_prodi INTEGER;
-                lid_jurusan INTEGER;
-                lrole_id INTEGER;
-            BEGIN
-                CASE NEW.status
-                    WHEN 1 THEN lrole_id := 1;
-                    WHEN 2 THEN lrole_id := 1;
-                    WHEN 3 THEN lrole_id := 1;
-                    WHEN 4 THEN lrole_id := 2;
-                    WHEN 5 THEN lrole_id := 2;
-                    WHEN 6 THEN lrole_id := 3;
-                    WHEN 7 THEN lrole_id := 3;
-                    WHEN 8 THEN lrole_id := 4;
-                    WHEN 9 THEN lrole_id := 4;
-                    WHEN 10 THEN lrole_id := NULL;
-                    WHEN 11 THEN lrole_Id := NULL;
-                    ELSE lrole_id := NULL;
-                END CASE;
+    CREATE OR REPLACE FUNCTION kirim_notif_saat_update_status()
+    RETURNS TRIGGER
+    LANGUAGE PLPGSQL AS $$
+    DECLARE
+        user_id_reviewer INTEGER;
+        user_id_mahasiswa INTEGER;
+        lid_prodi INTEGER;
+        lid_jurusan INTEGER;
+        lrole_id INTEGER;
+    BEGIN
+        -- Assigning the role ID based on the status
+        CASE NEW.status
+            WHEN 1 THEN lrole_id := 1;
+            WHEN 2 THEN lrole_id := 1;
+            WHEN 3 THEN lrole_id := 1;
+            WHEN 4 THEN lrole_id := 2;
+            WHEN 5 THEN lrole_id := 2;
+            WHEN 6 THEN lrole_id := 3;
+            WHEN 7 THEN lrole_id := 3;
+            WHEN 8 THEN lrole_id := 4;
+            WHEN 9 THEN lrole_id := 4;
+            WHEN 10 THEN lrole_id := NULL;
+            WHEN 11 THEN lrole_id := NULL;
+            ELSE lrole_id := NULL;
+        END CASE;
 
-                IF lrole_id IS NOT NULL THEN
-                    IF lrole_id = 2 THEN 
-                        SELECT id_prodi INTO lid_prodi FROM mahasiswa WHERE mahasiswa.nim = NEW.nim;
-                        SELECT id_jurusan INTO lid_jurusan FROM prodi WHERE prodi.id_prodi = lid_prodi;
-                        SELECT kajur_id INTO user_id_reviewer FROM jurusan WHERE jurusan.id_jurusan = lid_jurusan;
+        -- Only proceed if role ID is not null
+        IF lrole_id IS NOT NULL THEN
+            IF lrole_id = 2 THEN
+                -- Fetch the program ID (prodi), department ID (jurusan), and reviewer (kajur_id)
+                SELECT prodi_id INTO lid_prodi FROM mahasiswa WHERE mahasiswa.nim = NEW.nim;
+                SELECT jurusan_id INTO lid_jurusan FROM prodi WHERE prodi.id = lid_prodi;
+                SELECT kajur_id INTO user_id_reviewer FROM jurusan WHERE jurusan.id = lid_jurusan;
 
-                        INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status) 
-                        VALUES (user_id_reviewer, NEW.id_pengajuan_beasiswa, NEW.status);
-                    ELSE
-                        FOR user_id_reviewer IN
-                            SELECT user_id 
-                            FROM reviewer 
-                            WHERE reviewer.role_id = lrole_id
-                        LOOP
-                            INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status) 
-                            VALUES (user_id_reviewer, NEW.id_pengajuan_beasiswa, NEW.status);
-                        END LOOP;
-                    END IF;
-
-                    SELECT user_id INTO user_id_mahasiswa FROM mahasiswa WHERE mahasiswa.nim = NEW.nim;
+                -- Insert notification for the department head
+                INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status)
+                VALUES (user_id_reviewer, NEW.id, NEW.status);
+            ELSE
+                -- Notify all reviewers with the corresponding role ID
+                FOR user_id_reviewer IN
+                    SELECT user_id
+                    FROM reviewer
+                    WHERE reviewer.role_id = lrole_id
+                LOOP
                     INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status)
-                    VALUES (user_id_mahasiswa, NEW.id_pengajuan_beasiswa, NEW.status);
-                END IF;
+                    VALUES (user_id_reviewer, NEW.id, NEW.status);
+                END LOOP;
+            END IF;
 
-                RETURN NEW;
-            END;
-            $$;
-        ");
+            -- Notify the student
+            SELECT user_id INTO user_id_mahasiswa FROM mahasiswa WHERE mahasiswa.nim = NEW.nim;
+            INSERT INTO notifikasi(user_id, id_pengajuan_beasiswa, status)
+            VALUES (user_id_mahasiswa, NEW.id, NEW.status);
+        END IF;
+
+        -- Return the updated record
+        RETURN NEW;
+    END;
+    $$;
+");
+
 
         // Trigger for status update notification
         DB::statement("

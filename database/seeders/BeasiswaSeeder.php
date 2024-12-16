@@ -60,11 +60,8 @@ class BeasiswaSeeder extends Seeder
         ]);
 
         // Buat data jenjang pendidikan
-        $jenjang = JenjangPendidikan::create(['jenjang' => 'D4', 'jurusan' => 1]);
+        $beasiswa->jenjangPendidikan()->create(['beasiswa_id' => $beasiswa->id, 'jenjang' => 'D-3 Teknik Informatika']);
 
-        // Attach ke pivot table beasiswa_jenjang_pendidikan dengan timestamps
-        $beasiswa->jenjangPendidikan()->attach([
-            $jenjang->id => ['created_at' => $currentTime, 'updated_at' => $currentTime],
-        ]);
+        $beasiswa->posterBeasiswa()->create(['beasiswa_id' => $beasiswa->id, 'link_poster' => 'example.jpg']);
     }
 }

@@ -44,9 +44,5 @@
             <button class="text-xl">&#8594;</button>
         </div>
 
-        <div class="overflow-x-auto">
-            <embed src="{{ $pdfUrl }}" width="100%" height="600px" type="application/pdf">
-
-        </div>
     </div>
 @endsection

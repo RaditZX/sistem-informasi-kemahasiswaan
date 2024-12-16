@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 @endif
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEik4McHhDC2otgAFVVxX1_9KI4xqY0KLdkThGiFYjsfN720_z_kIvi2TARm24mA68XO1CbMBSILOHFfy0HIQVO9Hn1qXFxSVfTC54ZaoHKLi6Yj-fd6Lm02syaeQ_Q3nkaGu4LpM6JSk-MwEEzzYqjZMbMNDyQiP8InBNz7sFn00DMJXQQBakiNtx8qBw/s1080/Beasiswa-Creativa-Feed.png"
+                <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.ZZHzMoUorhjfqzXJHS80XQHaJQ&w=223&h=279&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2" }}
                     style="border-radius: 15px;" class="mb-3 h-400" alt="beasiswa">
                 <div class="flex justify-center gap-2 mb-1" style="max-height: 35px">
                     <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">D3</div>
@@ -60,7 +60,7 @@
                 <p class="font-bold text-justify mb-1">{{ $ba->nama_beasiswa }}</p>
                 <p class="text-xs text-justify mb-2">"{{ $ba->deskripsi }}</p>
                 <div class="flex flex-auto justify-left gap-3">
-                    <img src="https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2"
+                    <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2" }}
                         class="w-5 h-5 rounded-full" alt="KEMENDIKBUD">
                     <p class="text-xs font-bold ">{{ $ba->sumber }}</p>
                 </div>
