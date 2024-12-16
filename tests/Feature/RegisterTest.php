@@ -1,6 +1,5 @@
 <?php
 
-// tests/Feature/RegisterTest.php
 namespace Tests\Feature;
 
 use App\Models\User;
@@ -14,81 +13,116 @@ class RegisterTest extends TestCase
 {
     use RefreshDatabase;
 
+     /** @test */
+     public function it_should_fail_if_email_is_not_polban()
+     {
+         $response = $this->postJson('/register', [
+             'email' => 'user@gmail.com',
+             'password' => 'password123',
+             'password_confirmation' => 'password123',
+         ]);
+
+         $response->assertStatus(422);
+         $response->assertJsonValidationErrors(['email']);
+         $response->assertJson(['errors' => ['email' => ['Gunakan email polban!']]]);
+     }
+
+     /** @test */
+     public function it_should_fail_if_password_confirmation_is_incorrect()
+     {
+         $response = $this->postJson('/register', [
+             'email' => 'user@polban.ac.id',
+             'password' => 'password123',
+             'password_confirmation' => 'wrongpassword',
+         ]);
+
+         $response->assertStatus(409);
+         $response->assertJson(['error' => 'Konfirmasi password salah']);
+     }
+
     /** @test */
     public function it_registers_user_with_email_and_password_method()
     {
         // Prepare mock data
-        $email = 'muhammad.raihan.tif23@polban.ac.id';
+        $email = 'example6@polban.ac.id';
         $password = 'password123';
 
-        // Mock FirebaseAuth
+        // Mock FirebaseAuthService
         $firebaseAuth = Mockery::mock(FirebaseAuthService::class);
 
-        // Mock createUserWithEmailAndPassword method to return a fake user object
+        // Mock createUserWithEmailAndPassword method
         $firebaseAuth->shouldReceive('createUserWithEmailAndPassword')
-            ->with($email, $password);
+            ->with($email, $password)
+            ->andReturn((object) ['email' => $email]); // Return fake user object
 
-        // Bind the mock FirebaseAuth instance to the app container
+        $firebaseAuth->shouldReceive('sendEmailVerificationLink')
+            ->with($email)
+            ->andReturn(true);
+
+        // Bind the mock instance to the container
         $this->app->instance(FirebaseAuthService::class, $firebaseAuth);
 
-        // Simulate sending a POST request to register the user
-        $response = $this->post('/register', [
-            'method' => 'email_password',
+        // Simulate POST request to register endpoint
+        $response = $this->postJson('/register', [
             'email' => $email,
             'password' => $password,
+            'password_confirmation' => $password,
         ]);
 
+        // Assert response
+        $response->assertStatus(302) // Redirect after successful registration
+            ->assertRedirect(route('auth.register-information', ['id' => 1]));
 
-        // Assert the response status and content
-        $response->assertStatus(201)
-            ->assertJson([
-                'message' => 'User registered successfully',
-                'user' => ['email' => $email]
-            ]);
-
-        // Assert that the user was created in the database
+        // Assert user exists in the database
         $this->assertDatabaseHas('users', [
-            'email' => $email
+            'email' => $email,
         ]);
     }
-
-
 
     /** @test */
     public function it_returns_error_if_email_already_exists()
     {
-        // Mock FirebaseAuth
+        // Mock FirebaseAuthService
         $firebaseAuth = Mockery::mock(FirebaseAuthService::class);
 
-        // Simulate the userExists method returning true for an existing user
-        $firebaseAuth->shouldReceive('userExists')
-            ->with('existinguser@polban.ac.id')
-            ->andReturn(true);
+        // Simulate FirebaseEmailExists exception
+        $firebaseAuth->shouldReceive('createUserWithEmailAndPassword')
+            ->with('example@polban.ac.id', 'password123')
+            ->andThrow(new FirebaseEmailExists('Email already exists'));
 
-        // Ensure createUserWithEmailAndPassword is never called for an existing user
-        $firebaseAuth->shouldNotReceive('createUserWithEmailAndPassword');
-
-        // Bind the mock to the app container
         $this->app->instance(FirebaseAuthService::class, $firebaseAuth);
 
         // Attempt to register with an existing email
-        $response = $this->post('/register', [
-            'method' => 'email_password',
-            'email' => 'existinguser@polban.ac.id',
-            'password' => 'secret',
+        $response = $this->postJson('/register', [
+            'email' => 'example@polban.ac.id',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
         ]);
 
-        // Assert the correct error response
+        // Assert correct error response
         $response->assertStatus(409)
             ->assertJson(['error' => 'Email already exists in Firebase']);
     }
+
     /** @test */
-    public function it_can_insert_mahasiswa_data()
+    public function it_inserts_mahasiswa_data_successfully()
     {
+        // Seed the database with necessary data
         $this->seed();
+
+        // Create a user
+        $user = User::factory()->create([
+            'id' => 11,
+            'nama_depan' => 'Old First Name',
+            'nama_belakang' => 'Old Last Name',
+            'jenis_kelamin' => 'Pria',
+        ]);
 
         // Define request data
         $data = [
+            'nama_depan' => 'John',
+            'nama_belakang' => 'Doe',
+            'jenis_kelamin' => 'Pria',
             'nim' => '123456782',
             'semester' => 3,
             'tgl_lahir' => '2001-01-01',
@@ -97,22 +131,29 @@ class RegisterTest extends TestCase
             'angkatan' => 2021,
         ];
 
-        // Make the post request
-        $response = $this->post(route('mahasiswa.insert', ['id'=>1]), $data);
+        // Make the POST request
+        $response = $this->post(route('mahasiswa.insert', ['id' => $user->id]), $data);
 
-        // Assert that the response is successful
-        $response->assertStatus(201)
-            ->assertJson(['message' => 'Mahasiswa created successfully.']);
+        // Assert the response redirects to the login page
+        $response->assertRedirect('/login');
 
         // Assert that the Mahasiswa record exists in the database
         $this->assertDatabaseHas('mahasiswa', [
-            'user_id' => 1,
+            'user_id' => $user->id,
             'nim' => '123456782',
             'semester' => 3,
             'tgl_lahir' => '2001-01-01',
             'prodi_id' => 1,
             'no_hp' => '081234567890',
             'angkatan' => 2021,
+        ]);
+
+        // Assert that the User record has been updated
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'nama_depan' => 'John',
+            'nama_belakang' => 'Doe',
+            'jenis_kelamin' => 'Pria',
         ]);
     }
 }

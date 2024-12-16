@@ -2,6 +2,7 @@
 @extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
+
 @include('component.navbar', [
     'path' => "Tracking Beasiswa > " . $dataPengajuan->nama_beasiswa,
     'id' => null
@@ -16,7 +17,7 @@
                     $idStatusesArray = $idStatuses->toArray(); // Convert the collection to an array
                     $whatIndex = array_search($dataPengajuan->status, $idStatusesArray);
                 @endphp
-                    
+
                 <!-- Timeline Steps -->
                 @foreach ($dataStatus as $index => $step)
                     @if (in_array($index, [0, 1, 3, 5, 7, 9]))
@@ -93,7 +94,7 @@
                     <h3 id="seconds">0</h3>
                 </div>
             </div>
-        </section>        
+        </section>
 
         @if (($dataReviewer == NULL))
             @if ($dataPengajuan->status == 3 || $dataPengajuan->status == 5 || $dataPengajuan->status == 7 || $dataPengajuan->status == 9)
@@ -115,7 +116,7 @@
         <section class="beasiswa my-8 px-4">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-center bg-white rounded-2xl shadow-lg p-6 md:p-8">
                 <div class="beasiswa-images md:col-span-2 flex justify-center">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEik4McHhDC2otgAFVVxX1_9KI4xqY0KLdkThGiFYjsfN720_z_kIvi2TARm24mA68XO1CbMBSILOHFfy0HIQVO9Hn1qXFxSVfTC54ZaoHKLi6Yj-fd6Lm02syaeQ_Q3nkaGu4LpM6JSk-MwEEzzYqjZMbMNDyQiP8InBNz7sFn00DMJXQQBakiNtx8qBw/s1080/Beasiswa-Creativa-Feed.png" 
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEik4McHhDC2otgAFVVxX1_9KI4xqY0KLdkThGiFYjsfN720_z_kIvi2TARm24mA68XO1CbMBSILOHFfy0HIQVO9Hn1qXFxSVfTC54ZaoHKLi6Yj-fd6Lm02syaeQ_Q3nkaGu4LpM6JSk-MwEEzzYqjZMbMNDyQiP8InBNz7sFn00DMJXQQBakiNtx8qBw/s1080/Beasiswa-Creativa-Feed.png"
                         alt="Beasiswa LKPD" class="rounded-xl w-full h-auto max-w-sm object-cover">
                 </div>
                 <div class="beasiswa-content md:col-span-3 mt-6 md:mt-0">
@@ -126,7 +127,9 @@
                 </div>
             </div>
         </section>
-
+        @php
+        $n = 0;
+    @endphp
         <!-- Accordion Section -->
         <section class="dokumen my-8 px-4">
             <h1 class="text-xl font-semibold mb-4">Dokumen yang di ajukan</h1>
@@ -146,20 +149,13 @@
                         </button>
                         <div class="accordion-content hidden p-4 bg-gray-50 transition-all duration-200 max-h-0 overflow-hidden">
                             <p class="text-sm text-gray-500 mb-4">Preview for {{ $document }}:</p>
-                            {{-- <iframe src="https://docs.google.com/gview?url=https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/dokumen%2F3-a.pdf?alt=media&embedded=true" 
-                                    width="1000px" 
-                                    height="600px" 
-                                    class="w-full rounded-lg border" 
-                                    frameborder="0">
-                            </iframe> --}}
-                            @php
-                                $n = 0;
-                            @endphp
+
+
                                 <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="500" height="375" type="application/pdf">
                             @php
                                 $n += 1;
                             @endphp
-                        </div>                        
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -182,7 +178,7 @@
                 <!-- Hidden input field for role_id -->
                 <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
                 <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
-            </form>        
+            </form>
         @elseif (($dataPengajuan->status <= 1) && ($dataReviewer == NULL))
             <div class="flex justify-center items-center">
                 <form action="{{ route('pengajuan.batalkan-pengajuan', $dataPengajuan->id)  }}" method="POST" class="my-8 px-4" onsubmit="return confirm('Are you sure you want to delete this?');">
@@ -195,7 +191,7 @@
                 </form>
                 <div class="flex flex-col items-center justify-center">
                     <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Ingin mengubah data pengajuan?</label>
-                    <a href="{{ url('/pengajuan-beasiswa/edit/') . $dataPengajuan->id }}" class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
+                    <a href="{{ route('pengajuan.show', $dataPengajuan->id)  }}" class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
                         Edit
                     </a>
                 </div>

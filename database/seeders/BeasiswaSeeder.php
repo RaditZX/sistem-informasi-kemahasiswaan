@@ -18,6 +18,7 @@ class BeasiswaSeeder extends Seeder
 
         // Buat data beasiswa
         $beasiswa = Beasiswa::create([
+            'id' => 1,
             'nama_beasiswa' => 'Beasiswa LPDP',
             'deskripsi' => 'Beasiswa Lembaga Pengelola Dana Pendidikan (LPDP)...',
             'tipe_beasiswa' => 'eksternal',

@@ -14,6 +14,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 
 
 
@@ -27,6 +29,7 @@ class BeasiswaController extends Controller
 
     public function index(Request $request)
     {
+
         $query = Beasiswa::query();
 
         $notifController = new NotificationController();
@@ -60,13 +63,8 @@ class BeasiswaController extends Controller
         }
 
         // Jalankan query dan paginasi hasilnya
-        $beasiswa = $query->paginate(8);
-
-        // Data pengguna untuk view
-        $user = Auth::user();
-
-
-
+        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
+                  ->paginate(8);
         // Kirim data ke view
         return view('pages.Beasiswa.list-beasiswa', compact('beasiswa','notificationData'));
     }
@@ -186,8 +184,10 @@ class BeasiswaController extends Controller
                     $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
             }
         }
+        $lastId = DB::table('beasiswa')->max('id');
         // Simpan data beasiswa ke database dan dapatkan objek Beasiswa
         $beasiswa = Beasiswa::create([
+            'id'=> $lastId ? $lastId + 1 : 1,
             'nama_beasiswa' => $validatedData['nama_beasiswa'],
             'deskripsi' => $validatedData['deskripsi'],
             'jenis_beasiswa' => $validatedData['jenis_beasiswa'],
@@ -198,8 +198,6 @@ class BeasiswaController extends Controller
             'tanggal_berakhir' => $validatedData['tanggal_berakhir']
         ]);
 
-
-        
         // Simpan poster beasiswa
         foreach ($fileUrls as $url){
             PosterBeasiswa::create([
@@ -213,17 +211,18 @@ class BeasiswaController extends Controller
             foreach ($validatedData['syarat_beasiswa'] as $syarat) {
                 // Cari syarat dalam tabel syarat_beasiswa
                 $existingSyarat = SyaratBeasiswa::where('syarat', $syarat)->first();
-        
+
                 // Jika syarat tidak ditemukan, tambahkan ke tabel syarat_beasiswa
                 if (!$existingSyarat) {
                     $existingSyarat = SyaratBeasiswa::create(['syarat' => $syarat]);
                 }
-        
+
                 // Hubungkan beasiswa dengan syarat (tabel pivot)
                 $beasiswa->syaratBeasiswa()->attach($existingSyarat->id);
             }
         }
         
+
 
         // Simpan benefit beasiswa, jika ada
         if (isset($validatedData['benefit_beasiswa'])) {
@@ -242,6 +241,7 @@ class BeasiswaController extends Controller
             foreach ($validatedData['syarat_dokumen'] as $dokumen) {
                 $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
 
+
                 if(!$existingDokumen){
                     $existingDokumen = SyaratDokumen::create(['dokumen' => $dokumen]);
                 }
@@ -255,7 +255,8 @@ class BeasiswaController extends Controller
             foreach ($validatedData['jenjang_pendidikan'] as $jenjang){
                 JenjangPendidikan::create([
                     'beasiswa_id' => $beasiswa->id,
-                    'jenjang' => $jenjang
+                    'jenjang' => $jenjang,
+                    'jurusan' => 1
                 ]);
             }
         }
@@ -263,7 +264,7 @@ class BeasiswaController extends Controller
         // Log the created scholarship data
         Log::info('Beasiswa created successfully: ', [$beasiswa]);
 
-        return redirect('/beasiswa')->with('success', 'Beasiswa berhasil ditambahkan');
+        return redirect('/list-beasiswa-staff')->with('success', 'Beasiswa berhasil ditambahkan');
     }
 
 
@@ -371,8 +372,9 @@ class BeasiswaController extends Controller
             'jenjang_pendidikan.*' => 'string|max:100|nullable',
             // 'poster' => 'required|array|max:3',
             // 'poster.*' => [
-            //     'sometimes', 
-            //     'nullable', 
+            //     'sometimes',
+            //     'nullable',
+
             //     function($attribute, $value, $fail) {
             //         if (is_string($value)) {
             //             // Validasi jika nilai adalah string (URL)
@@ -396,6 +398,10 @@ class BeasiswaController extends Controller
         // Modifikasi tanggal_berakhir
         $tanggal_berakhir = Carbon::parse($request->tanggal_berakhir)->subDays(5);
 
+
+        // Modifikasi tanggal_berakhir
+        $tanggal_berakhir = Carbon::parse($request->tanggal_berakhir)->subDays(5);
+
         // Validasi tambahan untuk memastikan tanggal_mulai sesuai dengan tanggal_berakhir yang telah dimodifikasi
         if ($tanggal_berakhir->lte(Carbon::parse($request->tanggal_mulai))) {
             return back()->withErrors(['tanggal_mulai' => 'Tanggal mulai harus sebelum tanggal berakhir - 5 hari.'])->withInput();
@@ -415,7 +421,7 @@ class BeasiswaController extends Controller
             ]);
             $beasiswa->save();
             $fileUrls = [];  // Array untuk menyimpan URL file
-    
+
             // dd($request->poster);
             // Memeriksa jika ada file yang diupload
             if ($request->hasFile('input_poster')) {
@@ -423,32 +429,35 @@ class BeasiswaController extends Controller
                     $newRequest = new Request();
                     $newRequest->files->set('file', $file);
                     $newRequest->merge(['path' => 'poster']);
-    
+
                     // Call the uploadFile method from FileController
                     $fileController = new FileController();
                     $uploadedFileUrl = $fileController->uploadFile($newRequest);
-    
+
+
                     // Store the uploaded file URL in the array
                     $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
                     // dd($fileUrls);
                 }
             }
             // dd($fileUrls);
-    
+
             if (isset($request->poster)) {
                 foreach ($request->poster as $poster) {
                     if (filter_var($poster, FILTER_VALIDATE_URL)) {
                         // dd($poster);
+
                         $fileUrls[] = $poster; 
                     }
                 }
                 
+
                 // Menghapus poster yang ada jika ada perubahan
                 $existingPoster = PosterBeasiswa::where('beasiswa_id', $id)->get();
                 if (!($fileUrls == $existingPoster)) {
                     $beasiswa->posterBeasiswa()->delete();
                 }
-                
+
             }
             foreach ($fileUrls as $poster) {
                 // Memastikan hanya link yang valid dimasukkan
@@ -461,62 +470,62 @@ class BeasiswaController extends Controller
                     Log::warning("Invalid URL skipped: $poster");
                 }
             }
-            
+
             // Simpan atau update syarat-syarat beasiswa, jika ada
             if (isset($validatedData['syarat_beasiswa'])) {
                 $beasiswa->syaratBeasiswa()->detach();
                 foreach ($validatedData['syarat_beasiswa'] as $syarat) {
                     // Cari syarat dalam tabel syarat_beasiswa
                     $existingSyarat = SyaratBeasiswa::where('syarat', $syarat)->first();
-    
+
                     // Jika syarat tidak ditemukan, tambahkan ke tabel syarat_beasiswa
                     if (!$existingSyarat) {
                         $existingSyarat = SyaratBeasiswa::create(['syarat' => $syarat]);
                     }
-    
+
                     // Hubungkan beasiswa dengan syarat (tabel pivot)
                     $beasiswa->syaratBeasiswa()->syncWithoutDetaching([$existingSyarat->id]);
                 }
             } else {
                 $beasiswa->syaratBeasiswa()->detach();
             }
-    
+
             // Simpan atau update benefit beasiswa, jika ada
             if (isset($validatedData['benefit_beasiswa'])) {
                 $beasiswa->benefitBeasiswa()->detach();
                 foreach ($validatedData['benefit_beasiswa'] as $benefit) {
                     $existingBenefit = BenefitBeasiswa::where('benefit', $benefit)->first();
-    
+
                     // Jika benefit tidak ditemukan, tambahkan ke tabel benefit_beasiswa
                     if(!$existingBenefit) {
                         $existingBenefit = BenefitBeasiswa::create(['benefit' => $benefit]);
                     }
-    
+
                     // Hubungkan beasiswa dengan benefit (tabel pivot)
                     $beasiswa->benefitBeasiswa()->syncWithoutDetaching([$existingBenefit->id]);
                 }
             } else {
                 $beasiswa->benefitBeasiswa()->detach();
             }
-    
+
             // Simpan atau update syarat dokumen, jika ada
             if (isset($validatedData['syarat_dokumen'])) {
                 $beasiswa->syaratDokumen()->detach();
                 foreach ($validatedData['syarat_dokumen'] as $dokumen) {
                     $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
-    
+
                     // Jika dokumen tidak ditemukan, tambahkan ke tabel syarat_dokumen
                     if(!$existingDokumen) {
                         $existingDokumen = SyaratDokumen::create(['dokumen' => $dokumen]);
                     }
-    
+
                     // Hubungkan beasiswa dengan syarat dokumen (tabel pivot)
                     $beasiswa->syaratDokumen()->syncWithoutDetaching([$existingDokumen->id]);
                 }
             } else {
                 $beasiswa->syaratDokumen()->detach();
             }
-    
+
             // Simpan atau update jenjang pendidikan, jika ada
             if (isset($validatedData['jenjang_pendidikan'])) {
                 $beasiswa->jenjangPendidikan()->delete();
@@ -525,7 +534,6 @@ class BeasiswaController extends Controller
                     $existingJenjang = JenjangPendidikan::where('beasiswa_id', $beasiswa->id)
                                                         ->where('jenjang', $jenjang)
                                                         ->first();
-    
                     if (!$existingJenjang) {
                         JenjangPendidikan::create([
                             'beasiswa_id' => $beasiswa->id,
@@ -536,16 +544,18 @@ class BeasiswaController extends Controller
             } else {
                 $beasiswa->jenjangPendidikan()->delete();
             }
-    
+
+
             // Log the updated scholarship data
             Log::info('Beasiswa updated successfully: ', [$beasiswa]);
             // dd($beasiswa->syaratBeasiswa, $beasiswa->benefitBeasiswa, $beasiswa->syaratDokumen, $beasiswa->jenjangPendidikan, $beasiswa->posterBeasiswa, $beasiswa);
-    
-            return redirect()->route('beasiswa.index')->with('success', 'Data beasiswa berhasil diperbarui.');
-            
+
+            return redirect()->route('beasiswa.list-beasiswa-staff')->with('success', 'Data beasiswa berhasil diperbarui.');
+
         } catch (\Exception $e) {
             Log::error('Error updating scholarship: ', ['error' => $e->getMessage()]);
-        
+
+
             return redirect()->back();
                 // ->withInput($request->all())
                 // ->withErrors(['msg' => 'Terjadi kesalahan saat memperbarui data beasiswa.']);

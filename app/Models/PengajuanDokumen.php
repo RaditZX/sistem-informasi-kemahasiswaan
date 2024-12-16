@@ -14,7 +14,7 @@ class PengajuanDokumen extends Model
     protected $primaryKey = 'kode_dokumen';
 
     // Tentukan kolom yang bisa diisi secara massal
-    protected $fillable = ['kode_dokumen','id_pengajuan_beasiswa','nama_dokumen','link_dokumen'];
+    protected $fillable = ['id','kode_dokumen','id_pengajuan_beasiswa','nama_dokumen','link_dokumen'];
 
 
     public function pengajuanBeasiswa(){

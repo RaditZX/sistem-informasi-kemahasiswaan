@@ -32,6 +32,7 @@ return new class extends Migration
         });
 
         Schema::create('dokumen', function(Blueprint $table){
+            $table->id();
             $table->string('kode_dokumen')->primary();
             $table->unsignedBigInteger("id_pengajuan_beasiswa");
             $table->string("nama_dokumen");

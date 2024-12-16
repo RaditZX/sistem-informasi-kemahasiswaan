@@ -27,8 +27,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'nama_depan' => $this->faker->firstName,
             'nama_belakang' => $this->faker->lastName,
-            'jenis_kelamin' => $this->faker->randomElement(['Pria', 'Wanita']),
-            'remember_token' => Str::random(10),
+            'jenis_kelamin' => $this->faker->randomElement(['Pria', 'Wanita']);
             'foto' => 'path/to/foto.jpg',
             'created_at' => now(),
             'updated_at' => now(),

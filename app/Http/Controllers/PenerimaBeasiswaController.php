@@ -51,7 +51,8 @@ class PenerimaBeasiswaController extends Controller
         }
 
         // Jalankan query dan paginasi hasilnya
-        $beasiswa = $query->paginate(8);
+        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
+        ->paginate(8);
 
         // Data pengguna untuk view
         $user = Auth::user();
