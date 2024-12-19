@@ -15,23 +15,6 @@ use Illuminate\Support\Facades\Log;
 
 class BeasiswaController extends Controller
 {
-<<<<<<< Updated upstream
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $beasiswa = Beasiswa::all();
-        $user = Auth::user();
-        $name = $user->name;
-        $email = $user->email;
-        $role_id = $user->role_id;
-        $beasiswa = beasiswa::All();
-
-        return view('pages.Beasiswa.list-beasiswa', compact('email', 'name', 'role_id', 'beasiswa'));
-
-
-=======
     public function index(Request $request)
     {
         // Get the authenticated user
@@ -109,7 +92,6 @@ class BeasiswaController extends Controller
             'penerimaBeasiswa', 
             'beasiswaUserTipe'
         ));
->>>>>>> Stashed changes
     }
 
     public function getListBeasiswaForStaff()

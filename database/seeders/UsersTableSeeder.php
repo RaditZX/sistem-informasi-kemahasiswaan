@@ -53,13 +53,6 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'id'=>4,
-<<<<<<< Updated upstream
-                'name' => 'Alice Williams',
-                'email' => 'alice.williams@polban.ac.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'), // default password
-                'remember_token' => Str::random(10),
-=======
                 'nama_depan' => 'Kepala Jurusan',
                 'nama_belakang' => 'Teknik Sipil',
                 'email' => 'kajur.sipil@polban.ac.id',
@@ -236,7 +229,6 @@ class UsersTableSeeder extends Seeder
                 'nama_depan' => 'Dummy',
                 'nama_belakang' => 'Dummy',
                 'email' => 'dummy@polban.ac.id',
->>>>>>> Stashed changes
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
                 'created_at' => now(),

@@ -28,13 +28,6 @@ class PengaturanController extends Controller
         $phone = $user->phone;
         $jk = $user->jenis_kelamin;
 
-<<<<<<< Updated upstream
-        $nama = explode(' ', $user->name);
-        $nama_depan = $nama[0];
-        $nama_belakang = $nama[1];
-
-        return view('pages.Pengaturan.index', compact('user_id', 'email', 'nama_depan', 'nama_belakang', 'jk', 'user_img'));
-=======
         // Nama pengguna
         $nama_depan = $user->nama_depan;
         $nama_belakang = $user->nama_belakang;
@@ -88,7 +81,6 @@ class PengaturanController extends Controller
             'beasiswa',// Kirimkan data beasiswa jika user adalah mahasiswa
             'mahasiswa'
         ));
->>>>>>> Stashed changes
     }
 
 

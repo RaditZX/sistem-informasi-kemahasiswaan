@@ -60,14 +60,6 @@ Route::middleware('auth')->group(function () {
 // PENGATURAN ROUTES ======================================================================
 Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
-<<<<<<< Updated upstream
-    Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
-});
-
-Route::get('/pengajuan',function(){
-    return view('pages.Beasiswa.pengajuan');
-});
-=======
     Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
 
@@ -93,4 +85,3 @@ Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'u
 
 
 
->>>>>>> Stashed changes
