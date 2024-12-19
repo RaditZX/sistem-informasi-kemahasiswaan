@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -117,6 +119,7 @@ return [
     | Supported drivers: "file", "cache"
     |
     */
+
 
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
