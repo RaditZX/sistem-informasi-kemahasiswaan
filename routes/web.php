@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function () {
 // PENGATURAN ROUTES ======================================================================
 Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
+    Route::patch('/pengaturan/updatefoto/{user}', [PengaturanController::class, 'updatefoto'])->name('pengaturan.updatefoto');
+    Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');
     Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
 
@@ -79,8 +81,7 @@ Route::controller(PengajuanBeasiswaController::class)->group(function () {
 });
 
 Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
-Route::patch('/pengaturan/updatefoto/{user}', [PengaturanController::class, 'updatefoto'])->name('pengaturan.updatefoto');
-Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');
+
 
 
 
