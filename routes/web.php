@@ -60,9 +60,37 @@ Route::middleware('auth')->group(function () {
 // PENGATURAN ROUTES ======================================================================
 Route::middleware('auth')->group(function () {
     Route::resource('pengaturan', PengaturanController::class);
+<<<<<<< Updated upstream
     Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
 });
 
 Route::get('/pengajuan',function(){
     return view('pages.Beasiswa.pengajuan');
 });
+=======
+    Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
+    Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
+
+});
+
+Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
+Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
+Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
+Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
+Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
+
+Route::controller(PengajuanBeasiswaController::class)->group(function () {
+    Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
+    Route::post('/pengajuan/store/{id}', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
+    Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
+    Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
+});
+
+Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
+Route::patch('/pengaturan/updatefoto/{user}', [PengaturanController::class, 'updatefoto'])->name('pengaturan.updatefoto');
+Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');
+
+
+
+
+>>>>>>> Stashed changes

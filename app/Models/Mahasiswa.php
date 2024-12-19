@@ -19,4 +19,10 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(PengajuanBeasiswa::class);
     }
+
+    // Model Mahasiswa
+    public function penerimaBeasiswa()
+    {
+        return $this->hasMany(PenerimaBeasiswa::class, 'nim', 'nim');
+    }
 }

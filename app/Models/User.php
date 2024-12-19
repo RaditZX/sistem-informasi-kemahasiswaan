@@ -19,8 +19,15 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+<<<<<<< Updated upstream
         'password',
         'jenis_kelamin'
+=======
+        'jenis_kelamin',  // Changed from jenis_kelamin
+        'nim',
+        'no_hp',
+        'user_img'  // Add this for image uploads
+>>>>>>> Stashed changes
     ];
 
     /**
@@ -45,4 +52,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+<<<<<<< Updated upstream
+=======
+    // Model User
+    public function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class, 'user_id', 'id');
+    }
+
+    public function reviewer()
+{
+    return $this->hasOne(Reviewer::class, 'user_id', 'id');
+}
+
+>>>>>>> Stashed changes
 }
