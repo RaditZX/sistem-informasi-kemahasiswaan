@@ -14,26 +14,23 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
+
         DB::table('users')->insert([
             [
                 'id'=>1,
-                'name' => 'John Doe',
+                'nama_depan' => 'John',
+                'nama_belakang' => 'Doe',
                 'email' => 'john.doe@polban.ac.id',
-                'email_verified_at' => now(),
                 'jenis_kelamin' => 'Pria',
-                'password' => Hash::make('password'), // default password
-                'remember_token' => Str::random(10),
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id'=>2,
-                'name' => 'Jane Smith',
+                'nama_depan' => 'Jane',
+                'nama_belakang' => 'Smith',
                 'email' => 'jane.smith@polban.ac.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'), // default password
-                'remember_token' => Str::random(10),
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
                 'created_at' => now(),
@@ -41,11 +38,9 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'id'=>3,
-                'name' => 'James Johnson',
-                'email' => 'james.johnson@polban.ac.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('password'), // default password
-                'remember_token' => Str::random(10),
+                'nama_depan' => 'Staff Kemahasiswaan',
+                'nama_belakang' => 'Satu',
+                'email' => 'yani.rahmawati.tif23@polban.ac.id',
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
                 'created_at' => now(),
@@ -235,5 +230,6 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
+
     }
 }
