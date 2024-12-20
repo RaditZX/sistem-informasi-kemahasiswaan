@@ -78,16 +78,16 @@ class AuthController extends Controller
 
                 return $mhs ? redirect()->intended('/beasiswa') : redirect()->intended('/dashboard');
             } else {
-                return back()->withErrors(['email' => 'Please verify your email before logging in.'])->onlyInput('email');
+                return redirect('/login')->with('error', 'Silahkan Verifikasi Email anda');
             }
         } catch (\Kreait\Firebase\Exception\Auth\InvalidPassword $e) {
-            return back()->withErrors(['email' => 'Invalid email or password.'])->onlyInput('email');
+            return redirect('/login')->with('error', 'Email atau password salah.');
         } catch (\Kreait\Firebase\Exception\Auth\FailedToVerifyToken $e) {
-            return back()->withErrors(['email' => 'Failed to verify user token.'])->onlyInput('email');
+            return redirect('/login')->with('error', 'Gagal verifikasi Token.');
         } catch (\Kreait\Firebase\Exception\Auth\EmailNotFound $e) {
-            return back()->withErrors(['email' => 'Email not found.'])->onlyInput('email');
+            return redirect('/login')->with('error', 'Email tidak ditemukan.');
         } catch (\Exception $e) {
-            return back()->withErrors(['email' => 'An error occurred during login. ' . $e->getMessage()])->onlyInput('email');
+            return redirect('/login')->with('error', $e->getMessage());
         }
     }
 
@@ -131,9 +131,9 @@ class AuthController extends Controller
 
             return redirect()->route('auth.register-information', ['id' => $user->id]);
         } catch (FirebaseEmailExists $e) {
-            return response()->json(['error' => 'Email already exists in Firebase'], 409);
+            return redirect('/register')->with('error', 'Email telah terdaftar pada sistem.');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Registration failed', 'details' => $e->getMessage()], 500);
+            return redirect('/register')->with('error', $e->getMessage());
         }
     }
 

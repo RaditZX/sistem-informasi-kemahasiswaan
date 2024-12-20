@@ -72,9 +72,13 @@
                         class="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border p-4">
                         <div class="relative h-full overflow-hidden bg-cover rounded-xl"
                             style="background-image: url('./assets/img/ivancik.jpg')">
+
                             <span class="absolute top-0 left-0 w-full h-full bg-center bg-cover bg-white opacity-80"></span>
+
                             <div class="relative z-10 flex flex-col flex-auto h-full p-2">
+                                <h3 class="font-semibold">Pengajuan Berdasarkan Status</h3>
                                 <div>
+
                                     <canvas id="myChart"></canvas>
                                 </div>
                             </div>
@@ -261,7 +265,8 @@
 
                 <div class="w-full max-w-full px-3 md:w-1/2 md:flex-none lg:w-1/3 lg:flex-none">
                     <div
-                        class="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
+                        class="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid p-2 bg-white bg-clip-border">
+                        <h3 class="font-semibold mb-2">Pengajuan Berdasarkan Tahun</h3>
                         <div style="height: 100%; display: flex; align-items: stretch;">
                             <canvas id="myChart1" style="height: 100%; width: 100%;"></canvas>
                         </div>
@@ -271,9 +276,9 @@
 
             <div class="w-full max-w-full px-3 md:flex-none h-full lg:flex-none">
                 <div
-                    class="border-black/12.5 shadow-soft-xl relative flex h-96 min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
-                    <!-- Dropdown to select jurusan -->
-                    <div style="padding: 10px;" class="flex gap-3">
+                    class="border-black/12.5 shadow-soft-xl relative flex h-96 min-w-0 flex-col break-words rounded-2xl p-2 border-0 border-solid bg-white bg-clip-border">
+                    <h3 class="font-semibold mb-2">Pengajuan Berdasarkan Jurusan</h3>
+                    <div  class="flex gap-3">
                         <label for="jurusanSelect">Filter by Jurusan:</label>
                         <form method="GET" action="{{ route('dashboard.index') }}" class="max-w-sm">
                             <select id="countries" name="nama_jurusan" class="bg-gray-50 border border-gray-300 text-white-900 text-sm rounded-lg" onchange="this.form.submit()">

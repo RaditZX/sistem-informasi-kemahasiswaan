@@ -52,9 +52,25 @@
 
 <body>
     <main class="overflow-y-auto">
+        @include('component.alert')
+        @if (session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    showAlert('success', 'Success', "{{ session('success') }}");
+                });
+            </script>
+        @endif
+
+        @if (session('error'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    showAlert('error', 'Error', {!! json_encode(session('error')) !!});
+                });
+            </script>
+        @endif
     </main>
-    
-    
+
+
 </body>
 @yield('content')
 
