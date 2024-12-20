@@ -92,7 +92,8 @@ Route::middleware('auth')->group(function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
     Route::resource('pengaturan', PengaturanController::class);
-    Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::patch('/pengaturan/updatefoto/{user}', [PengaturanController::class, 'updatefoto'])->name('pengaturan.updatefoto');
+    Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');
     Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
 

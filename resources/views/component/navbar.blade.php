@@ -142,7 +142,7 @@
 
         <li class="mt-0.5 w-full">
             <a id="profile-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
-            href="./pages/profile.html">
+            href="/pengaturan">
                 <div class="icon shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
                     <svg width="12px" height="12px" viewBox="0 0 46 42" version="1.1"
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -261,7 +261,7 @@
                                                 <div class="flex flex-col justify-center">
                                                     <!-- Display status of the notification -->
                                                     <h6 class="mb-1 text-sm font-normal leading-normal">
-                                                        {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}
+                                                        <p>Beasiswa {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}</p>
                                                         {{ $notification->pengajuanBeasiswa->Status->isi_status }}
                                                     </h6>
                                                     <p class="mb-0 text-xs leading-tight text-slate-400">

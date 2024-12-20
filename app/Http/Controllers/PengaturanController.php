@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Controllers\Controller;
+use App\Models\Pengaturan;
 use App\Models\User;
+use App\Models\Mahasiswa;
+use App\Models\Reviewer;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,20 +19,71 @@ class PengaturanController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::id();
-        $user = Auth::user();
+        $user = Auth::user(); // Ambil data user yang sedang login
+
+        // Data umum
+        $user_id = $user->id;
         $user_img = $user->foto;
         $email = $user->email;
+        $phone = $user->phone;
         $jk = $user->jenis_kelamin;
 
-        $nama = explode(' ', $user->name);
-        $nama_depan = $nama[0];
-        $nama_belakang = $nama[1];
+        // Nama pengguna
+        $nama_depan = $user->nama_depan;
+        $nama_belakang = $user->nama_belakang;
+
+        // Data notifikasi
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
 
-        return view('pages.Pengaturan.index', compact('user_id', 'email', 'nama_depan', 'nama_belakang', 'jk', 'user_img', 'notificationData'));
+        // Default data untuk NIM, NIP, dan no_hp
+        $nim = null;
+        $nip = null;
+        $no_hp = $phone;
+
+        // Cek apakah user adalah mahasiswa
+        if ($user->mahasiswa) {
+            $nim = $user->mahasiswa->nim;
+            $no_hp = $user->mahasiswa->no_hp ?: $phone; // Gunakan no_hp mahasiswa jika tersedia
+        }
+
+        // Cek apakah user adalah reviewer
+        if ($user->reviewer) {
+            $nip = $user->reviewer->nip; // Ambil NIP dari reviewer
+        }
+        
+        
+        // Tentukan role_name
+        $role_name = $user->reviewer && $user->reviewer->role
+            ? $user->reviewer->role->role_name
+            : 'Mahasiswa'; // Default role jika tidak ada role reviewer
+
+        // Ambil data beasiswa jika user adalah mahasiswa
+        $beasiswa = $user->mahasiswa
+            ? $user->mahasiswa->penerimaBeasiswa()->with('beasiswa')->get()
+            : collect(); // Gunakan collection kosong jika bukan mahasiswa
+
+            $mahasiswa = mahasiswa::where('user_id', $user_id)->first();
+        // Kirim data ke view
+        return view('pages.Pengaturan.index', compact(
+            'user_id',
+            'email',
+            'nama_depan',
+            'nama_belakang',
+            'phone',
+            'user_img',
+            'notificationData',
+            'no_hp',
+            'jk',
+            'role_name',
+            'nim', // Kirimkan NIM jika ada
+            'nip', // Kirimkan NIP jika ada
+            'beasiswa',// Kirimkan data beasiswa jika user adalah mahasiswa
+            'mahasiswa'
+        ));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -64,12 +120,15 @@ class PengaturanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updatefoto(Request $request, string $id)
     {
         // Ensure the user is authenticated
         if (!Auth::check()) {
             return redirect('login');
         }
+
+        // $user_id = Auth::id();
+        // $mahasiswa = Mahasiswa::where('user_id', $user_id)->first();
 
         // Validate the uploaded file
         $request->validate([
@@ -92,6 +151,100 @@ class PengaturanController extends Controller
 
         return redirect()->route('pengaturan.index')->with('error', 'Failed to update profile photo');
     }
+
+    public function updateprofil(Request $request, string $id)
+{
+    // Pastikan user terautentikasi
+    if (!Auth::check()) {
+        return redirect('login');
+    }
+
+    $user_id = Auth::id();
+
+    try {
+        // Cari data mahasiswa
+        $mahasiswa = Mahasiswa::where('user_id', $user_id)->first();
+        // Cari data reviewer
+        $reviewer = Reviewer::where('user_id', $user_id)->first();
+
+        // Jika user adalah mahasiswa, perbolehkan update seluruh profil
+        if ($mahasiswa) {
+            // Validasi data mahasiswa
+            $request->validate([
+                'nama_depan' => 'required|string|max:255',
+                'nama_belakang' => 'required|string|max:255',
+                'jk' => 'required|string|in:Pria,Wanita',
+                'nim' => 'required|string|max:20',
+                'no_hp' => 'nullable|string|max:15',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optionally handle photo upload
+            ]);
+
+            // Cari user berdasarkan ID
+            $user = User::findOrFail($id);
+
+            // Update data user
+            $user->update([
+                'nama_depan' => $request->input('nama_depan', $user->nama_depan),
+                'nama_belakang' => $request->input('nama_belakang', $user->nama_belakang),
+                'jenis_kelamin' => $request->input('jk', $user->jenis_kelamin),
+            ]);
+
+            // Update data mahasiswa
+            $mahasiswa->update([
+                'nim' => $request->input('nim', $mahasiswa->nim),
+                'no_hp' => $request->input('no_hp', $mahasiswa->no_hp),
+            ]);
+
+            // Handle photo upload
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('photos', 'public');
+                $user->update(['photo' => $photoPath]);
+            }
+
+            return redirect()->route('pengaturan.index')->with('success', 'Profil mahasiswa berhasil diperbarui.');
+        }
+
+        // Jika user adalah reviewer, batasi update pada data yang diperbolehkan
+        if ($reviewer) {
+            // Validasi data reviewer
+            $request->validate([
+                'nama_depan' => 'required|string|max:255',
+                'nama_belakang' => 'required|string|max:255',
+                'jk' => 'required|string|in:Pria,Wanita',
+                'no_hp' => 'nullable|string|max:15',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optionally handle photo upload
+            ]);
+
+            // Cari user berdasarkan ID
+            $user = User::findOrFail($id);
+
+            // Update data user reviewer
+            $user->update([
+                'nama_depan' => $request->input('nama_depan', $user->nama_depan),
+                'nama_belakang' => $request->input('nama_belakang', $user->nama_belakang),
+                'jenis_kelamin' => $request->input('jk', $user->jenis_kelamin),
+            ]);
+
+            // Update data reviewer jika ada
+            $reviewer->update([
+                'no_hp' => $request->input('no_hp', $reviewer->no_hp),
+            ]);
+
+            // Handle photo upload
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('photos', 'public');
+                $user->update(['photo' => $photoPath]);
+            }
+
+            return redirect()->route('pengaturan.index')->with('success', 'Profil reviewer berhasil diperbarui.');
+        }
+
+        return redirect()->route('pengaturan.index')->with('error', 'User tidak ditemukan.');
+
+    } catch (\Exception $e) {
+        return redirect()->route('pengaturan.index')->with('error', 'Terjadi kesalahan saat memperbarui profil. Silakan coba lagi.');
+    }
+}
 
     /**
      * Remove the specified resource from storage.
