@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Facades\Firebase;
 use Kreait\Firebase\Storage;
+use Illuminate\Support\Facades\Storage as LaravelStorage;
+use Illuminate\Support\Facades\Response;
 
 class FileController extends Controller
 {
@@ -32,6 +34,67 @@ class FileController extends Controller
             echo "Updated metadata for {$object->name()}\n";
         }
     }
+
+
+
+    public function uploadFileLocal(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file',
+            'path' => 'required|string',
+        ]);
+
+        $file = $request->file('file');
+        $path = $request->path;
+
+        // Simpan file menggunakan Laravel Storage
+        $filePath = rtrim($path, '/') . '/' . $file->getClientOriginalName();
+        $storedPath = $file->storeAs($path, $file->getClientOriginalName(), 'public');
+
+        // Set Content-Disposition: inline (untuk menampilkan di browser)
+        $storage = LaravelStorage::disk('public');
+        $storage->setVisibility($storedPath, 'public'); // Set visibility to public (if needed)
+
+        // You can then set Content-Disposition for Firebase Storage or another service if necessary
+        $url = asset('storage/' . $storedPath);  // URL to access the file
+
+        return response()->json(['url' => $url]);
+    }
+
+
+
+
+    public function viewFile($url)
+    {
+        // Path to the file in storage
+        $filePath = storage_path('app/public/dokumen/' . $url);
+
+        // Check if the file exists
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        // Get the MIME type of the file
+        $mimeType = mime_content_type($filePath);
+
+
+
+        // If it's a PDF, force set the MIME type to application/pdf
+        if ($mimeType === 'application/octet-stream' || $mimeType === 'application/pdf') {
+            $mimeType = 'application/pdf';  // Override to force PDF type
+        }
+
+        // Return the file with 'Content-Disposition' header set to 'inline'
+        return Response::make(file_get_contents($filePath), 200, [
+            'Content-Type' => $mimeType,  // Set the correct MIME type for the file
+            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',  // Display inline
+        ]);
+    }
+
+
+
+
+
 
     public function uploadFile(Request $request)
     {

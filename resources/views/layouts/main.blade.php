@@ -14,7 +14,7 @@
     <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <!-- Main Styling -->
@@ -39,12 +39,28 @@
         };
     </script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
-    @vite(['resources/css/app.css','resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="overflow-hidden">
+
     <main class="min-h-screen overflow-y-auto">
         @include('component.alert')
+        @if (session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    showAlert('success', 'Success', "{{ session('success') }}");
+                });
+            </script>
+        @endif
+
+        @if (session('error'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    showAlert('error', 'Error', {!! json_encode(session('error')) !!});
+                });
+            </script>
+        @endif
         @yield('content')
 
     </main>

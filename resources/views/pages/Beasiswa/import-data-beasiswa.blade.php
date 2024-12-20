@@ -3,22 +3,6 @@
 
 @section('content')
     @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null, 'notificationData'=>$notificationData])
-
-    @if(session('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            showAlert('success', 'Success', "{{ session('success') }}");
-        });
-    </script>
-    @endif
-
-    @if(session('error'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            showAlert('error', 'Error', "{{ session('error') }}");
-        });
-    </script>
-    @endif
     <div class="p-3 mt-3 flex flex-row">
         <p class="text-2xl lg:text-3xl font-bold text-black">Import Data Penerima Beasiswa</p>
     </div>

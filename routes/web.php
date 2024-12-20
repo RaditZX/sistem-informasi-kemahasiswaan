@@ -60,8 +60,10 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/beasiswa/search-dokumen', [BeasiswaController::class, 'search_dokumen'])->name('Beasiswa.search_dokumen');
     Route::get('/beasiswa/search-benefit', [BeasiswaController::class, 'search_benefit'])->name('Beasiswa.search_benefit');
     Route::get('/beasiswa/search-jenjang', [BeasiswaController::class, 'search_jenjang'])->name('Beasiswa.search_jenjang');
+    Route::post('/export-pengumuman-beasiswa/{id}',[PenerimaBeasiswaController::class, 'exportPenerimaBeasiswaInExcel'])->name('beasiswa.export-data-beasiswa');
 
 });
+
 
 
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
@@ -95,7 +97,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
     Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
-
+    Route::get('/dokumen/{url}', [FileController::class, 'viewFile'])->name('viewfile');
 });
 
 Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');

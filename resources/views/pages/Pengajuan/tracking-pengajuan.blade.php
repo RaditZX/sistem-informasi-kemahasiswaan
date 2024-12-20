@@ -134,24 +134,25 @@
         <section class="dokumen my-8 px-4">
             <h1 class="text-xl font-semibold mb-4">Dokumen yang di ajukan</h1>
             <div class="space-y-4">
-                @foreach (['Kartu Tanda Mahasiswa (KTM)', 'Curriculum Vitae', 'Transkrip Nilai', 'Surat Berperilaku Baik', 'Surat Pernyataan sedang tidak menerima beasiswa'] as $document)
+                @foreach ($documents as $document)
                     <div class="accordion-item rounded-xl shadow-md overflow-hidden">
                         <button class="accordion-button flex items-center justify-between w-full p-4 text-left text-gray-900 font-medium focus:outline-none" onclick="toggleAccordion(this)">
                             <span class="flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
-                                {{ $document }}
+                                {{ $document->dokumen }}
                             </span>
                             <svg class="accordion-icon w-5 h-5 text-gray-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
                         <div class="accordion-content hidden p-4 bg-gray-50 transition-all duration-200 max-h-0 overflow-hidden">
-                            <p class="text-sm text-gray-500 mb-4">Preview for {{ $document }}:</p>
+                            <p class="text-sm text-gray-500 mb-4">Preview for {{ $document->dokumen }}:</p>
 
+                            <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="100%" height="500" type="application/pdf">
+                            {{-- <embed src="{{ route('viewfile',['url' => $dataDokumenPengajuan[$n]->nama_dokumen ]) }}" width="100%" height="800" type="application/pdf"> --}}
 
-                                <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="500" height="375" type="application/pdf">
                             @php
                                 $n += 1;
                             @endphp
