@@ -17,9 +17,10 @@ class ReviewerSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [   'user_id' => 4,
+            [
+                'user_id' => 4,
                 'nip' => 'NIP' . rand(1000000000, 9999999999),
-                'role_id' => 2,
+                'role_id' => 3,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -80,7 +81,14 @@ class ReviewerSeeder extends Seeder
             [
                 'user_id' => 14,
                 'nip' => 'NIP' . rand(1000000000, 9999999999),
-                'role_id' => 3,
+                'role_id' => 4,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 21,
+                'nip' => 'NIP' . rand(1000000000, 9999999999),
+                'role_id' => 4,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

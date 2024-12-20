@@ -65,6 +65,9 @@ class BeasiswaManagementTest extends TestCase
         // Seed the database with sample data
         $this->seed();
 
+
+
+
         $response = $this->actingAs($this->user_reviewer)
         ->withSession(['auth' => ['user' => $this->user_reviewer, 'role' => 'reviewer', 'reviewer' => $this->reviewer]]);
         // Create some Beasiswa records
@@ -164,6 +167,7 @@ class BeasiswaManagementTest extends TestCase
             // Cari ID benefit yang sesuai
             $benefitId = BenefitBeasiswa::where('benefit', $benefit)->first()->id;
 
+
             // Memastikan bahwa pivot table berisi ID yang benar
             $this->assertDatabaseHas('beasiswa_benefit', [
                 'beasiswa_id' => $beasiswa->id,
@@ -175,13 +179,13 @@ class BeasiswaManagementTest extends TestCase
             // Cari ID dokumen yang sesuai
             $dokumenId = SyaratDokumen::where('dokumen', $dokumen)->first()->id;
 
+
             // Memastikan bahwa pivot table berisi ID yang benar
             $this->assertDatabaseHas('beasiswa_syarat_dokumen', [
                 'beasiswa_id' => $beasiswa->id,
                 'syarat_dokumen_id' => $dokumenId,  // Gunakan ID, bukan string
             ]);
         }
-
     }
 
     /** @test */
