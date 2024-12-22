@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder
                 'id'=>3,
                 'nama_depan' => 'Staff Kemahasiswaan',
                 'nama_belakang' => 'Satu',
-                'email' => 'yani.rahmawati.tif23@polban.ac.id',
+                'email' => 'yani.rahmawati.tif231@polban.ac.id',
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
                 'created_at' => now(),

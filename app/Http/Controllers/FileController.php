@@ -67,7 +67,7 @@ class FileController extends Controller
     public function viewFile($url)
     {
         // Path to the file in storage
-        $filePath = storage_path('app/public/dokumen/' . $url);
+        $filePath = storage_path(path: 'app/public/dokumen/' . $url);
 
         // Check if the file exists
         if (!file_exists($filePath)) {

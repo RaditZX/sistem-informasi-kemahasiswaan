@@ -50,8 +50,8 @@ class BeasiswaSeeder extends Seeder
         ]);
 
         // Buat data syarat dokumen
-        $dokumen1 = SyaratDokumen::create(['dokumen' => 'Fotokopi ijazah terakhir.']);
-        $dokumen2 = SyaratDokumen::create(['dokumen' => 'Surat rekomendasi.']);
+        $dokumen1 = SyaratDokumen::create(['dokumen' => 'Fotokopi ijazah terakhir.', 'link_dokumen' => 'example.pdf']);
+        $dokumen2 = SyaratDokumen::create(['dokumen' => 'Surat rekomendasi.', 'link_dokumen' => 'example.pdf']);
 
         // Attach ke pivot table beasiswa_syarat_dokumen dengan timestamps
         $beasiswa->syaratDokumen()->attach([

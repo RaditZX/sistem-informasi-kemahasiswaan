@@ -154,6 +154,17 @@
                         <div id="tag-counter-beasiswa" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
                     </div>
 
+                    <!-- Benefit Beasiswa -->
+                    <div class="relative">
+                        <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
+                        <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2"></div>
+                        <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
+                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                        oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
+                        <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                        <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
+                    </div>
+
                     <!-- Syarat Dokumen Beasiswa -->
                     <div class="relative">
                         <label for="syarat_dokumen" class="block text-sm font-medium text-gray-700">Syarat-Syarat Dokumen Beasiswa</label>
@@ -165,16 +176,6 @@
                         <div id="tag-counter-dokumen" class="mb-2 text-sm text-gray-600">Jumlah syarat dokumen yang dipilih: 0</div>
                     </div>
 
-                    <!-- Benefit Beasiswa -->
-                    <div class="relative">
-                        <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
-                        <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
-                        <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                        <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
-                    </div>
                     <br>
                     <p class="@error('poster') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
                         <div class="mb-4">
@@ -392,26 +393,6 @@
                         <div id="tag-counter-beasiswa" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
                     </div>
 
-                    <!-- Syarat Dokumen Beasiswa -->
-                    <div class="relative">
-                        <label for="syarat_dokumen" class="block text-sm font-medium text-gray-700">Syarat-Syarat Dokumen Beasiswa</label>
-                        <div id="selected-tags-dokumen" class="flex flex-wrap gap-2 mb-2">
-                            @foreach(old('syarat_dokumen', []) as $old_dokumen_tag)
-                            <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                                {{ $old_dokumen_tag }}
-                                <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('{{ $old_dokumen_tag }}', this, 'dokumen_tags');">×</span>
-                                <input type="hidden" name="syarat_beasiswa[]" value="{{ $old_dokumen_tag }}">
-                            </div>
-                            @endforeach
-                        </div>
-                        
-                        <input type="search" id="syarat_dokumen" name="input_syarat_dokumen" placeholder="Syarat-syarat Dokumen"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchDokumenTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addDokumenTag(this.value); this.nextElementSibling.classList.add('hidden');}">
-                        <div id="syarat-suggestions-dokumen" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                        <div id="tag-counter-dokumen" class="mb-2 text-sm text-gray-600">Jumlah syarat dokumen yang dipilih: 0</div>
-                    </div>
-
                     <!-- Benefit Beasiswa -->
                     <div class="relative">
                         <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
@@ -432,11 +413,65 @@
                         <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
                     </div>
 
+                    <div id="form-container">
+                        <div class="grid grid-cols-12 gap-4 items-center" id="form-row-1">
+                            <!-- Input Syarat Dokumen -->
+                            <div class="col-span-6 relative">
+                                <label for="dokumen-1" class="block text-sm font-medium text-gray-700 mb-1">Syarat Dokumen</label>
+                                <input
+                                    type="text"
+                                    id="dokumen-1"
+                                    name="nama_dokumen[]" 
+                                    placeholder="Masukkan dokumen"
+                                    class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    oninput="fetchDokumenTags(1)"
+                                    onkeydown="handleDokumenKeydown(event, 1)"
+                                />
+                                <div id="syarat-suggestions-dokumen-1" 
+                                     class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                            </div>
+                    
+                            <!-- Input Unggah Format Dokumen -->
+                            <div class="col-span-5">
+                                <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
+                                <input
+                                    type="file"
+                                    id="unggah-1"
+                                    class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                    name="dokumen_file[]"
+                                />
+                            </div>
+                    
+                            <div class="col-span-1 justify-center flex items-center mt-7">
+                                <div class="bg-red-400 hover:bg-red-600 rounded">
+                                    <button
+                                        type="button"
+                                        class="px-3 text-sm font-medium"
+                                        onclick="removeFormRow(1)"
+                                    >
+                                        X
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tombol Tambah Syarat Dokumen -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            id="add-button"
+                            class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                            <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
+                        </button>
+                    </div>
+                
+                    
                     <br>
                     <p class="@error('poster') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
                     <div class="mb-4">
                         <label for="poster_beasiswa" class="cursor-pointer block w-full px-3 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <i class="fa-duotone fa-solid fa-paperclip"></i>
                             <span id="file-name" class="ml-2 text-gray-600">Pilih file</span>
                             <input type="file" id="poster_beasiswa" name="poster[]" class="hidden" accept="image/*" multiple onchange="displayFileNamesAndPreview()">
                         </label>
@@ -607,10 +642,14 @@
         }
 
         // Similar functions for dokumen
-        function fetchDokumenTags() {
-            let query = $('#syarat_dokumen').val().trim();
+        function fetchDokumenTags(dokumenID) {
+            let query = $(`#dokumen-${dokumenID}`).val().trim();
             if (query === '') {
-                $('#syarat-suggestions-dokumen').addClass('hidden');
+                $(`#syarat-suggestions-dokumen-${dokumenID}`).addClass('hidden');
+                return;
+            }
+            if (dokumen_tags.includes(query)){
+                $(`#syarat-suggestions-dokumen-${dokumenID}`).addClass('hidden');
                 return;
             }
             $.ajax({
@@ -618,7 +657,7 @@
                 type: 'GET',
                 data: { query: query },
                 success: function(tags) {
-                    let suggestions = $('#syarat-suggestions-dokumen').empty().removeClass('hidden');
+                    let suggestions = $(`#syarat-suggestions-dokumen-${dokumenID}`).empty().removeClass('hidden');
                     if (!tags.length) {
                         suggestions.addClass('hidden');
                         return;
@@ -631,38 +670,42 @@
                         `);
                     });
                     $('.tag-suggestion-dokumen').on('click', function() {
-                        addDokumenTag($(this).text());
+                        addDokumenTag($(this).text().trim(), dokumenID);
                         suggestions.empty().addClass('hidden');
                     });
                 }
             });
         }
 
-        function addDokumenTag(tagText) {
+        function addDokumenTag(tagText, dokumenID) {
             tagText = tagText.trim();
-            console.log(tagText);
+            const dokumen_input_field = $(`#dokumen-${dokumenID}`);
+
             if (dokumen_tags.includes(tagText)) {
-                $('#syarat_dokumen').val('');
-                return;
-            }
-            if (tagText === ''){
+                // Tambahkan tanda pada input dan tampilkan alert
+                dokumen_input_field.addClass("border-red-500"); // Beri warna merah pada border
+                alert("Tag sudah ada!");
+                setTimeout(() => {
+                    dokumen_input_field.removeClass(existingTagClass); // Hapus tanda setelah beberapa waktu
+                }, 2000);
+                dokumen_input_field.val(''); // Kosongkan input
                 return;
             }
 
-            // Tambahkan tag ke array dan ke UI
+            if (tagText === '') {
+                alert("Field tag kosong!");
+                return;
+            }
+
+            // Tambahkan tag ke array dan set nilai input menjadi readonly
             dokumen_tags.push(tagText);
 
-            let tagContainer = $('#selected-tags-dokumen');
-            tagContainer.append(`
-                <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                    ${tagText}
-                    <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('${tagText.replace(/'/g, "\\'")}', this, 'dokumen_tags');">×</span>
-                    <input type="hidden" name="syarat_dokumen[]" value="${tagText}">
-                </div>
-            `);
-            updateDokumenCounter();
-            $('#syarat_dokumen').val('');
+            dokumen_input_field.val(tagText);
+            dokumen_input_field.prop('readonly', true);
+
+            console.log(`Tag "${tagText}" berhasil ditambahkan.`);
         }
+
 
         function updateDokumenCounter() {
             let count = dokumen_tags.length;
@@ -982,8 +1025,6 @@
 
         @foreach (old('syarat_dokumen', []) as $old_dokumen_tag )
             addDokumenTag(@json(@$old_dokumen_tag));
-            // dokumen_tags.push(@json($old_dokumen_tag));
-            // updateDokumenCounter();
         @endforeach
         @foreach (old('syarat_beasiswa', []) as $old_syarat_tag )
             addBeasiswaTag(@json(@$old_syarat_tag));
@@ -995,27 +1036,92 @@
             addJenjangTag(@json(@$old_jenjang_tag));
         @endforeach
 
-        @if ($errors->any())
-            selectedFiles = {!! json_encode($poster, JSON_HEX_TAG) !!};
-            if (selectedFiles){
-                renderPreviews(selectedFiles);
+        let formCounter = 1; // Hitung jumlah input
+    
+        // Fungsi untuk menambahkan input baru
+        document.getElementById("add-button").addEventListener("click", function () {
+            formCounter++;
+            const formContainer = document.getElementById("form-container");
+    
+            const newFormRow = createFormRow(formCounter);
+            formContainer.appendChild(newFormRow);
+        });
+    
+        // Membuat form row baru
+        function createFormRow(counter) {
+            const newFormRow = document.createElement("div");
+            newFormRow.className = "mt-3 grid grid-cols-12 gap-4 items-center";
+            newFormRow.id = `form-row-${counter}`;
+    
+            newFormRow.innerHTML = `
+                <div class="col-span-6 relative">
+                    <input
+                        type="text"
+                        id="dokumen-${counter}"
+                        name="nama_dokumen[]" 
+                        placeholder="Masukkan dokumen"
+                        class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        oninput="fetchDokumenTags(${counter})"
+                        onkeydown="handleDokumenKeydown(event, ${counter})"
+                    />
+                    <div id="syarat-suggestions-dokumen-${counter}" 
+                            class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                </div>
+                <div class="col-span-5">
+                    <label for="unggah-${counter}" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                    <input
+                        type="file"
+                        id="unggah-${counter}"
+                        class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                        name="dokumen_file[]" 
+                    />
+                </div>
+    
+                <div class="col-span-1 justify-center flex items-center">
+                    <div class="bg-red-400 hover:bg-red-600 rounded">
+                        <button
+                            type="button"
+                            class="px-3 text-sm font-medium"
+                            onclick="removeFormRow(${counter})"
+                        >
+                            X
+                        </button>
+                    </div>
+                </div>
+            `;
+            return newFormRow;
+        }
+    
+        // Fungsi untuk menghapus baris form
+        function removeFormRow(rowId) {
+            const tagText = document.getElementById(`dokumen-${rowId}`).value.trim();
+    
+            if (rowId === 1) {
+                document.getElementById(`dokumen-${rowId}`).value = '';
+                document.getElementById(`dokumen-${rowId}`).disabled = false;
+            } else {
+                const rowToRemove = document.getElementById(`form-row-${rowId}`);
+                if (rowToRemove) {
+                    rowToRemove.remove();
+                }
             }
-            @foreach (old('syarat_dokumen', []) as $old_dokumen_tag )
-                addDokumenTag(@json(@$old_dokumen_tag));
-            @endforeach
-            @foreach (old('syarat_beasiswa', []) as $old_syarat_tag )
-                addBeasiswaTag(@json(@$old_syarat_tag));
-            @endforeach
-            @foreach (old('benefit_beasiswa', []) as $old_benefit_tag )
-                addBenefitTag(@json(@$old_benefit_tag));
-            @endforeach
-            @foreach (old('jenjang_pendidikan', []) as $old_jenjang_tag )
-                addJenjangTag(@json(@$old_jenjang_tag));
-            @endforeach
-        @endif
+    
+            dokumen_tags = dokumen_tags.filter(tag => tag !== tagText);
+            document.getElementById(`dokumen-${rowId}`).disabled = false;
+    
+            formCounter--;
+        }
+    
+        // Fungsi untuk menangani keydown pada input dokumen
+        function handleDokumenKeydown(event, rowId) {
+            if (event.keyCode === 13) { // Enter key
+                event.preventDefault();
+                addDokumenTag(document.getElementById(`dokumen-${rowId}`).value.trim(), rowId);
+            }
+        }
         </script>
 
-@if (($beasiswa != null) && (!$errors->any()))
+@if ($beasiswa != null)
 <script>
     console.log("A");
     var beasiswa =  {!! json_encode($beasiswa, JSON_HEX_TAG) !!} 
