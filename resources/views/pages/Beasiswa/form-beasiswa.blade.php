@@ -166,14 +166,60 @@
                     </div>
 
                     <!-- Syarat Dokumen Beasiswa -->
-                    <div class="relative">
-                        <label for="syarat_dokumen" class="block text-sm font-medium text-gray-700">Syarat-Syarat Dokumen Beasiswa</label>
-                        <div id="selected-tags-dokumen" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="syarat_dokumen" name="input_syarat_dokumen" placeholder="Syarat-syarat Dokumen"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchDokumenTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addDokumenTag(this.value); this.nextElementSibling.classList.add('hidden');}">
-                        <div id="syarat-suggestions-dokumen" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                        <div id="tag-counter-dokumen" class="mb-2 text-sm text-gray-600">Jumlah syarat dokumen yang dipilih: 0</div>
+                    <div id="form-container">
+                        <div class="grid grid-cols-12 gap-4 items-center" id="form-row-1">
+                            <!-- Input Syarat Dokumen -->
+                            <div class="col-span-6 relative">
+                                <label for="dokumen-1" class="block text-sm font-medium text-gray-700 mb-1">Syarat Dokumen</label>
+                                <input
+                                    type="text"
+                                    id="dokumen-1"
+                                    name="nama_dokumen[]" 
+                                    placeholder="Masukkan dokumen"
+                                    class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    oninput="fetchDokumenTags(1)"
+                                    onkeydown="handleDokumenKeydown(event, 1)"
+                                />
+                                <div id="syarat-suggestions-dokumen-1" 
+                                     class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                            </div>
+                    
+                            <!-- Input Unggah Format Dokumen -->
+                            <div class="col-span-5">
+                                <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
+                                <input
+                                    type="file"
+                                    id="unggah-1"
+                                    class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                    name="dokumen_file[]"
+                                    onchange="addDokumenFile(this.files[0].name, 1)"
+                                />
+                                <span id="dokumen-name-1" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
+                            </div>
+                    
+                            <div class="col-span-1 justify-center flex items-center mt-7">
+                                <div class="bg-red-400 hover:bg-red-600 rounded">
+                                    <button
+                                        type="button"
+                                        class="px-3 text-sm font-medium"
+                                        onclick="removeFormRow(1)"
+                                    >
+                                        X
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tombol Tambah Syarat Dokumen -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            id="add-button"
+                            class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        >
+                            <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
+                        </button>
                     </div>
 
                     <br>
@@ -357,13 +403,6 @@
                     <div class="relative">
                         <label for="jenjang_pendidikan" class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
                         <div id="selected-tags-jenjang" class="flex flex-wrap gap-2 mb-2">
-                            @foreach(old('jenjang_pendidikan', []) as $old_jenjang_tag)
-                            <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                                {{ $old_jenjang_tag }}
-                                <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('{{ $old_jenjang_tag }}', this, 'jenjang_tags');">×</span>
-                                <input type="hidden" name="jenjang_pendidikan[]" value="{{ $old_jenjang_tag }}">
-                            </div>
-                            @endforeach
                         </div>
                         <input type="search" id="jenjang_pendidikan" name="input_jenjang_pendidikan" placeholder="Jenjang Pendidikan"
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
@@ -377,13 +416,6 @@
                     <div class="relative">
                         <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
                         <div id="selected-tags-beasiswa" class="flex flex-wrap gap-2 mb-2">
-                            @foreach(old('syarat_beasiswa', []) as $old_syarat_tag)
-                            <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                                {{ $old_syarat_tag }}
-                                <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('{{ $old_syarat_tag }}', this, 'syarat_tags');">×</span>
-                                <input type="hidden" name="syarat_beasiswa[]" value="{{ $old_syarat_tag }}">
-                            </div>
-                            @endforeach 
                         </div>
 
                         <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
@@ -397,13 +429,6 @@
                     <div class="relative">
                         <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
                         <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2">
-                            @foreach(old('benefit_beasiswa', []) as $old_benefit_tag)
-                            <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                                {{ $old_benefit_tag }}
-                                <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('{{ $old_benefit_tag }}', this, 'benefit_tags');">×</span>
-                                <input type="hidden" name="benefit_beasiswa[]" value="{{ $old_benefit_tag }}">
-                            </div>
-                            @endforeach
                         </div>
                         
                         <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
@@ -437,9 +462,11 @@
                                 <input
                                     type="file"
                                     id="unggah-1"
-                                    class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                    class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                     name="dokumen_file[]"
+                                    onchange="addDokumenFile(this.files[0].name, 1)"
                                 />
+                                <span id="dokumen-name-1" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
                             </div>
                     
                             <div class="col-span-1 justify-center flex items-center mt-7">
@@ -496,9 +523,13 @@
             </div>
         </div>
     </div>
-
-@endif
+    
+    @endif
     <script>
+        
+        let formCounter = 1; // Hitung jumlah input dokumen
+        let selectedDokumen = [];
+        var selectedFiles = []; // Menyimpan file yang dipilih
 
         if (typeof dokumen_tags === 'undefined') {
             var dokumen_tags = []; // Initialize dokumen_tags array if it is not already defined
@@ -664,13 +695,15 @@
                     }
                     tags.forEach(tag => {
                         suggestions.append(`
-                            <div class="tag-suggestion-dokumen px-4 py-2 text-gray-700 hover:bg-indigo-100 cursor-pointer">
+                            <div class="tag-suggestion-dokumen px-4 py-2 text-gray-700 hover:bg-indigo-100 cursor-pointer" data-link-dokumen="${tag.link_dokumen}">
                                 ${tag.dokumen}
                             </div>
                         `);
                     });
+
                     $('.tag-suggestion-dokumen').on('click', function() {
                         addDokumenTag($(this).text().trim(), dokumenID);
+                        addDokumenFile($(this).data('link-dokumen'), dokumenID); // kirimkan link_dokumen ke fungsi addDokumenFile
                         suggestions.empty().addClass('hidden');
                     });
                 }
@@ -688,7 +721,7 @@
                 setTimeout(() => {
                     dokumen_input_field.removeClass(existingTagClass); // Hapus tanda setelah beberapa waktu
                 }, 2000);
-                dokumen_input_field.val(''); // Kosongkan input
+                // dokumen_input_field.val(''); // Kosongkan input
                 return;
             }
 
@@ -711,6 +744,33 @@
             let count = dokumen_tags.length;
             document.getElementById("tag-counter-dokumen").textContent = "Jumlah syarat dokumen yang dipilih: " + count;
         }
+
+        function addDokumenFile(link, dokumenID) {
+            const dokumen_name_span = $(`#dokumen-name-${dokumenID}`); // Assuming you have unique ids for each span, like dokumen-name-1, dokumen-name-2
+
+            if (!(typeof link === 'string') && !(link instanceof File)){
+                console.error('Invalid input: Expected a string or a File object');
+            } else if (typeof link === 'string') {
+                // Extract the filename from the link
+                const filename = link.split('/').pop();
+    
+                // Modify the span text to indicate that the file has been added
+                dokumen_name_span.text(filename); // Update the span text to show the filename
+    
+                // Store the link as a data attribute on the span element
+                dokumen_name_span.attr('data-link', link); // Store the link in a data attribute (data-link)    
+            } else if (link instanceof File) {
+                // Case 2: link is a File (from input[type="file"])
+                const filename = link.name;  // Get the filename from the File object
+                dokumen_name_span.text(filename);  // Update the span text with the filename
+                dokumen_name_span.attr('data-link', URL.createObjectURL(link));  // Store a temporary URL for the file as a data attribute
+            } 
+
+            url = dokumen_name_span.attr('data-link');
+            selectedDokumen.push(url);
+            console.log(selectedDokumen);
+        }
+
 
         // Fetch tags for benefit
         function fetchBenefitTags() {
@@ -802,7 +862,6 @@
             }
         });
 
-        var selectedFiles = []; // Menyimpan file yang dipilih
 
         function displayFileNamesAndPreview() {
             const input = document.getElementById('poster_beasiswa');
@@ -1036,45 +1095,49 @@
             addJenjangTag(@json(@$old_jenjang_tag));
         @endforeach
 
-        let formCounter = 1; // Hitung jumlah input
+
     
         // Fungsi untuk menambahkan input baru
         document.getElementById("add-button").addEventListener("click", function () {
-            formCounter++;
-            const formContainer = document.getElementById("form-container");
-    
-            const newFormRow = createFormRow(formCounter);
-            formContainer.appendChild(newFormRow);
+            createFormRow();
         });
     
         // Membuat form row baru
-        function createFormRow(counter) {
+        function createFormRow() {
+            if (typeof formCounter === 'undefined') {let formCounter = 1;}
+            console.log("creating form");
+            formCounter++;
+            console.log(formCounter);
+
+            const formContainer = document.getElementById("form-container");
             const newFormRow = document.createElement("div");
             newFormRow.className = "mt-3 grid grid-cols-12 gap-4 items-center";
-            newFormRow.id = `form-row-${counter}`;
+            newFormRow.id = `form-row-${formCounter}`;
     
             newFormRow.innerHTML = `
                 <div class="col-span-6 relative">
                     <input
                         type="text"
-                        id="dokumen-${counter}"
+                        id="dokumen-${formCounter}"
                         name="nama_dokumen[]" 
                         placeholder="Masukkan dokumen"
                         class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        oninput="fetchDokumenTags(${counter})"
-                        onkeydown="handleDokumenKeydown(event, ${counter})"
+                        oninput="fetchDokumenTags(${formCounter})"
+                        onkeydown="handleDokumenKeydown(event, ${formCounter})"
                     />
-                    <div id="syarat-suggestions-dokumen-${counter}" 
+                    <div id="syarat-suggestions-dokumen-${formCounter}" 
                             class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
                 </div>
                 <div class="col-span-5">
-                    <label for="unggah-${counter}" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                    <label for="unggah-${formCounter}" class="block text-sm font-medium text-gray-700 mb-1"></label>
                     <input
                         type="file"
-                        id="unggah-${counter}"
-                        class="w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                        id="unggah-${formCounter}"
+                        class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
                         name="dokumen_file[]" 
+                        onchange="addDokumenFile(this.files[0].name, ${formCounter})"
                     />
+                    <span id="dokumen-name-${formCounter}" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
                 </div>
     
                 <div class="col-span-1 justify-center flex items-center">
@@ -1082,23 +1145,25 @@
                         <button
                             type="button"
                             class="px-3 text-sm font-medium"
-                            onclick="removeFormRow(${counter})"
+                            onclick="removeFormRow(${formCounter})"
                         >
                             X
                         </button>
                     </div>
                 </div>
             `;
-            return newFormRow;
+            formContainer.appendChild(newFormRow);
         }
     
         // Fungsi untuk menghapus baris form
         function removeFormRow(rowId) {
             const tagText = document.getElementById(`dokumen-${rowId}`).value.trim();
+            const link = document.getElementById(`dokumen-name-${rowId}`).getAttribute('data-link');
     
             if (rowId === 1) {
                 document.getElementById(`dokumen-${rowId}`).value = '';
-                document.getElementById(`dokumen-${rowId}`).disabled = false;
+                document.getElementById(`dokumen-${rowId}`).readOnly = false;
+                document.getElementById(`dokumen-name-${rowId}`).text('Belum ada file yang dipilih');
             } else {
                 const rowToRemove = document.getElementById(`form-row-${rowId}`);
                 if (rowToRemove) {
@@ -1107,27 +1172,39 @@
             }
     
             dokumen_tags = dokumen_tags.filter(tag => tag !== tagText);
-            document.getElementById(`dokumen-${rowId}`).disabled = false;
-    
+            selectedDokumen = selectedDokumen.filter(ulink => ulink !== link);
+
+            console.log(selectedDokumen);
             formCounter--;
         }
     
         // Fungsi untuk menangani keydown pada input dokumen
         function handleDokumenKeydown(event, rowId) {
+            const inputField = document.getElementById(`dokumen-${rowId}`);
+            if (inputField.readOnly) {
+                event.preventDefault(); // Block Enter if readonly
+                return;
+            }
+
             if (event.keyCode === 13) { // Enter key
                 event.preventDefault();
-                addDokumenTag(document.getElementById(`dokumen-${rowId}`).value.trim(), rowId);
+                const tagText = inputField.value.trim();
+                if (tagText) {
+                    addDokumenTag(tagText, rowId);
+                }
             }
         }
+
         </script>
 
 @if ($beasiswa != null)
 <script>
-    console.log("A");
+
     var beasiswa =  {!! json_encode($beasiswa, JSON_HEX_TAG) !!} 
     var syarat =  {!! json_encode($syarat, JSON_HEX_TAG) !!} 
     var jenjang =  {!! json_encode($jenjang, JSON_HEX_TAG) !!} 
     var dokumen =  {!! json_encode($dokumen, JSON_HEX_TAG) !!} 
+    var link_dokumen =  {!! json_encode($link_dokumen, JSON_HEX_TAG) !!} 
     var benefit =  {!! json_encode($benefit, JSON_HEX_TAG) !!} 
     var poster =  {!! json_encode($poster, JSON_HEX_TAG) !!} 
     
@@ -1138,7 +1215,15 @@
             renderPreviews(selectedFiles);  // Tampilkan pratinjau untuk file yang dipilih
         });
         syarat.forEach(item => addBeasiswaTag(item));
-        dokumen.forEach(item => addDokumenTag(item));
+        console.log(dokumen)
+        dokumen.forEach((item, index) => {
+            addDokumenTag(item, index + 1);
+            createFormRow();
+
+        });
+        link_dokumen.forEach((item, index) => {
+            addDokumenFile(item, index + 1);
+        });
         jenjang.forEach(item => addJenjangTag(item));
         benefit.forEach(item => addBenefitTag(item));
     }
@@ -1148,7 +1233,6 @@
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         createHiddenInput();
-        console.log(selectedFiles);
         form.submit();
     })
 
@@ -1170,6 +1254,30 @@
                 hiddenContainer.appendChild(hiddenInput);
             }
         });
+
+        selectedDokumen.forEach((file, index) => {
+            // Regex untuk validasi URL
+            const urlPattern = new RegExp(
+                '^(https?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', // fragment locator
+                'i'
+            );
+
+            if (urlPattern.test(file)) {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.name = 'link_dokumen[]';
+                hiddenInput.type = 'hidden';
+                hiddenInput.value = file;
+                hiddenContainer.appendChild(hiddenInput);
+            } else {
+                console.warn(`Invalid URL skipped: ${file}`);
+            }
+        });
+
         // dd(selectedFiles);
     }
 

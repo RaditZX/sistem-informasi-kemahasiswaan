@@ -27,8 +27,6 @@ class beasiswa extends Model
     {
         return $this->belongsToMany(BenefitBeasiswa::class, 'beasiswa_benefit');
     }
-
-    // Relasi satu ke banyak dengan SyaratDokumen
     public function syaratDokumen()
     {
         return $this->belongsToMany(SyaratDokumen::class,'beasiswa_syarat_dokumen');
