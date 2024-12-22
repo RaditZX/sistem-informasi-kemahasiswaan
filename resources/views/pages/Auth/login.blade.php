@@ -1,6 +1,9 @@
 @extends('layouts.main')
 @section('content')
 
+
+
+
 <main class="flex items-center justify-center h-screen bg-gray-100">
     <section class="relative flex flex-col lg:flex-row w-full max-w-4xl h-auto lg:h-[30rem] rounded-3xl overflow-hidden shadow-lg">
         <!-- First Column (App Name + Background Image + Overlay) -->
