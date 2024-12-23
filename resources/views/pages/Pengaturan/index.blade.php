@@ -43,7 +43,7 @@
                         <!-- Profile Picture -->
                         <div class="w-1/4 text-center">
                             <h2 class="text-xl font-semibold mb-4">Profile</h2>
-                            <img src="{{ asset('storage/' . $user_img) }}" alt="Avatar" class="rounded-full w-24 h-24 mx-auto">
+                            <img src="{{ $user_img }}" alt="Avatar" class="rounded-full w-24 h-24 mx-auto">
                             <h2 class="mt-4 text-lg font-bold">{{ $nama_depan . ' ' . $nama_belakang }}</h2>
                             <p class="text-gray-600">{{ $role_name }}</p>
                             <button data-modal-target="change-photo-modal" data-modal-toggle="change-photo-modal" class="mt-4 bg-[#6B705C] text-white px-4 py-2 rounded" type="button">
