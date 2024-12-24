@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\MaddingController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PenerimaBeasiswaController;
@@ -98,6 +99,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
     Route::get('/dokumen/{url}', [FileController::class, 'viewFile'])->name('viewfile');
+
+    Route::controller(MaddingController::class)->group(function () {
+        Route::get('/madding', [MaddingController::class, 'index'])->name('madding.index');
+    });
 });
 
 Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
@@ -114,6 +119,3 @@ Route::controller(PengajuanBeasiswaController::class)->group(function () {
 });
 
 Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');
-
-
-

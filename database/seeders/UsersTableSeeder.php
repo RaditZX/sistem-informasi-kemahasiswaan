@@ -220,17 +220,6 @@ class UsersTableSeeder extends Seeder
             ],
             [
 
-                'id'=>21,
-                'nama_depan' => 'Yani',
-                'nama_belakang' => 'Rahmawati',
-                'email' => 'yani.rahmawati.tif23@polban.ac.id',
-                'jenis_kelamin' => 'Wanita',
-                'foto' => 'example.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-
                 'id'=>100,
                 'nama_depan' => 'Dummy',
                 'nama_belakang' => 'Dummy',
