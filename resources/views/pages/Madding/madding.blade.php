@@ -16,7 +16,7 @@
                 <p>Tempat kamu mendapatkan info terbaru mengenai beasiswa :D</p>
             </div>
             <div>
-                <a href="#" type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <a href="{{ route('beasiswa.index') }}" type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Lihat Lebih Banyak
                 </a>
             </div>
@@ -34,7 +34,7 @@
                     </ul>
                 </div>
                 <div id="default-styled-tab-content">
-                    <div class="hidden p-4 rounded-lg bg-gray-100 rounded-xl grid grid-rows-[auto 1fr 1fr 1fr] grid-cols-4 gap-4" id="styled-newest" role="tabpanel" aria-labelledby="newest-tab">
+                    <div class="hidden p-4 rounded-lg bg-gray-100 rounded-xl grid grid-rows-[auto 1fr 1fr 1fr] grid-cols-4 gap-4 shadow-lg" id="styled-newest" role="tabpanel" aria-labelledby="newest-tab">
                         @php
                             $totalCards = 7;
                         @endphp
@@ -56,8 +56,8 @@
                                                 <div class="flex flex-col h-full md:flex-row items-stretch rounded-lg hover:bg-[#fffdf4]">
                                                     <!-- Image section -->
                                                     <img class="w-full md:w-1/2 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg" 
-                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
-                                                        alt="">
+                                                        src="{{ $beasiswa->link_poster }}" 
+                                                        alt="Poster Beasiswa">
                                                     
                                                     <!-- Content section -->
                                                     <div class="flex flex-col justify-between p-6 leading-normal">
@@ -79,11 +79,22 @@
                                                         <p class="mb-4 text-sm font-normal text-gray-900">
                                                             {{ $beasiswa->short_description }}
                                                         </p>
-                                                        <a 
-                                                            href="#" 
-                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
-                                                            Lihat Selengkapnya
-                                                        </a>
+                                                        <!-- Button -->
+                                                        @if($beasiswa->tipe_beasiswa === "kipk")
+                                                            <a 
+                                                                href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
+                                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                                Lihat Selengkapnya
+                                                            </a>
+                                                        @elseif($beasiswa->tipe_beasiswa === "eksternal")
+                                                            <a 
+                                                                href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
+                                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                                Lihat Selengkapnya
+                                                            </a>
+                                                        @else
+                                                            <p>nothing</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -92,12 +103,12 @@
                                         <div class="row-span-2 bg-yellow-700 flex flex-col rounded-2xl">
                                             <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4]">
                                                 <!-- Image Section -->
-                                                <a href="#" class="rounded-t-lg overflow-hidden">
+                                                <div class="rounded-t-lg overflow-hidden">
                                                     <img 
                                                         class="h-48 w-full object-cover" 
-                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
+                                                        src="{{ $beasiswa->link_poster }}" 
                                                         alt="Poster Beasiswa">
-                                                </a>
+                                                </div>
                         
                                                 <!-- Content Section -->
                                                 <div class="p-5 flex-1 flex flex-col justify-between">
@@ -130,11 +141,21 @@
                                                     </p>
                         
                                                     <!-- Button -->
-                                                    <a 
-                                                        href="#" 
-                                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
-                                                        Lihat Selengkapnya
-                                                    </a>
+                                                    @if($beasiswa->tipe_beasiswa === "kipk")
+                                                        <a 
+                                                            href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
+                                                    @elseif($beasiswa->tipe_beasiswa === "eksternal")
+                                                        <a 
+                                                            href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
+                                                    @else
+                                                        <p>nothing</p>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -148,7 +169,7 @@
                         @endif                    
                     </div>
                     
-                    <div class="hidden p-4 rounded-lg bg-gray-100 rounded-xl grid grid-rows-[auto 1fr 1fr 1fr] grid-cols-4 gap-4" id="styled-upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                    <div class="hidden p-4 rounded-lg bg-gray-100 rounded-xl grid grid-rows-[auto 1fr 1fr 1fr] grid-cols-4 gap-4 shadow-lg" id="styled-upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
                         @php
                             $totalCards = 7;
                         @endphp
@@ -170,8 +191,8 @@
                                                 <div class="flex flex-col h-full md:flex-row items-stretch rounded-lg hover:bg-[#fffdf4]">
                                                     <!-- Image section -->
                                                     <img class="w-full md:w-1/2 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg" 
-                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
-                                                        alt="">
+                                                        src="{{ $beasiswa->link_poster }}" 
+                                                        alt="Poster Beasiswa">
                                                     
                                                     <!-- Content section -->
                                                     <div class="flex flex-col justify-between p-6 leading-normal">
@@ -193,11 +214,22 @@
                                                         <p class="mb-4 text-sm font-normal text-gray-900">
                                                             {{ $beasiswa->short_description }}
                                                         </p>
+                                                        <!-- Button -->
+                                                        @if($beasiswa->tipe_beasiswa === "kipk")
                                                         <a 
-                                                            href="#" 
+                                                            href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
                                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
                                                             Lihat Selengkapnya
                                                         </a>
+                                                        @elseif($beasiswa->tipe_beasiswa === "eksternal")
+                                                        <a 
+                                                            href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
+                                                        @else
+                                                        <p>nothing</p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -206,12 +238,12 @@
                                         <div class="row-span-2 bg-yellow-700 flex flex-col rounded-2xl">
                                             <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4]">
                                                 <!-- Image Section -->
-                                                <a href="#" class="rounded-t-lg overflow-hidden">
+                                                <div href="#" class="rounded-t-lg overflow-hidden">
                                                     <img 
                                                         class="h-48 w-full object-cover" 
-                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
+                                                        src="{{ $beasiswa->link_poster }}" 
                                                         alt="Poster Beasiswa">
-                                                </a>
+                                                </div>
 
                                                 <!-- Content Section -->
                                                 <div class="p-5 flex-1 flex flex-col justify-between">
@@ -244,11 +276,21 @@
                                                     </p>
 
                                                     <!-- Button -->
-                                                    <a 
-                                                        href="#" 
-                                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
-                                                        Lihat Selengkapnya
-                                                    </a>
+                                                    @if($beasiswa->tipe_beasiswa === "kipk")
+                                                        <a 
+                                                            href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
+                                                    @elseif($beasiswa->tipe_beasiswa === "eksternal")
+                                                        <a 
+                                                            href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
+                                                    @else
+                                                        <p>nothing</p>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -268,15 +310,22 @@
     </div>
 
     <div class="madding-2 mt-[3em]">
-        <div class="madding-header pb-4">
-            <h1 class="text-2xl font-bold">Mereka Bisa, Kamu Juga Bisa!</h1>
-            <p>Beberapa mahasiswa yang berhasil mendapatkan beasiswa bulan ini :D</p>
+        <div class="madding-header pb-4 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold">Mereka Bisa, Kamu Juga Bisa!</h1>
+                <p>Beberapa mahasiswa yang berhasil mendapatkan beasiswa bulan ini :D</p>
+            </div>
+            <div>
+                <a href="{{ route('pengumuman-beasiswa.index') }}" type="button" class="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Pengumuman Lebih Lengkap
+                </a>
+            </div>
         </div>
         <div class="madding-content grid grid-cols-4 gap-4">
-            @foreach ($newestMahasiswaAccepted as $penerima)
-                <div class="w-full max-w-sm bg-white border-2 border-gray-900 rounded-lg shadow-xl">
+            @forelse ($newestMahasiswaAccepted as $penerima)
+                <div class="w-full max-w-sm bg-white border-2 border-gray-900 rounded-lg shadow-xl hover:bg-gray-100">
                     <div class="flex flex-col items-center p-10">
-                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg mb-5" src="https://s1.zerochan.net/Mudrock.600.3200855.jpg" alt="Bonnie image"/>
+                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg mb-5" src="{{ $penerima->foto }}" alt="Foto User"/>
                         <h5 class="mb-1 text-xl font-medium text-gray-900 text-center">{{ $penerima->nama_depan }} {{ $penerima->nama_belakang }}</h5>
                         <span class="text-sm text-gray-500">{{ $penerima->nama_prodi }} @ {{ $penerima->angkatan }}</span>
                         <div class="flex mt-2 md:mt-4 flex flex-col gap-1 justify-center items-center text-center">
@@ -285,7 +334,11 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="flex items-center justify-center h-full">
+                    <p class="text-xl text-gray-700">Ayo daftar beasiswa, Kalo diterima, Kamu bakal muncul disini!</p>
+                </div>
+            @endforelse
         </div>
         <div class="py-5">
             {{ $newestMahasiswaAccepted->links() }}
