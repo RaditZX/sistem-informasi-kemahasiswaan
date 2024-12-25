@@ -187,7 +187,7 @@
                         <!-- Buttons Section -->
                         <div class="flex flex-row justify-between gap-4 mt-6">
                             <button type="submit"
-                                class="w-1/2 bg-blue-500 p-3 text-white rounded-full shadow-md hover:bg-blue-600">Apply</button>
+                                class="w-1/2 bg-orange-500 p-3 text-white rounded-full shadow-md hover:bg-blue-600">Apply</button>
                             <button type="button" onclick="hidePopup()"
                                 class="w-1/2 bg-red-500 p-3 text-white rounded-full shadow-md hover:bg-red-600">Close</button>
                         </div>

@@ -24,12 +24,12 @@
             <nav class="">
                 <ul class="flex space-x-6">
                     <li>
-                        <a href="#profil" class="tab-link active text-lg font-semibold text-gray-700 hover:text-blue-600 py-2 px-4 transition duration-300 ease-in-out" data-target="profil">
+                        <a href="#profil" class="tab-link active text-lg font-semibold text-gray-700 hover:text-orange-600 py-2 px-4 transition duration-300 ease-in-out" data-target="profil">
                             Profil
                         </a>
                     </li>
                     <li>
-                        <a href="#notifikasi" class="tab-link text-lg font-semibold text-gray-700 hover:text-blue-600 py-2 px-4 transition duration-300 ease-in-out" data-target="notifikasi">
+                        <a href="#notifikasi" class="tab-link text-lg font-semibold text-gray-700 hover:text-orange-600 py-2 px-4 transition duration-300 ease-in-out" data-target="notifikasi">
                             Notifikasi
                         </a>
                     </li>
@@ -46,7 +46,7 @@
                             <img src="{{ $user_img }}" alt="Avatar" class="rounded-full w-24 h-24 mx-auto">
                             <h2 class="mt-4 text-lg font-bold">{{ $nama_depan . ' ' . $nama_belakang }}</h2>
                             <p class="text-gray-600">{{ $role_name }}</p>
-                            <button data-modal-target="change-photo-modal" data-modal-toggle="change-photo-modal" class="mt-4 bg-[#6B705C] text-white px-4 py-2 rounded" type="button">
+                            <button data-modal-target="change-photo-modal" data-modal-toggle="change-photo-modal" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded" type="button">
                                 Ganti Foto
                             </button>
                         </div>
@@ -70,7 +70,7 @@
                                         <input id="new_img" name="new_img" type="file" class="block w-full mt-2 text-sm">
                                     </div>
                                     <div class="mt-6">
-                                        <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded-lg">Update</button>
+                                        <button type="submit" class="w-full bg-orange-700 text-white py-2 rounded-lg">Update</button>
                                     </div>
                                 </form>
                             </div>
@@ -108,7 +108,7 @@
                                     <label class="block text-sm font-medium">Nomor Handphone</label>
                                     <input readonly type="text" class="w-full border-gray-300 rounded-md shadow-sm p-2" value="{{ $no_hp ?? 'Belum diisi' }}">
                                 </div>
-                                <button data-modal-target="edit-profile-modal" data-modal-toggle="edit-profile-modal" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">Edit Profil</button>
+                                <button data-modal-target="edit-profile-modal" data-modal-toggle="edit-profile-modal" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded">Edit Profil</button>
                             </form>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                                 @endif
 
                                 <div class="mt-6">
-                                    <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded-lg">Simpan Perubahan</button>
+                                    <button type="submit" class="w-full bg-orange-500 text-white py-2 rounded-lg">Simpan Perubahan</button>
                                 </div>
                             </form>
 
@@ -187,7 +187,7 @@
                         </ul>
                     </div>
                 @else
-                <p class="mt-5 text-gray-600 text-center text-lg font-semibold py-3 px-6 border border-blue-500 rounded-lg bg-blue-100">
+                <p class="mt-5 text-gray-600 text-center text-lg font-semibold py-3 px-6 border border-orange-500 rounded-lg bg-orange-100">
     Anda belum menerima beasiswa.
 </p>
                 @endif
@@ -207,13 +207,13 @@
 
                         <div class="space-y-6">
                             <div class="flex items-center">
-                                <input id="aktifkan" name="notification" type="radio" class="w-5 h-5 text-blue-600 border-gray-300" checked>
+                                <input id="aktifkan" name="notification" type="radio" class="w-5 h-5 text-orange-600 border-gray-300" checked>
                                 <label for="aktifkan" class="ml-3 text-md font-medium text-gray-900">Aktifkan Notifikasi</label>
                             </div>
                             <p class="ml-8 text-gray-500">Kirimkan saya notifikasi mengenai aktivitas update laporan beasiswa.</p>
 
                             <div class="flex items-center">
-                                <input id="nonaktifkan" name="notification" type="radio" class="w-5 h-5 text-blue-600 border-gray-300">
+                                <input id="nonaktifkan" name="notification" type="radio" class="w-5 h-5 text-orange-600 border-gray-300">
                                 <label for="nonaktifkan" class="ml-3 text-md font-medium text-gray-900">Nonaktifkan Notifikasi</label>
                             </div>
                             <p class="ml-8 text-gray-500">Jangan kirimkan notifikasi pop-up.</p>
