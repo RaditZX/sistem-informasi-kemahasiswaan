@@ -82,18 +82,22 @@
                                                         <!-- Button -->
                                                         @if($beasiswa->tipe_beasiswa === "kipk")
                                                             <a 
-                                                                href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
+                                                                href="{{ url('detail-beasiswa-kipk/'. $beasiswa->id) }}" 
                                                                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
                                                                 Lihat Selengkapnya
                                                             </a>
                                                         @elseif($beasiswa->tipe_beasiswa === "eksternal")
                                                             <a 
-                                                                href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
+                                                                href="{{ url('detail-beasiswa-eksternal/'. $beasiswa->id) }}" 
                                                                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
                                                                 Lihat Selengkapnya
                                                             </a>
                                                         @else
-                                                            <p>nothing</p>
+                                                            <a 
+                                                                href="{{ url('beasiswa/'. $beasiswa->id) }}" 
+                                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                                Lihat Selengkapnya
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -143,18 +147,22 @@
                                                     <!-- Button -->
                                                     @if($beasiswa->tipe_beasiswa === "kipk")
                                                         <a 
-                                                            href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
+                                                            href="{{ url('detail-beasiswa-kipk/'. $beasiswa->id) }}" 
                                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
                                                             Lihat Selengkapnya
                                                         </a>
                                                     @elseif($beasiswa->tipe_beasiswa === "eksternal")
                                                         <a 
-                                                            href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
+                                                            href="{{ url('detail-beasiswa-eksternal/'. $beasiswa->id) }}" 
                                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
                                                             Lihat Selengkapnya
                                                         </a>
                                                     @else
-                                                        <p>nothing</p>
+                                                        <a 
+                                                            href="{{ url('beasiswa/'. $beasiswa->id) }}" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
                                                     @endif
                                                 </div>
                                             </div>
@@ -216,19 +224,23 @@
                                                         </p>
                                                         <!-- Button -->
                                                         @if($beasiswa->tipe_beasiswa === "kipk")
-                                                        <a 
-                                                            href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
-                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
-                                                            Lihat Selengkapnya
-                                                        </a>
+                                                            <a 
+                                                                href="{{ url('detail-beasiswa-kipk/'. $beasiswa->id) }}" 
+                                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                                Lihat Selengkapnya
+                                                            </a>
                                                         @elseif($beasiswa->tipe_beasiswa === "eksternal")
-                                                        <a 
-                                                            href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
-                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
-                                                            Lihat Selengkapnya
-                                                        </a>
+                                                            <a 
+                                                                href="{{ url('detail-beasiswa-eksternal/'. $beasiswa->id) }}" 
+                                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                                Lihat Selengkapnya
+                                                            </a>
                                                         @else
-                                                        <p>nothing</p>
+                                                            <a 
+                                                                href="{{ url('beasiswa/'. $beasiswa->id) }}" 
+                                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                                Lihat Selengkapnya
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -278,18 +290,22 @@
                                                     <!-- Button -->
                                                     @if($beasiswa->tipe_beasiswa === "kipk")
                                                         <a 
-                                                            href="{{ route('beasiswa.detail-beasiswa-kipk', $beasiswa->id) }}" 
+                                                            href="{{ url('detail-beasiswa-kipk/'. $beasiswa->id) }}" 
                                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
                                                             Lihat Selengkapnya
                                                         </a>
                                                     @elseif($beasiswa->tipe_beasiswa === "eksternal")
                                                         <a 
-                                                            href="{{ route('beasiswa.detail-beasiswa-eksternal', $beasiswa->id) }}" 
+                                                            href="{{ url('detail-beasiswa-eksternal/'. $beasiswa->id) }}" 
                                                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
                                                             Lihat Selengkapnya
                                                         </a>
                                                     @else
-                                                        <p>nothing</p>
+                                                        <a 
+                                                            href="{{ url('beasiswa/'. $beasiswa->id) }}" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
                                                     @endif
                                                 </div>
                                             </div>
