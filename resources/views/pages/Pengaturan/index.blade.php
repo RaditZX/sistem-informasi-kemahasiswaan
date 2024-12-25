@@ -70,7 +70,7 @@
                                         <input id="new_img" name="new_img" type="file" class="block w-full mt-2 text-sm">
                                     </div>
                                     <div class="mt-6">
-                                        <button type="submit" class="w-full bg-orange-700 text-white py-2 rounded-lg">Update</button>
+                                        <button type="submit" class="w-full bg-orange-500 text-white py-2 rounded-lg">Update</button>
                                     </div>
                                 </form>
                             </div>
