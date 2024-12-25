@@ -17,6 +17,9 @@ class MaddingController extends Controller
      */
     public function index()
     {
+        // Get today's date
+        $today = Carbon::today();
+
         // Get newest beasiswa based on tanggal_mulai
         $newestBeasiswa = Beasiswa::leftJoin('jenjang_pendidikan', 'jenjang_pendidikan.beasiswa_id', '=', 'beasiswa.id')
                                     ->select(
@@ -31,6 +34,8 @@ class MaddingController extends Controller
                                         'beasiswa.tanggal_berakhir',
                                         DB::raw("COALESCE(array_agg(jenjang_pendidikan.jenjang) FILTER (WHERE jenjang_pendidikan.jenjang IS NOT NULL), ARRAY['All Jenjang Pendidikan']) AS jenjang_list")
                                     )
+                                    ->where('beasiswa.tanggal_mulai', '<=', $today)
+                                    ->where('beasiswa.tanggal_berakhir', '>=', $today)
                                     ->groupBy('beasiswa.id', 'beasiswa.nama_beasiswa', 'beasiswa.tanggal_mulai')
                                     ->orderBy('beasiswa.tanggal_mulai', 'desc')
                                     ->take(7)
@@ -55,9 +60,6 @@ class MaddingController extends Controller
         // Attach the cleaned-up array back to the beasiswa object
         $beasiswa->jenjang_list = $jenjangListArray;
         }
-
-        // Get today's date
-        $today = Carbon::today();
 
         // Get upcoming beasiswa where tanggal_mulai is greater than today
         $upcomingBeasiswa = Beasiswa::leftJoin('jenjang_pendidikan', 'jenjang_pendidikan.beasiswa_id', '=', 'beasiswa.id')

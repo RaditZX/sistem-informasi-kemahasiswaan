@@ -35,207 +35,231 @@
                 </div>
                 <div id="default-styled-tab-content">
                     <div class="hidden p-4 rounded-lg bg-gray-100 rounded-xl grid grid-rows-[auto 1fr 1fr 1fr] grid-cols-4 gap-4" id="styled-newest" role="tabpanel" aria-labelledby="newest-tab">
-                        @foreach ($newestBeasiswa as $index => $beasiswa)
-                            @if ($index === 0)
-                                <div class="row-span-2 col-span-2 flex flex-col rounded-2xl h-full">
-                                    <div class="flex-1 flex flex-col bg-white border-2 border-gray-600 rounded-lg shadow ">
-                                        <div class="flex flex-col h-full md:flex-row items-stretch rounded-lg hover:bg-[#fffdf4]">
-                                            <!-- Image section -->
-                                            <img class="w-full md:w-1/2 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg" 
-                                                src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
-                                                alt="">
-                                            
-                                            <!-- Content section -->
-                                            <div class="flex flex-col justify-between p-6 leading-normal">
-                                                <div class="mb-4">
-                                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $beasiswa->tipe_beasiswa }}</span>
-                                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $beasiswa->jenis_beasiswa }}</span>
+                        @php
+                            $totalCards = 7;
+                        @endphp
+                        
+                        @if ($newestBeasiswa->isEmpty())
+                            <div class="flex items-center justify-center h-full">
+                                <p class="text-lg text-gray-700">Oops! Sepertinya belum ada beasiswa terbaru nih, mungkin kamu bisa lihat ke <span class="font-semibold">beasiswa yang akan datang (upcoming)</span></p>
+                            </div>
+                        @else
+                            @for ($index = 0; $index < $totalCards; $index++)
+                                @if ($index < $newestBeasiswa->count())
+                                    @php
+                                        $beasiswa = $newestBeasiswa[$index];
+                                    @endphp
+                        
+                                    @if ($index === 0)
+                                        <div class="row-span-2 col-span-2 flex flex-col rounded-2xl h-full">
+                                            <div class="flex-1 flex flex-col bg-white border-2 border-gray-600 rounded-lg shadow">
+                                                <div class="flex flex-col h-full md:flex-row items-stretch rounded-lg hover:bg-[#fffdf4]">
+                                                    <!-- Image section -->
+                                                    <img class="w-full md:w-1/2 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg" 
+                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
+                                                        alt="">
+                                                    
+                                                    <!-- Content section -->
+                                                    <div class="flex flex-col justify-between p-6 leading-normal">
+                                                        <div class="mb-4">
+                                                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $beasiswa->tipe_beasiswa }}</span>
+                                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $beasiswa->jenis_beasiswa }}</span>
+                                                        </div>
+                                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                                                            {{ $beasiswa->nama_beasiswa }}
+                                                        </h5>
+                                                        <div class="">
+                                                            <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500">
+                                                                <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                                                                </svg>
+                                                                {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
+                                                            </span>
+                                                        </div>
+                                                        <p class="mb-4 text-sm font-normal text-gray-900">
+                                                            {{ $beasiswa->short_description }}
+                                                        </p>
+                                                        <a 
+                                                            href="#" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-                                                    {{ $beasiswa->nama_beasiswa }}
-                                                </h5>
-                                                <div class="">
-                                                    <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500 ">
-                                                        <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                                                        </svg>
-                                                        {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
-                                                    </span>
-                                                </div>
-                                                <p class="mb-4 text-sm font-normal text-gray-900">
-                                                    {{ $beasiswa->short_description }}
-                                                </p>
-                                                <a 
-                                                    href="#" 
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4"
-                                                >
-                                                    Lihat Selengkapnya
-                                                </a>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>                                                                                                             
-                            @else
-                            <div class="row-span-2 bg-yellow-700 flex flex-col rounded-2xl">
-                                <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4]">
-                                    
-                                    <!-- Image Section -->
-                                    <a href="#" class="rounded-t-lg overflow-hidden">
-                                        <img 
-                                            class="h-48 w-full object-cover" 
-                                            src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
-                                            alt="Poster Beasiswa"
-                                        />
-                                    </a>
-                            
-                                    <!-- Content Section -->
-                                    <div class="p-5 flex-1 flex flex-col justify-between">
-                                        
-                                        <!-- Badge Row -->
-                                        <div class="flex flex-wrap gap-2 mb-4">
-                                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                                                {{ $beasiswa->tipe_beasiswa }}
-                                            </span>
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                                                {{ $beasiswa->jenis_beasiswa }}
-                                            </span>
+                                    @else
+                                        <div class="row-span-2 bg-yellow-700 flex flex-col rounded-2xl">
+                                            <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4]">
+                                                <!-- Image Section -->
+                                                <a href="#" class="rounded-t-lg overflow-hidden">
+                                                    <img 
+                                                        class="h-48 w-full object-cover" 
+                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
+                                                        alt="Poster Beasiswa">
+                                                </a>
+                        
+                                                <!-- Content Section -->
+                                                <div class="p-5 flex-1 flex flex-col justify-between">
+                                                    <!-- Badge Row -->
+                                                    <div class="flex flex-wrap gap-2 mb-4">
+                                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                                                            {{ $beasiswa->tipe_beasiswa }}
+                                                        </span>
+                                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                                                            {{ $beasiswa->jenis_beasiswa }}
+                                                        </span>
+                                                    </div>
+                        
+                                                    <!-- Title -->
+                                                    <h5 class="text-2xl font-bold tracking-tight text-gray-900 h-16 flex">
+                                                        {{ $beasiswa->nama_beasiswa }}
+                                                    </h5>
+                                                    <div class="mt-4">
+                                                        <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500">
+                                                            <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                                                            </svg>
+                                                            {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
+                                                        </span>
+                                                    </div>
+                        
+                                                    <!-- Description -->
+                                                    <p class="flex-grow font-normal text-gray-900 mt-4">
+                                                        {{ $beasiswa->short_description }}
+                                                    </p>
+                        
+                                                    <!-- Button -->
+                                                    <a 
+                                                        href="#" 
+                                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                        Lihat Selengkapnya
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
-                            
-                                        <!-- Title -->
-                                        <h1 class="mb-4">
-                                            <h5 class="text-2xl font-bold tracking-tight text-gray-900 h-16 flex">
-                                                {{ $beasiswa->nama_beasiswa }}
-                                            </h5>
-                                        </h1>
-                                        
-                                        <div class="mt-4">
-                                            <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500 ">
-                                                <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                                                </svg>
-                                                {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
-                                            </span>
-                                        </div>
-                            
-                                        <!-- Description -->
-                                        <p class="flex-grow font-normal text-gray-900  mt-4">
-                                            {{ $beasiswa->short_description }}
-                                        </p>
-                            
-                                        <!-- Button -->
-                                        <a 
-                                            href="#" 
-                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4"
-                                        >
-                                            Lihat Selengkapnya
-                                        </a>
+                                    @endif
+                                @else
+                                    <div class="row-span-2 bg-gray-400 flex flex-col rounded-2xl justify-center items-center">
+                                        <p class="text-lg font-bold text-white">Coming Soon</p>
                                     </div>
-                                </div>
-                            </div>                            
-                            @endif
-                        @endforeach
+                                @endif
+                            @endfor
+                        @endif                    
                     </div>
                     
                     <div class="hidden p-4 rounded-lg bg-gray-100 rounded-xl grid grid-rows-[auto 1fr 1fr 1fr] grid-cols-4 gap-4" id="styled-upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
-                        @foreach ($upcomingBeasiswa as $index => $beasiswa)
-                            @if ($index === 0)
-                                <div class="row-span-2 col-span-2 flex flex-col rounded-2xl h-full">
-                                    <div class="flex-1 flex flex-col bg-white border-2 border-gray-600 rounded-lg shadow ">
-                                        <div class="flex flex-col h-full md:flex-row items-stretch rounded-lg hover:bg-[#fffdf4]">
-                                            <!-- Image section -->
-                                            <img class="w-full md:w-1/2 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg" 
-                                                src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
-                                                alt="">
-                                            
-                                            <!-- Content section -->
-                                            <div class="flex flex-col justify-between p-6 leading-normal">
-                                                <div class="mb-4">
-                                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $beasiswa->tipe_beasiswa }}</span>
-                                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $beasiswa->jenis_beasiswa }}</span>
+                        @php
+                            $totalCards = 7;
+                        @endphp
+
+                        @if ($upcomingBeasiswa->isEmpty())
+                            <div class="flex items-center justify-center h-full">
+                                <p class="text-lg text-gray-700">Sepertinya belum ada beasiswa yang akan datang, Mungkin tertarik dengan <span class="font-semibold">beasiswa terbaru?</span></p>
+                            </div>
+                        @else
+                            @for ($index = 0; $index < $totalCards; $index++)
+                                @if ($index < $upcomingBeasiswa->count())
+                                    @php
+                                        $beasiswa = $upcomingBeasiswa[$index];
+                                    @endphp
+
+                                    @if ($index === 0)
+                                        <div class="row-span-2 col-span-2 flex flex-col rounded-2xl h-full">
+                                            <div class="flex-1 flex flex-col bg-white border-2 border-gray-600 rounded-lg shadow">
+                                                <div class="flex flex-col h-full md:flex-row items-stretch rounded-lg hover:bg-[#fffdf4]">
+                                                    <!-- Image section -->
+                                                    <img class="w-full md:w-1/2 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg" 
+                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
+                                                        alt="">
+                                                    
+                                                    <!-- Content section -->
+                                                    <div class="flex flex-col justify-between p-6 leading-normal">
+                                                        <div class="mb-4">
+                                                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $beasiswa->tipe_beasiswa }}</span>
+                                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $beasiswa->jenis_beasiswa }}</span>
+                                                        </div>
+                                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+                                                            {{ $beasiswa->nama_beasiswa }}
+                                                        </h5>
+                                                        <div class="">
+                                                            <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500">
+                                                                <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                                                                </svg>
+                                                                {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
+                                                            </span>
+                                                        </div>
+                                                        <p class="mb-4 text-sm font-normal text-gray-900">
+                                                            {{ $beasiswa->short_description }}
+                                                        </p>
+                                                        <a 
+                                                            href="#" 
+                                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                            Lihat Selengkapnya
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
-                                                    {{ $beasiswa->nama_beasiswa }}
-                                                </h5>
-                                                <div class="">
-                                                    <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500 ">
-                                                        <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                                                        </svg>
-                                                        {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
-                                                    </span>
-                                                </div>
-                                                <p class="mb-4 text-sm font-normal text-gray-900">
-                                                    {{ $beasiswa->short_description }}
-                                                </p>
-                                                <a 
-                                                    href="#" 
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4"
-                                                >
-                                                    Lihat Selengkapnya
-                                                </a>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>                                                                                                             
-                            @else
-                            <div class="row-span-2 bg-yellow-700 flex flex-col rounded-2xl">
-                                <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4]">
-                                    
-                                    <!-- Image Section -->
-                                    <a href="#" class="rounded-t-lg overflow-hidden">
-                                        <img 
-                                            class="h-48 w-full object-cover" 
-                                            src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
-                                            alt="Poster Beasiswa"
-                                        />
-                                    </a>
-                            
-                                    <!-- Content Section -->
-                                    <div class="p-5 flex-1 flex flex-col justify-between">
-                                        
-                                        <!-- Badge Row -->
-                                        <div class="flex flex-wrap gap-2 mb-4">
-                                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                                                {{ $beasiswa->tipe_beasiswa }}
-                                            </span>
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
-                                                {{ $beasiswa->jenis_beasiswa }}
-                                            </span>
+                                    @else
+                                        <div class="row-span-2 bg-yellow-700 flex flex-col rounded-2xl">
+                                            <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4]">
+                                                <!-- Image Section -->
+                                                <a href="#" class="rounded-t-lg overflow-hidden">
+                                                    <img 
+                                                        class="h-48 w-full object-cover" 
+                                                        src="https://firebasestorage.googleapis.com/v0/b/sistem-informasi-kemahasiswaan.appspot.com/o/poster%2FPoster-Beasiswa-Prestasi-Kita-4.jpg?alt=media&token=e80d5dad-456e-4fc5-bf19-16cbf4365244" 
+                                                        alt="Poster Beasiswa">
+                                                </a>
+
+                                                <!-- Content Section -->
+                                                <div class="p-5 flex-1 flex flex-col justify-between">
+                                                    <!-- Badge Row -->
+                                                    <div class="flex flex-wrap gap-2 mb-4">
+                                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                                                            {{ $beasiswa->tipe_beasiswa }}
+                                                        </span>
+                                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                                                            {{ $beasiswa->jenis_beasiswa }}
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Title -->
+                                                    <h5 class="text-2xl font-bold tracking-tight text-gray-900 h-16 flex">
+                                                        {{ $beasiswa->nama_beasiswa }}
+                                                    </h5>
+                                                    <div class="mt-4">
+                                                        <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500">
+                                                            <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                                                            </svg>
+                                                            {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Description -->
+                                                    <p class="flex-grow font-normal text-gray-900 mt-4">
+                                                        {{ $beasiswa->short_description }}
+                                                    </p>
+
+                                                    <!-- Button -->
+                                                    <a 
+                                                        href="#" 
+                                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4">
+                                                        Lihat Selengkapnya
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
-                            
-                                        <!-- Title -->
-                                        <h1 class="mb-4">
-                                            <h5 class="text-2xl font-bold tracking-tight text-gray-900 h-16 flex">
-                                                {{ $beasiswa->nama_beasiswa }}
-                                            </h5>
-                                        </h1>
-                                        
-                                        <div class="mt-4">
-                                            <span class="bg-yellow-500 text-gray-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-yellow-500 ">
-                                                <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                                                </svg>
-                                                {{ $beasiswa->tanggal_mulai }} - {{ $beasiswa->tanggal_berakhir }}
-                                            </span>
-                                        </div>
-                            
-                                        <!-- Description -->
-                                        <p class="flex-grow font-normal text-gray-900  mt-4">
-                                            {{ $beasiswa->short_description }}
-                                        </p>
-                            
-                                        <!-- Button -->
-                                        <a 
-                                            href="#" 
-                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700 mt-4"
-                                        >
-                                            Lihat Selengkapnya
-                                        </a>
+                                    @endif
+                                @else
+                                    <div class="row-span-2 bg-gray-400 flex flex-col rounded-2xl justify-center items-center">
+                                        <p class="text-lg font-bold text-white">Coming Soon</p>
                                     </div>
-                                </div>
-                            </div>                            
-                            @endif
-                        @endforeach
+                                @endif
+                            @endfor
+                        @endif
                     </div>
                 </div>
             </div>
