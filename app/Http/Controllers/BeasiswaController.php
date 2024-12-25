@@ -212,6 +212,8 @@ class BeasiswaController extends Controller
                     $dokumenUrls[] = $uploadedFileUrl->getData()->url ?? null;
             }
         }
+
+        dd($validatedData['nama_dokumen'], $dokumenUrls);
         if (isset($validatedData['nama_dokumen'])) {
             foreach ($validatedData['nama_dokumen'] as $index => $dokumen) {
                 $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
@@ -533,6 +535,49 @@ class BeasiswaController extends Controller
 
         return response()->json($tags);
     }
+
+    public function getBeasiswaTemplate()
+    {
+        return beasiswa::select('id', 'nama_beasiswa', 'deskripsi')->get();
+    }
+
+    public function getBeasiswa($id)
+    {
+        // Ambil data dari database berdasarkan ID
+        $beasiswa = Beasiswa::with([
+            'syaratBeasiswa', 
+            'jenjangPendidikan', 
+            'benefitBeasiswa', 
+            'syaratDokumen', 
+            'posterBeasiswa'
+        ])->find($id); // Just use find($id) without 'id' and without get()
+        
+        // Cek apakah data beasiswa ditemukan
+        if (!$beasiswa) {
+            return response()->json(['message' => 'Beasiswa not found'], 404);
+        }
+
+        // Ambil data dari relasi dan pluck kolom yang dibutuhkan
+        $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
+        $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
+        $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
+        $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
+        $link_dokumen = $beasiswa->syaratDokumen->pluck('link_dokumen')->toArray();
+        $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
+
+        // dd($beasiswa, $syarat, $jenjang, $benefit, $dokumen, $link_dokumen, $poster);
+        // Return data dalam format JSON
+        return response()->json([
+            'beasiswa' => $beasiswa,
+            'syarat' => $syarat,
+            'jenjang' => $jenjang,
+            'benefit' => $benefit,
+            'dokumen' => $dokumen,
+            'link_dokumen' => $link_dokumen,
+            'poster' => $poster
+        ]);
+    }
+
 
     private $validation_messages = [
         'nama_beasiswa.required' => 'Nama beasiswa wajib diisi.',

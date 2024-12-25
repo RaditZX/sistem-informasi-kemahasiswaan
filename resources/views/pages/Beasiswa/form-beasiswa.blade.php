@@ -146,7 +146,7 @@
                     <!-- Syarat Beasiswa -->
                     <div class="relative">
                         <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
-                        <div id="selected-tags-beasiswa" class="flex flex-wrap gap-2 mb-2"></div>
+                        <div id="selected-tags-syarat" class="flex flex-wrap gap-2 mb-2"></div>
                         <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                         oninput="fetchBeasiswaTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBeasiswaTag(this.value); this.nextElementSibling.classList.add('hidden');}">
@@ -190,7 +190,7 @@
                                 <input
                                     type="file"
                                     id="unggah-1"
-                                    class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                    class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:bg-orange-400 hover:file:bg-blue-100"
                                     name="dokumen_file[]"
                                     onchange="addDokumenFile(this.files[0].name, 1)"
                                 />
@@ -256,17 +256,28 @@
     </div>
 
 @else
+<!-- Modal Trigger -->
+<script>
+    
+
+        
+
+</script>
+
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px4 py-6 sm:px-0">
             <div class="bg-white rounded-lg p-6">
-            <form action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
+                <div class="bg-blue-400 rounded shadow-lg cursor-pointer px-3 py-1 hover:bg-blue-500" onclick="showPopup()">
+                    <p>Gunakan Data Beasiswa yang sudah dibuat</p>
+                </div>
+                <form action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <!-- Nama Beasiswa -->
                         <div class="mb-4">
                             <label for="nama_beasiswa" class="block text-sm font-medium text-gray-700">Nama Beasiswa</label>
                             <input
-                                type="text"
+                            type="text"
                                 id="nama_beasiswa"
                                 name="nama_beasiswa"
                                 placeholder="Nama Beasiswa"
@@ -294,7 +305,7 @@
                     <div class="mb-4">
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Beasiswa</label>
                         <textarea id="deskripsi" name="deskripsi" rows="4"
-                                  class="mt-1 block w-full px-3 py-2 border @error('deskripsi') border-red-500 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('deskripsi') }}</textarea>
+                                  class="mt-1 block w-full px-3 py-2 border @error('deskripsi') border-red-500 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" autocomplete="on">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -365,7 +376,8 @@
                                 <input type="date" id="tanggal_mulai" name="tanggal_mulai"
                                     class="block w-full border @error('tanggal_mulai')
                      border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                                     value="{{old('tanggal_mulai')}}">
+                                     value="{{old('tanggal_mulai')}}"
+                                     autocomplete="on">
                             </div>
                             @error('tanggal_mulai')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -379,7 +391,8 @@
                                 <input type="date" id="tanggal_berakhir" name="tanggal_berakhir"
                                 class="block w-full border @error('tanggal_berakhir')
              border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                                value="{{old('tanggal_berakhir')}}">
+                                value="{{old('tanggal_berakhir')}}"
+                                autocomplete="on">
                             </div>
                             @error('tanggal_berakhir')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -415,7 +428,7 @@
                     <!-- Syarat Beasiswa -->
                     <div class="relative">
                         <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
-                        <div id="selected-tags-beasiswa" class="flex flex-wrap gap-2 mb-2">
+                        <div id="selected-tags-syarat" class="flex flex-wrap gap-2 mb-2">
                         </div>
 
                         <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
@@ -464,7 +477,7 @@
                                     id="unggah-1"
                                     class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                     name="dokumen_file[]"
-                                    onchange="addDokumenFile(this.files[0].name, 1)"
+                                    onchange="addDokumenFile(this.files[0], 1)"
                                 />
                                 <span id="dokumen-name-1" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
                             </div>
@@ -489,6 +502,7 @@
                             type="button"
                             id="add-button"
                             class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                            onclick="createFormRow()"
                         >
                             <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
                         </button>
@@ -523,6 +537,29 @@
             </div>
         </div>
     </div>
+
+    {{-- popup --}}
+  
+    <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
+            {{-- Tombol Close --}}
+            <div class="absolute top-4 right-4">
+                <button onclick="hidePopup()" aria-label="Close" class="text-gray-500 hover:text-gray-700">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+    
+            {{-- Header --}}
+            <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center">Pilih Template Beasiswa</h2>
+    
+            {{-- Daftar Template Beasiswa --}}
+            <ul id="template-list" class="space-y-4">
+                <li id="loading-indicator" class="text-center text-gray-600">Memuat template...</li>
+            </ul>
+        </div>
+    </div>            
     
     @endif
     <script>
@@ -593,15 +630,7 @@
 
             // Tambahkan tag ke array dan ke UI
             jenjang_tags.push(tagText);
-
-            let tagContainer = $('#selected-tags-jenjang');
-            tagContainer.append(`
-                <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                    ${tagText}
-                    <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('${tagText.replace(/'/g, "\\'")}', this, 'jenjang_tags');">×</span>
-                    <input type="hidden" name="jenjang_pendidikan[]" value="${tagText}">
-                </div>
-            `);
+            renderTags('jenjang');
             updateJenjangCounter();
             $('#jenjang_pendidikan').val('');
         }
@@ -655,15 +684,7 @@
             }
             // Tambahkan tag ke array dan ke UI
             syarat_tags.push(tagText);
-            
-            let tagContainer = $('#selected-tags-beasiswa');
-            tagContainer.append(`
-                <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                    ${tagText}
-                    <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('${tagText.replace(/'/g, "\\'")}', this, 'syarat_tags');">×</span>
-                    <input type="hidden" name="syarat_beasiswa[]" value="${tagText}">
-                </div>
-            `);
+            renderTags('syarat');
             updateBeasiswaCounter();
             $('#syarat_beasiswa').val('');
         }
@@ -674,7 +695,9 @@
 
         // Similar functions for dokumen
         function fetchDokumenTags(dokumenID) {
-            let query = $(`#dokumen-${dokumenID}`).val().trim();
+            element = $(`#dokumen-${dokumenID}`)
+            if (element.prop('readonly')) {return;}
+            query = element.val().trim();
             if (query === '') {
                 $(`#syarat-suggestions-dokumen-${dokumenID}`).addClass('hidden');
                 return;
@@ -688,14 +711,14 @@
                 type: 'GET',
                 data: { query: query },
                 success: function(tags) {
-                    let suggestions = $(`#syarat-suggestions-dokumen-${dokumenID}`).empty().removeClass('hidden');
+                    suggestions = $(`#syarat-suggestions-dokumen-${dokumenID}`).empty().removeClass('hidden');
                     if (!tags.length) {
                         suggestions.addClass('hidden');
                         return;
                     }
                     tags.forEach(tag => {
                         suggestions.append(`
-                            <div class="tag-suggestion-dokumen px-4 py-2 text-gray-700 hover:bg-indigo-100 cursor-pointer" data-link-dokumen="${tag.link_dokumen}">
+                            <div class="tag-suggestion-dokumen px-4 py-2 text-gray-700 hover:bg-indigo-100 cursor-pointer" data-name="${tag.dokumen}" data-link-dokumen="${tag.link_dokumen}">
                                 ${tag.dokumen}
                             </div>
                         `);
@@ -714,13 +737,12 @@
             tagText = tagText.trim();
             const dokumen_input_field = $(`#dokumen-${dokumenID}`);
 
-            if (dokumen_tags.includes(tagText)) {
+            if (dokumen_input_field.prop('readonly')) {
+                return;
+            } else if (dokumen_tags.includes(tagText)) {
                 // Tambahkan tanda pada input dan tampilkan alert
                 dokumen_input_field.addClass("border-red-500"); // Beri warna merah pada border
                 alert("Tag sudah ada!");
-                setTimeout(() => {
-                    dokumen_input_field.removeClass(existingTagClass); // Hapus tanda setelah beberapa waktu
-                }, 2000);
                 // dokumen_input_field.val(''); // Kosongkan input
                 return;
             }
@@ -758,12 +780,14 @@
                 dokumen_name_span.text(filename); // Update the span text to show the filename
     
                 // Store the link as a data attribute on the span element
-                dokumen_name_span.attr('data-link', link); // Store the link in a data attribute (data-link)    
+                dokumen_name_span.attr('data-link', link); // Store the link in a data attribute (data-link)  
+                console.log("url added");
             } else if (link instanceof File) {
                 // Case 2: link is a File (from input[type="file"])
                 const filename = link.name;  // Get the filename from the File object
                 dokumen_name_span.text(filename);  // Update the span text with the filename
                 dokumen_name_span.attr('data-link', URL.createObjectURL(link));  // Store a temporary URL for the file as a data attribute
+                console.log("file added");
             } 
 
             url = dokumen_name_span.attr('data-link');
@@ -816,21 +840,57 @@
             
             // Tambahkan tag ke array dan ke UI
             benefit_tags.push(tagText);
-
-            let tagContainer = $('#selected-tags-benefit');
-            tagContainer.append(`
-                <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
-                    ${tagText}
-                    <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('${tagText.replace(/'/g, "\\'")}', this, 'benefit_tags');">×</span>
-                    <input type="hidden" name="benefit_beasiswa[]" value="${tagText}">
-                </div>
-            `);
+            renderTags('benefit');
             updateBenefitCounter();
             $('#benefit_beasiswa').val('');
         } 
 
         function updateBenefitCounter() {
             document.getElementById("tag-counter-benefit").textContent = "Jumlah benefit beasiswa yang dipilih: " + benefit_tags.length;
+        }
+
+        function renderTags(tagCategory) {
+            // Get the tag container based on category
+            const tagContainer = $(`#selected-tags-${tagCategory}`);
+
+            // Clear the container to avoid duplicates
+            tagContainer.empty();
+
+            // Check if the category exists in the tagData
+            if (tagCategory === 'benefit') {
+                // Loop through the tags and render each
+                benefit_tags.forEach(tagText => {
+                    tagContainer.append(`
+                        <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
+                            ${tagText}
+                            <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('${tagText.replace(/'/g, "\\'")}', this, '${tagCategory}_tags');">×</span>
+                            <input type="hidden" name="${tagCategory}_beasiswa[]" value="${tagText}">
+                        </div>
+                    `);
+                });
+            } else if (tagCategory === 'syarat') {
+                syarat_tags.forEach(tagText => {
+                    tagContainer.append(`
+                        <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
+                            ${tagText}
+                            <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('${tagText.replace(/'/g, "\\'")}', this, '${tagCategory}_tags');">×</span>
+                            <input type="hidden" name="${tagCategory}_beasiswa[]" value="${tagText}">
+                        </div>
+                    `);
+                });
+            } else if (tagCategory === 'jenjang') {
+                jenjang_tags.forEach(tagText => {
+                    tagContainer.append(`
+                        <div class="flex items-center bg-indigo-100 text-indigo-700 rounded-md px-2 py-1 text-sm">
+                            ${tagText}
+                            <span class="ml-2 text-gray-500 hover:text-red-500 cursor-pointer" onclick="removeTag('${tagText.replace(/'/g, "\\'")}', this, '${tagCategory}_tags');">×</span>
+                            <input type="hidden" name="${tagCategory}_pendidikan[]" value="${tagText}">
+                        </div>
+                    `);
+                });
+            } else {
+                console.error(`Unknown tag category: ${tagCategory}`);
+            }
         }
 
         function removeTag(tagText, element, arrayName) {
@@ -1035,6 +1095,7 @@
                     imgContainer.appendChild(img);
                     imgContainer.appendChild(deleteButton);
                     previewContainer.appendChild(imgContainer);
+                    console.log("image rendered")
                 }
             });
         }
@@ -1098,9 +1159,9 @@
 
     
         // Fungsi untuk menambahkan input baru
-        document.getElementById("add-button").addEventListener("click", function () {
-            createFormRow();
-        });
+        // document.getElementById("add-button").addEventListener("click", function () {
+        //     createFormRow();
+        // });
     
         // Membuat form row baru
         function createFormRow() {
@@ -1135,7 +1196,7 @@
                         id="unggah-${formCounter}"
                         class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
                         name="dokumen_file[]" 
-                        onchange="addDokumenFile(this.files[0].name, ${formCounter})"
+                        onchange="addDokumenFile(this.files[0], ${formCounter})"
                     />
                     <span id="dokumen-name-${formCounter}" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
                 </div>
@@ -1163,7 +1224,7 @@
             if (rowId === 1) {
                 document.getElementById(`dokumen-${rowId}`).value = '';
                 document.getElementById(`dokumen-${rowId}`).readOnly = false;
-                document.getElementById(`dokumen-name-${rowId}`).text('Belum ada file yang dipilih');
+                document.getElementById(`dokumen-name-${rowId}`).textContent = 'Belum ada file yang dipilih';
             } else {
                 const rowToRemove = document.getElementById(`form-row-${rowId}`);
                 if (rowToRemove) {
@@ -1187,15 +1248,162 @@
             }
 
             if (event.keyCode === 13) { // Enter key
-                event.preventDefault();
+                event.preventDefault(); // Block Enter if readonly
                 const tagText = inputField.value.trim();
                 if (tagText) {
                     addDokumenTag(tagText, rowId);
+                    // Mendapatkan semua elemen dengan atribut data-name
+                    const elements = document.querySelectorAll('[data-name]');
+                    elements.forEach(element => {
+                        if(element.getAttribute('data-name') === tagText) {
+                            elementLink = element.getAttribute('data-link-dokumen');
+                            addDokumenFile(elementLink, rowId);
+                            element.classList.add('hidden');
+                        }
+                    })
                 }
+                // inputField.readOnly = true;
+                $(`#syarat-suggestions-dokumen-${rowId}`).empty().addClass('hidden');
             }
         }
+        function showPopup() {
+            document.getElementById('popup').classList.remove('hidden');
 
-        </script>
+            const templateList = document.getElementById('template-list');
+
+            // Bersihkan daftar template
+            templateList.innerHTML = '<li id="loading-indicator" class="text-center text-gray-600">Memuat template...</li>';
+
+            //Ambil data template dari server
+            fetch('/beasiswa/get-templates')
+                .then(response => response.json())
+                .then(data => {
+                    // Bersihkan indikator loading
+                    templateList.innerHTML = '';
+
+                    // Tambahkan data template ke dalam daftar
+                    data.forEach(template => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'p-4 bg-gray-100 rounded-lg flex justify-between items-center';
+                        listItem.innerHTML = `
+                            <div>
+                                <p class="text-lg font-medium text-gray-800">${template.nama_beasiswa}</p>
+                                <p class="text-sm text-gray-600">${template.deskripsi}</p>
+                            </div>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                                    onclick="selectTemplate('${template.id}')">
+                                Pilih
+                            </button>
+                        `;
+                        templateList.appendChild(listItem);
+                    });
+                })
+                .catch(error => {
+                    templateList.innerHTML = '<li class="text-center text-red-600">Gagal memuat template.</li>';
+                    console.error('Error fetching templates:', error);
+                });
+        }
+
+        function hidePopup() {
+            document.getElementById('popup').classList.add('hidden');
+        }
+
+        function cleanInputFields() {
+            // Membersihkan input
+            document.getElementById('nama_beasiswa').value = "";
+            document.getElementById('sumber_beasiswa').value = "";
+            document.getElementById('deskripsi').value = "";
+
+            // Set dates
+            document.getElementById('tanggal_mulai').value = "";
+            document.getElementById('tanggal_berakhir').value = "";
+            document.getElementById('kuota_beasiswa').value = "";
+
+            // Process arrays (poster, syarat, dokumen, etc.)
+            selectedFiles = [];
+            renderPreviews();  
+
+            jenjang_tags = [];
+            renderTags('jenjang');
+            syarat_tags = [];
+            renderTags('syarat');
+            benefit_tags = [];
+            renderTags('benefit');
+
+            // Assuming addBeasiswaTag, addDokumenTag, etc., are functions to process each array
+
+            console.log("Deleting dokumen..");
+            console.log(dokumen_tags);
+            dokumen_tags.forEach((item, index) => {
+                console.log(item, index+1);
+                removeFormRow(index+1);  // Assuming this function handles creating new rows for documents
+            });
+            formCounter = 1;
+        }
+
+        function selectTemplate(templateID) {
+            cleanInputFields();
+            fetch(`get-beasiswa/${templateID}`)
+                .then(response => response.json())
+                .then(data => {
+                    const template = data.beasiswa;  // The main beasiswa data
+                    
+                    // Populate form fields
+                    document.getElementById('nama_beasiswa').value = template.nama_beasiswa;
+                    document.getElementById('sumber_beasiswa').value = template.sumber;
+                    document.getElementById('deskripsi').value = template.deskripsi;
+
+                    // Set radio buttons for jenis_beasiswa
+                    document.getElementsByName('jenis_beasiswa').forEach(radio => {
+                        if (radio.value === template.jenis_beasiswa) {
+                            radio.checked = true;
+                        }
+                    });
+
+                    // Set radio buttons for tipe_beasiswa
+                    document.getElementsByName('tipe_beasiswa').forEach(radio => {
+                        if (radio.value === template.tipe_beasiswa) {
+                            radio.checked = true;
+                        }
+                    });
+
+                    // Set dates
+                    document.getElementById('tanggal_mulai').value = template.tanggal_mulai;
+                    document.getElementById('tanggal_berakhir').value = template.tanggal_berakhir;
+                    document.getElementById('kuota_beasiswa').value = template.kuota;
+
+                    // Process arrays (poster, syarat, dokumen, etc.)
+                    data.poster.forEach(poster => {
+                        selectedFiles.push(poster);
+                        console.log(selectedFiles);
+                        renderPreviews(selectedFiles);  // Assuming renderPreviews handles displaying the file
+                    });
+
+                    // Assuming addBeasiswaTag, addDokumenTag, etc., are functions to process each array
+                    data.syarat.forEach(item => addBeasiswaTag(item));
+                    console.log("Inserting dokumen");
+                    console.log(data.dokumen);
+                    data.dokumen.forEach((item, index) => {
+                        console.log(item, index + 1);
+                        addDokumenTag(item, index + 1);
+                        if (index !== data.dokumen.length - 1) {
+                            createFormRow();
+                        }
+                    });
+                    data.link_dokumen.forEach((item, index) => {
+                        addDokumenFile(item, index + 1);  // Assuming this handles document file rendering
+                    });
+                    data.jenjang.forEach(item => addJenjangTag(item));
+                    data.benefit.forEach(item => addBenefitTag(item));
+
+                    // Hide the popup (assuming hidePopup is defined elsewhere)
+                    hidePopup();
+                })
+                .catch(error => {
+                    console.error('Error fetching template:', error);
+                });
+        }
+    </script>
 
 @if ($beasiswa != null)
 <script>
@@ -1284,3 +1492,4 @@
 
 </script>
 @endif
+
