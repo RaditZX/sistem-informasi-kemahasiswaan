@@ -192,9 +192,9 @@
                                     id="unggah-1"
                                     class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:bg-orange-400 hover:file:bg-blue-100"
                                     name="dokumen_file[]"
-                                    onchange="addDokumenFile(this.files[0].name, 1)"
+                                    onchange="addDokumenFile(this.files[0], 1)"
                                 />
-                                <span id="dokumen-name-1" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
+                                <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
                             </div>
                     
                             <div class="col-span-1 justify-center flex items-center mt-7">
@@ -217,7 +217,8 @@
                             type="button"
                             id="add-button"
                             class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
-                        >
+                            onclick="createFormRow()"
+                            >
                             <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
                         </button>
                     </div>
@@ -256,21 +257,16 @@
     </div>
 
 @else
-<!-- Modal Trigger -->
-<script>
-    
-
-        
-
-</script>
-
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px4 py-6 sm:px-0">
             <div class="bg-white rounded-lg p-6">
-                <div class="bg-blue-400 rounded shadow-lg cursor-pointer px-3 py-1 hover:bg-blue-500" onclick="showPopup()">
-                    <p>Gunakan Data Beasiswa yang sudah dibuat</p>
+                <p>Gunakan Data Beasiswa yang sudah dibuat?</p>
+                <div class="bg-[#FF8E07] rounded cursor-pointer p-1 mb-2 hover:cursor-pointer flex items-center" onclick="showPopup()">
+                    <span class="text-xl mx-2">+</span> Template Data Beasiswa
                 </div>
-                <form action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
+                
+
+                <form id="beasiswa-form" action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <!-- Nama Beasiswa -->
@@ -479,7 +475,7 @@
                                     name="dokumen_file[]"
                                     onchange="addDokumenFile(this.files[0], 1)"
                                 />
-                                <span id="dokumen-name-1" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
+                                <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
                             </div>
                     
                             <div class="col-span-1 justify-center flex items-center mt-7">
@@ -530,6 +526,7 @@
                             <button id="close-modal" class="absolute top-2 right-2 bg-white text-black rounded-full p-1" onclick="event.preventDefault()">X</button>
                         </div>
                     </div>
+                    <div id="hidden-input-container"></div>
                     <div>
                         <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                     </div>
@@ -558,6 +555,8 @@
             <ul id="template-list" class="space-y-4">
                 <li id="loading-indicator" class="text-center text-gray-600">Memuat template...</li>
             </ul>
+
+            <div id="pagination-controls" class="py-3 hidden"></div>
         </div>
     </div>            
     
@@ -937,14 +936,14 @@
                 }
                 // Pastikan file belum ada di array
                 if (!selectedFiles.some(item => item.name === file.name && item.lastModified === file.lastModified)) {
-                    selectedFiles.push(file);
+                    selectedFiles.push(URL.createObjectURL(file));
                 }
             }
 
             // Simpan file yang dipilih ke sessionStorage
             // selectedFiles = Array.from(input.files);
             console.log(selectedFiles);
-            saveFilesToStorage(selectedFiles);
+            // saveFilesToStorage(selectedFiles);
             
             renderPreviews(selectedFiles);  // Tampilkan pratinjau untuk file yang dipilih
         }
@@ -1198,7 +1197,7 @@
                         name="dokumen_file[]" 
                         onchange="addDokumenFile(this.files[0], ${formCounter})"
                     />
-                    <span id="dokumen-name-${formCounter}" class="w-2/3 text-gray-500">Belum ada file yang dipilih</span>
+                    <span id="dokumen-name-${formCounter}" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
                 </div>
     
                 <div class="col-span-1 justify-center flex items-center">
@@ -1266,23 +1265,41 @@
                 $(`#syarat-suggestions-dokumen-${rowId}`).empty().addClass('hidden');
             }
         }
+
+        let currentPage = 1; // Menyimpan halaman saat ini
+        let last_page = 1;
+
         function showPopup() {
             document.getElementById('popup').classList.remove('hidden');
+            loadTemplates(currentPage);
+        }
 
+        function loadTemplates(page) {
             const templateList = document.getElementById('template-list');
-
-            // Bersihkan daftar template
+            const paginationControls = document.getElementById('pagination-controls');
+            
+            // Menampilkan indikator loading
             templateList.innerHTML = '<li id="loading-indicator" class="text-center text-gray-600">Memuat template...</li>';
 
-            //Ambil data template dari server
-            fetch('/beasiswa/get-templates')
+            // Ambil data template dengan paginasi menggunakan fetch
+            fetch(`/beasiswa/get-templates?page=${page}`, {
+                headers: {
+                    'Accept': 'application/json', // Memastikan respons berupa JSON
+                }})
                 .then(response => response.json())
                 .then(data => {
+                    last_page = data.last_page;
+                    console.log('Response Data:', data); // Debugging keseluruhan respons
+                    if (!data.data || !Array.isArray(data.data)) {
+                        console.log('Data content:', data.data); // Debugging hanya bagian data
+                        throw new Error('Invalid data format: data.data is not an array');
+                    }
+                    
                     // Bersihkan indikator loading
                     templateList.innerHTML = '';
-
-                    // Tambahkan data template ke dalam daftar
-                    data.forEach(template => {
+                    
+                    // Menampilkan data template
+                    data.data.forEach(template => {
                         const listItem = document.createElement('li');
                         listItem.className = 'p-4 bg-gray-100 rounded-lg flex justify-between items-center';
                         listItem.innerHTML = `
@@ -1297,6 +1314,14 @@
                         `;
                         templateList.appendChild(listItem);
                     });
+
+                    // Menampilkan tombol navigasi halaman
+                    paginationControls.classList.remove('hidden');
+                    paginationControls.innerHTML = `
+                        <button onclick="changePage(${data.current_page - 1})" ${data.current_page === 1 ? 'disabled' : ''} class="px-4 py-2 bg-gray-300 rounded-md"><</button>
+                        <span class="px-4 py-2">${data.current_page} of ${data.last_page}</span>
+                        <button onclick="changePage(${data.current_page + 1})" ${data.current_page === data.last_page ? 'disabled' : ''} class="px-4 py-2 bg-gray-300 rounded-md">></button>
+                    `;
                 })
                 .catch(error => {
                     templateList.innerHTML = '<li class="text-center text-red-600">Gagal memuat template.</li>';
@@ -1304,9 +1329,18 @@
                 });
         }
 
+        function changePage(page) {
+            if (page < 1 || page > last_page) return; // Cek apakah halaman valid, jangan lupa sesuaikan batas dengan last_page
+            currentPage = page;
+            const paginationControls = document.getElementById('pagination-controls');
+            paginationControls.classList.add('hidden');
+            loadTemplates(currentPage);
+        }
+
         function hidePopup() {
             document.getElementById('popup').classList.add('hidden');
         }
+
 
         function cleanInputFields() {
             // Membersihkan input
@@ -1375,7 +1409,7 @@
                     // Process arrays (poster, syarat, dokumen, etc.)
                     data.poster.forEach(poster => {
                         selectedFiles.push(poster);
-                        console.log(selectedFiles);
+                        console.log("existing poster ", selectedFiles);
                         renderPreviews(selectedFiles);  // Assuming renderPreviews handles displaying the file
                     });
 
@@ -1403,6 +1437,57 @@
                     console.error('Error fetching template:', error);
                 });
         }
+
+        const form = document.getElementById('beasiswa-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            createHiddenInput();
+            form.submit();
+        })
+
+        function createHiddenInput() {
+            const hiddenContainer = document.getElementById('hidden-input-container');
+
+            // Kosongkan input tersembunyi sebelumnya
+            hiddenContainer.innerHTML = '';
+
+            // Tambahkan selectedFiles ke input tersembunyi
+            selectedFiles.forEach((file, index) => {
+                if (typeof file === "string") {
+                    // Jika file adalah URL, tambahkan URL
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.name = 'poster[]';
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.value = file;
+                    hiddenContainer.appendChild(hiddenInput);
+                }
+            });
+
+            selectedDokumen.forEach((file, index) => {
+                // Regex untuk validasi URL
+                const urlPattern = new RegExp(
+                    '^(https?:\\/\\/)?' + // protocol
+                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                    '(\\#[-a-z\\d_]*)?$', // fragment locator
+                    'i'
+                );
+
+                if (urlPattern.test(file)) {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.name = 'link_dokumen[]';
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.value = file;
+                    hiddenContainer.appendChild(hiddenInput);
+                } else {
+                    console.warn(`Invalid URL skipped: ${file}`);
+                }
+            });
+
+            // dd(selectedFiles);
+        }
     </script>
 
 @if ($beasiswa != null)
@@ -1426,8 +1511,9 @@
         console.log(dokumen)
         dokumen.forEach((item, index) => {
             addDokumenTag(item, index + 1);
-            createFormRow();
-
+            if (index !== dokumen.length - 1) {
+                createFormRow();
+            }
         });
         link_dokumen.forEach((item, index) => {
             addDokumenFile(item, index + 1);
@@ -1435,61 +1521,6 @@
         jenjang.forEach(item => addJenjangTag(item));
         benefit.forEach(item => addBenefitTag(item));
     }
-
-
-    const form = document.getElementById('beasiswa-form');
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        createHiddenInput();
-        form.submit();
-    })
-
-
-    function createHiddenInput() {
-        const hiddenContainer = document.getElementById('hidden-input-container');
-
-        // Kosongkan input tersembunyi sebelumnya
-        hiddenContainer.innerHTML = '';
-
-        // Tambahkan selectedFiles ke input tersembunyi
-        selectedFiles.forEach((file, index) => {
-            if (typeof file === "string") {
-                // Jika file adalah URL, tambahkan URL
-                const hiddenInput = document.createElement('input');
-                hiddenInput.name = 'poster[]';
-                hiddenInput.type = 'hidden';
-                hiddenInput.value = file;
-                hiddenContainer.appendChild(hiddenInput);
-            }
-        });
-
-        selectedDokumen.forEach((file, index) => {
-            // Regex untuk validasi URL
-            const urlPattern = new RegExp(
-                '^(https?:\\/\\/)?' + // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-                '(\\#[-a-z\\d_]*)?$', // fragment locator
-                'i'
-            );
-
-            if (urlPattern.test(file)) {
-                const hiddenInput = document.createElement('input');
-                hiddenInput.name = 'link_dokumen[]';
-                hiddenInput.type = 'hidden';
-                hiddenInput.value = file;
-                hiddenContainer.appendChild(hiddenInput);
-            } else {
-                console.warn(`Invalid URL skipped: ${file}`);
-            }
-        });
-
-        // dd(selectedFiles);
-    }
-
-
 </script>
 @endif
 
