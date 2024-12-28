@@ -58,11 +58,13 @@ class PengajuanBeasiswaController extends Controller
                 ->join('users', 'mahasiswa.user_id', '=', 'users.id')
                 ->join('kode_status', 'kode_status.id', '=', 'pengajuan_beasiswa.status')
                 ->select(
-                    'beasiswa.*',
+                    'beasiswa.nama_beasiswa',
+                    'beasiswa.sumber',
                     'users.nama_depan',
                     'pengajuan_beasiswa.status',
                     'pengajuan_beasiswa.tanggal_pengajuan',
-                    'kode_status.isi_status'
+                    'kode_status.isi_status',
+                    'pengajuan_beasiswa.id as id_pengajuan'
                 )
                 ->where('mahasiswa.nim', '=', $mhs->nim)
                 ->get();
@@ -77,10 +79,12 @@ class PengajuanBeasiswaController extends Controller
                     ->join('jurusan', 'jurusan.id', '=', 'prodi.jurusan_id')
                     ->join('users', 'mahasiswa.user_id', '=', 'users.id')
                     ->select(
-                        'beasiswa.*',
+                        'beasiswa.nama_beasiswa',
+                        'beasiswa.sumber',
                         'users.nama_depan',
                         'pengajuan_beasiswa.status',
-                        'pengajuan_beasiswa.tanggal_pengajuan'
+                        'pengajuan_beasiswa.tanggal_pengajuan',
+                        'pengajuan_beasiswa.id as id_pengajuan'
                     )
                     ->where('jurusan.kajur_id', $user->id)
                     ->whereIn('pengajuan_beasiswa.status', [4, 5])
@@ -128,8 +132,6 @@ class PengajuanBeasiswaController extends Controller
         JOIN syarat_dokumen
         ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
         WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$id]);
-
-
 
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
@@ -198,7 +200,7 @@ class PengajuanBeasiswaController extends Controller
 
                 // Upload the file
                 $fileController = new FileController();
-                $fileUrl = $fileController->uploadFile($newRequest);
+                $fileUrl = $fileController->uploadFileLocal($newRequest);
                 // Get the last ID for `dokumen`
                 $lastId = DB::table('dokumen')->max('id');
 
@@ -326,7 +328,7 @@ class PengajuanBeasiswaController extends Controller
                     $newRequest->merge(['path' => 'dokumen']);
 
                     // Upload the new file
-                    $fileUrl = $fileController->uploadFile($newRequest);
+                    $fileUrl = $fileController->uploadFileLocal($newRequest);
 
                     // Update the document record
                     $dokumen->nama_dokumen = $file->getClientOriginalName();
@@ -347,23 +349,6 @@ class PengajuanBeasiswaController extends Controller
 
     }
 
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PengajuanBeasiswa $pengajuanBeasiswa)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PengajuanBeasiswa $pengajuanBeasiswa)
-    {
-        //
-    }
 
     public function showTracking(string $id)
     {
@@ -445,8 +430,8 @@ class PengajuanBeasiswaController extends Controller
                 $existingNotification = DB::table('notifikasi')
                     ->where('id_pengajuan_beasiswa', $dataPengajuan->id)
                     ->where('user_id', $user_id)
-                    ->where('status', 12) // Status for "Sent"
-                    ->exists(); // Use `exists()` for a faster query if you don't need the full record.
+                    ->where('status', 12)
+                    ->exists();
 
                 if (!$existingNotification) {
                     $data = [

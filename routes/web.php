@@ -63,11 +63,6 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
 
 });
 
-
-
-// ========================================================================================
-// BEASISWA ROUTES ========================================================================
-
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::get('/tracking-pengajuan/{id}', [PengajuanBeasiswaController::class, 'showTracking'])->name('pengajuan.tracking');
@@ -102,8 +97,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dokumen/{url}', [FileController::class, 'viewFile'])->name('viewfile');
 });
 
-// ========================================================================================
-// PENGATURAN ROUTES ======================================================================
 
 
 

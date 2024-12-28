@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\NotificationController;
 use App\Models\beasiswa;
 use App\Models\PenerimaBeasiswa;
+use App\Models\Reviewer;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -153,10 +154,11 @@ class PenerimaBeasiswaController extends Controller
             ->get();
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
-
-
+        $user = Auth::user();
+        $reviewer = Reviewer::where('user_id', $user->id)->first();
         $beasiswa = Beasiswa::findOrFail($id);
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'notificationData', 'beasiswa'));
+
+        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'notificationData', 'beasiswa','reviewer'));
     }
 
     /**

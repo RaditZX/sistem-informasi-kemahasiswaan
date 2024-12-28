@@ -149,10 +149,7 @@
                         </button>
                         <div class="accordion-content hidden p-4 bg-gray-50 transition-all duration-200 max-h-0 overflow-hidden">
                             <p class="text-sm text-gray-500 mb-4">Preview for {{ $document->dokumen }}:</p>
-
                             <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="100%" height="500" type="application/pdf">
-                            {{-- <embed src="{{ route('viewfile',['url' => $dataDokumenPengajuan[$n]->nama_dokumen ]) }}" width="100%" height="800" type="application/pdf"> --}}
-
                             @php
                                 $n += 1;
                             @endphp
@@ -175,8 +172,6 @@
                     <button type="submit" class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="revise">Revisi</button>
                     <button type="submit" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="approve">Terima</button>
                 </div>
-
-                <!-- Hidden input field for role_id -->
                 <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
                 <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
             </form>

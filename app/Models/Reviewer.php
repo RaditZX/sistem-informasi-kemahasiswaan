@@ -12,6 +12,6 @@ class Reviewer extends Model
 
     protected $primaryKey = 'nip'; // Custom primary key
     protected $table = 'reviewer';
-    protected $fillable = ['nim','semester','tgl_lahir','no_hp','jurusan_id','prodi_id','angkatan','user_id'];
+
 
 }
