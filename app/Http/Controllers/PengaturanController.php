@@ -220,7 +220,6 @@ class PengaturanController extends Controller
                     'nama_depan' => 'required|string|max:255',
                     'nama_belakang' => 'required|string|max:255',
                     'jk' => 'required|string|in:Pria,Wanita',
-                    'no_hp' => 'nullable|string|max:15',
                 ]);
 
                 // Cari user berdasarkan ID
@@ -233,18 +232,13 @@ class PengaturanController extends Controller
                     'jenis_kelamin' => $request->input('jk', $user->jenis_kelamin),
                 ]);
 
-                // Update data reviewer jika ada
-                $reviewer->update([
-                    'no_hp' => $request->input('no_hp', $reviewer->no_hp),
-                ]);
-
                 return redirect()->route('pengaturan.index')->with('success', 'Profil reviewer berhasil diperbarui.');
             }
 
             return redirect()->route('pengaturan.index')->with('error', 'User tidak ditemukan.');
 
         } catch (\Exception $e) {
-            return redirect()->route('pengaturan.index')->with('error', 'Terjadi kesalahan saat memperbarui profil. Silakan coba lagi.');
+            return redirect()->route('pengaturan.index')->with('error', 'Terjadi kesalahan saat memperbarui profil. Silakan coba lagi. Peringatan! NIM tidak bisa diganti jika anda telah menerima beasiswa');
         }
     }
 

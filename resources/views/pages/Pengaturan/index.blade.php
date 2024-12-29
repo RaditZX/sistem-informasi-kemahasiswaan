@@ -129,7 +129,6 @@
                             <form action="{{ route('pengaturan.updateprofil', $user_id) }}" method="POST">
                                 @method('PATCH')
                                 @csrf
-                                <!-- Form input untuk profil -->
                                 <div class="mt-4">
                                     <label for="nama_depan" class="block text-sm font-medium">Nama Depan</label>
                                     <input id="nama_depan" name="nama_depan" type="text" class="block w-full mt-2 text-sm border-gray-300 rounded-md shadow-sm" value="{{ $nama_depan }}">
@@ -147,10 +146,20 @@
                                     </select>
                                 </div>
 
+                                <!-- Hanya tampilkan input NIM jika user adalah mahasiswa -->
+                                @if($mahasiswa)
+                                    <div class="mt-4">
+                                        <label for="nim" class="block text-sm font-medium">NIM</label>
+                                        <input id="nim" name="nim" type="text" class="block w-full mt-2 text-sm border-gray-300 rounded-md shadow-sm" value="{{ $nim }}">
+                                    </div>
+                                
+
                                 <div class="mt-4">
                                     <label for="no_hp" class="block text-sm font-medium">Nomor Handphone</label>
                                     <input id="no_hp" name="no_hp" type="text" class="block w-full mt-2 text-sm border-gray-300 rounded-md shadow-sm" value="{{ $no_hp ?? '' }}">
                                 </div>
+                                @endif
+
                                 <div class="mt-6">
                                     <button type="submit" class="w-full bg-orange-500 text-white py-2 rounded-lg">Simpan Perubahan</button>
                                 </div>
