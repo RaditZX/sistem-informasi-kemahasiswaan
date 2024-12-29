@@ -46,17 +46,17 @@
                             <img src="{{ $user_img }}" alt="Avatar" class="rounded-full w-24 h-24 mx-auto">
                             <h2 class="mt-4 text-lg font-bold">{{ $nama_depan . ' ' . $nama_belakang }}</h2>
                             <p class="text-gray-600">{{ $role_name }}</p>
-                            <button data-modal-target="change-photo-modal" data-modal-toggle="change-photo-modal" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded" type="button">
+                            <button onclick="showChangePhotoModal()" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded">
                                 Ganti Foto
                             </button>
                         </div>
 
-                        <!-- Change Photo Modal -->
-                        <div id="change-photo-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed top-0 right-0 left-0 z-50 w-full h-full flex justify-center items-center">
-                            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                        <!-- Modal Ganti Foto Profil -->
+                        <div id="change-photo-modal" class="hidden overflow-y-auto fixed top-0 right-0 left-0 z-50 w-full h-full flex justify-center items-center backdrop-blur-md">
+                            <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
                                 <div class="flex items-center justify-between border-b pb-4">
                                     <h3 class="text-xl font-semibold">Ganti Foto Profil</h3>
-                                    <button type="button" data-modal-hide="change-photo-modal" class="text-gray-400 hover:bg-gray-200 p-2 rounded-lg">
+                                    <button type="button" onclick="hideChangePhotoModal()" class="text-gray-400 hover:bg-gray-200 p-2 rounded-lg">
                                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                         </svg>
@@ -108,17 +108,19 @@
                                     <label class="block text-sm font-medium">Nomor Handphone</label>
                                     <input readonly type="text" class="w-full border-gray-300 rounded-md shadow-sm p-2" value="{{ $no_hp ?? 'Belum diisi' }}">
                                 </div>
-                                <button data-modal-target="edit-profile-modal" data-modal-toggle="edit-profile-modal" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded">Edit Profil</button>
+                                <button type="button" onclick="showEditProfileModal()" class="mt-4 bg-orange-500 text-white px-4 py-2 rounded">
+                                    Edit Profil
+                                </button>
                             </form>
                         </div>
                     </div>
 
-                    <!-- Edit Profile Modal -->
-                    <div id="edit-profile-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed top-0 right-0 left-0 z-50 w-full h-full flex justify-center items-center">
-                        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                    <!-- Modal Edit Profil -->
+                    <div id="edit-profile-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed top-0 right-0 left-0 z-50 w-full h-full flex justify-center items-center backdrop-blur-md">
+                        <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
                             <div class="flex items-center justify-between border-b pb-4">
                                 <h3 class="text-xl font-semibold">Edit Profil</h3>
-                                <button type="button" data-modal-hide="edit-profile-modal" class="text-gray-400 hover:bg-gray-200 p-2 rounded-lg">
+                                <button onclick="hideEditProfileModal()">
                                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
@@ -127,6 +129,7 @@
                             <form action="{{ route('pengaturan.updateprofil', $user_id) }}" method="POST">
                                 @method('PATCH')
                                 @csrf
+                                <!-- Form input untuk profil -->
                                 <div class="mt-4">
                                     <label for="nama_depan" class="block text-sm font-medium">Nama Depan</label>
                                     <input id="nama_depan" name="nama_depan" type="text" class="block w-full mt-2 text-sm border-gray-300 rounded-md shadow-sm" value="{{ $nama_depan }}">
@@ -144,58 +147,46 @@
                                     </select>
                                 </div>
 
-                                <!-- Hanya tampilkan input NIM jika user adalah mahasiswa -->
-                                @if($mahasiswa)
-                                    <div class="mt-4">
-                                        <label for="nim" class="block text-sm font-medium">NIM</label>
-                                        <input id="nim" name="nim" type="text" class="block w-full mt-2 text-sm border-gray-300 rounded-md shadow-sm" value="{{ $nim }}">
-                                    </div>
-                                
-
                                 <div class="mt-4">
                                     <label for="no_hp" class="block text-sm font-medium">Nomor Handphone</label>
                                     <input id="no_hp" name="no_hp" type="text" class="block w-full mt-2 text-sm border-gray-300 rounded-md shadow-sm" value="{{ $no_hp ?? '' }}">
                                 </div>
-                                @endif
-
                                 <div class="mt-6">
                                     <button type="submit" class="w-full bg-orange-500 text-white py-2 rounded-lg">Simpan Perubahan</button>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 
 
-                <!-- Beasiswa Section -->
-                @if($mahasiswa)
-                @if($beasiswa->isNotEmpty())
-                    <h3 class="mt-8 font-semibold text-2xl text-center m-5">Beasiswa yang Diterima</h3>
-                    <div class="bg-gray-100 p-4 rounded-md shadow-sm">
-                        <ul class="space-y-4">
-                            @foreach($beasiswa as $item)
-                                <li class="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm">
-                                    <div>
-                                        <h4 class="font-semibold text-gray-800 text-xl">{{ $item->beasiswa->nama_beasiswa }}</h4>
-                                        <p class="text-gray-600 text-xl">Jenis: <span class="font-medium">{{ $item->beasiswa->jenis_beasiswa }}</span></p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-gray-500 text-xl">Diterima pada: <span class="font-medium">{{ $item->beasiswa->created_at->format('d M Y') }}</span></p>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @else
-                <p class="mt-5 text-gray-600 text-center text-lg font-semibold py-3 px-6 border border-orange-500 rounded-lg bg-orange-100">
-    Anda belum menerima beasiswa.
-</p>
-                @endif
-                @endif
-                </section>
-                <!-- Notifikasi Section -->
-                
+                    <!-- Beasiswa Section -->
+                    @if($mahasiswa)
+                    @if($beasiswa->isNotEmpty())
+                        <h3 class="mt-8 font-semibold text-2xl text-center m-5">Beasiswa yang Diterima</h3>
+                        <div class="bg-gray-100 p-4 rounded-md shadow-sm">
+                            <ul class="space-y-4">
+                                @foreach($beasiswa as $item)
+                                    <li class="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm">
+                                        <div>
+                                            <h4 class="font-semibold text-gray-800 text-xl">{{ $item->beasiswa->nama_beasiswa }}</h4>
+                                            <p class="text-gray-600 text-xl">Jenis: <span class="font-medium">{{ $item->beasiswa->jenis_beasiswa }}</span></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-gray-500 text-xl">Diterima pada: <span class="font-medium">{{ $item->beasiswa->created_at->format('d M Y') }}</span></p>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @else
+                    <p class="mt-5 text-gray-600 text-center text-lg font-semibold py-3 px-6 border border-orange-500 rounded-lg bg-orange-100">
+                        Anda belum menerima beasiswa.
+                    </p>
+                    @endif
+                    @endif
+                    
             </div>
+            <!-- Notifikasi Section -->
             <section id="notifikasi" class="tab-content hidden mt-10">
                     <div class="max-w-4xl mx-auto p-6 rounded-lg bg-white shadow-md">
                         <h1 class="text-xl font-semibold">Preferensi Notifikasi</h1>
@@ -225,46 +216,44 @@
 </div>
 
 <script>
-    // JavaScript for handling tab switching
-    document.querySelectorAll('.tab-link').forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            const target = this.getAttribute('data-target');
+    // Fungsi untuk menampilkan konten tab yang sesuai
+    const tabLinks = document.querySelectorAll('.tab-link');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-            // Remove 'active' class from all links
-            document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active', 'font-bold'));
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
 
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            // Menghapus kelas 'active' dari semua tab link dan menyembunyikan semua tab content
+            tabLinks.forEach(link => link.classList.remove('active'));
+            tabContents.forEach(content => content.classList.add('hidden'));
 
-            // Show the targeted tab content and set active state
-            document.getElementById(target).classList.remove('hidden');
-            this.classList.add('active', 'font-bold');
+            // Menambahkan kelas 'active' pada tab yang diklik
+            link.classList.add('active');
+
+            // Menampilkan konten yang sesuai dengan tab yang diklik
+            const target = document.querySelector(`#${link.dataset.target}`);
+            target.classList.remove('hidden');
         });
     });
-    document.querySelectorAll('[data-modal-toggle]').forEach(button => {
-    button.addEventListener('click', function(event) {
-        event.preventDefault();
-        const target = this.getAttribute('data-modal-target');
-        const modal = document.getElementById(target);
-        console.log(modal); // Debugging output
-        modal.classList.toggle('hidden');
-    });
-});
-// Menampilkan modal
-document.querySelector('[data-modal-show="change-photo-modal"]').addEventListener('click', () => {
-    document.getElementById('change-photo-modal').classList.remove('hidden');
-});
+    // Fungsi untuk menampilkan modal ganti foto
+    function showChangePhotoModal() {
+        document.getElementById('change-photo-modal').classList.remove('hidden');
+    }
 
-// Menutup modal
-document.querySelector('[data-modal-hide="change-photo-modal"]').addEventListener('click', () => {
-    document.getElementById('change-photo-modal').classList.add('hidden');
-});
+    // Fungsi untuk menyembunyikan modal ganti foto
+    function hideChangePhotoModal() {
+        document.getElementById('change-photo-modal').classList.add('hidden');
+    }
 
+    // Fungsi untuk menampilkan modal edit profil
+    function showEditProfileModal() {
+        document.getElementById('edit-profile-modal').classList.remove('hidden');
+    }
 
-
-    // Set the default tab to be active on page load
-    document.querySelector('.tab-link').click();
-    
+    // Fungsi untuk menyembunyikan modal edit profil
+    function hideEditProfileModal() {
+        document.getElementById('edit-profile-modal').classList.add('hidden');
+    }
 </script>
 @endsection
