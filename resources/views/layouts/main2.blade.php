@@ -69,9 +69,12 @@
             </script>
         @endif
     </main>
-
-
+    @yield('content')
+    
+    
 </body>
-@yield('content')
-
+@yield('scripts')
+@if ($beasiswa != null)
+    @yield('scriptsForEditBeasiswa')
+@endif
 </html>
