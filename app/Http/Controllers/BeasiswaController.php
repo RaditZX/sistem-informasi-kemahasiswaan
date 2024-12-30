@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Str;
 
 
 
@@ -629,14 +629,20 @@ class BeasiswaController extends Controller
         $templates = beasiswa::select('id', 'nama_beasiswa', 'deskripsi')
             ->orderBy('updated_at', 'desc')
             ->paginate(5);
-
+    
+        // Perpendek deskripsi
+        $templates->getCollection()->transform(function ($item) {
+            $item->deskripsi = Str::limit($item->deskripsi, 100, '...');
+            return $item;
+        });
+    
         return response()->json([
             'data' => $templates->items(),
             'current_page' => $templates->currentPage(),
             'last_page' => $templates->lastPage(),
         ]);
     }
-
+    
 
 
     public function getBeasiswa($id)
