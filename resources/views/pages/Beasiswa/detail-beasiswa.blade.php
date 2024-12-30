@@ -38,8 +38,6 @@
                             : ($beasiswa->tanggal_mulai > now()
                                 ? 'Upcoming'
                                 : 'Past') }}
-
-
                     </span>
                 </div>
                 @php

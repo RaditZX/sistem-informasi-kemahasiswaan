@@ -58,8 +58,8 @@
                             @endif
                     </td>
                     <td class="text-center py-5">
-                        <a href="{{ url('tracking-pengajuan/' . $pengajuan->id) }}">
-                            <i class="fas fa-arrow-right text-black text-lg" onclick=""></i>
+                        <a href="{{ url('tracking-pengajuan/' . $pengajuan->id_pengajuan) }}">
+                            <i class="fas fa-arrow-right text-black text-lg" ></i>
                         </a>
                     </td>
                 </tr>
@@ -67,7 +67,7 @@
             </tbody>
         </table>
     </div>
-    
+
     {{-- Filter Popup --}}
     <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center">
     <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">

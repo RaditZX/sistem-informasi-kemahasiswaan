@@ -39,7 +39,7 @@
                             @error('password')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
-                            <span class="pt-2 block">Forgot your password? <a href="#" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
+                            <span class="pt-2 block">Forgot your password? <a href="/reset-password" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
                             <span class="pt-2 block">Dont have account? <a href="/register" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
                         </div>
                     </div>
@@ -111,92 +111,5 @@
     </section>
 </main>
 
-<script>
-    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-    const backToLogin = document.getElementById('backToLogin');
-    const loginForm = document.getElementById('loginForm');
-    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-    const resetPasswordForm = document.getElementById('resetPasswordForm');
-    const resetSuccess = document.getElementById('resetSuccess');
-    const backToLoginAfterSuccess = document.getElementById('backToLoginAfterSuccess');
-
-    // Transition to Forgot Password Form
-    forgotPasswordLink.addEventListener('click', function (event) {
-        event.preventDefault();
-        forgotPasswordForm.classList.remove('hidden');
-        setTimeout(() => {
-            loginForm.classList.add('translate-x-full');
-            forgotPasswordForm.classList.remove('translate-x-full');
-        }, 50);
-    });
-
-    // Handle Forgot Password Form Submission
-    document.getElementById('forgotPasswordFormSubmit').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const email = document.getElementById('reset-email').value;
-        const authCode = document.getElementById('auth_code').value;
-
-        fetch('{{ route('password.forgot') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ email, auth_code: authCode })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === 'Verified!') {
-                forgotPasswordForm.classList.add('hidden');
-                resetPasswordForm.classList.remove('hidden');
-                resetPasswordForm.classList.remove('translate-x-full');
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-
-    // Handle Reset Password Form Submission
-    document.getElementById('resetPasswordFormSubmit').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const password = document.getElementById('password').value;
-        const passwordConfirmation = document.getElementById('password_confirmation').value;
-
-        fetch('{{ route('password.update') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ password, password_confirmation: passwordConfirmation })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.message === 'Password updated successfully!') {
-                resetPasswordForm.classList.add('hidden');
-                resetSuccess.classList.remove('hidden');
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An unexpected error occurred. Please try again.');
-        });
-    });
-
-    // Back to Login from Success
-    backToLoginAfterSuccess.addEventListener('click', function (event) {
-        event.preventDefault();
-        resetSuccess.classList.add('hidden');
-        loginForm.classList.remove('translate-x-full');
-    });
-</script>
 
 @endsection

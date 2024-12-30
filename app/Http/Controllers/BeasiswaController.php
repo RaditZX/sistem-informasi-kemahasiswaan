@@ -106,12 +106,43 @@ class BeasiswaController extends Controller
             'beasiswaUserTipe'
         ));
     }
-    public function getListBeasiswaForStaff()
+    public function getListBeasiswaForStaff(Request $request)
     {
+        $query = Beasiswa::query();
+
         $notifController = new NotificationController();
         $notificationData = $notifController->getNotifData();
-        $beasiswa = Beasiswa::paginate(10);
 
+        // Filter `search` berdasarkan `nama_beasiswa`
+        if ($request->has('search') && $request->input('search') !== '') {
+            $searchTerm = $request->input('search');
+            $query->where('nama_beasiswa', 'ilike', "%{$searchTerm}%");
+        }
+
+        // Filter `jenis_beasiswa`
+        if ($request->has('jenis_beasiswa') && !empty($request->input('jenis_beasiswa'))) {
+            $jenisBeasiswa = $request->input('jenis_beasiswa');
+            foreach ($jenisBeasiswa as $jenis) {
+                $query->orWhere('jenis_beasiswa', $jenis);
+            }
+        }
+
+        // Filter `tipe_beasiswa`
+        if ($request->has('tipe_beasiswa') && !empty($request->input('tipe_beasiswa'))) {
+            $query->where('tipe_beasiswa', $request->input('tipe_beasiswa'));
+        }
+
+        // Filter `jurusan` dalam `syarat_beasiswa`
+        if ($request->has('jurusan') && !empty($request->input('jurusan'))) {
+            $jurusan = $request->input('jurusan');
+            $query->whereHas('syaratBeasiswa', function ($q) use ($jurusan) {
+                $q->where('syarat', 'like', "%{$jurusan}%");
+            });
+        }
+
+        // Jalankan query dan paginasi hasilnya
+        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
+                  ->paginate(10);
 
 
         return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa', 'notificationData'));

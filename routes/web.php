@@ -65,8 +65,6 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
 
 });
 
-
-
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::get('/tracking-pengajuan/{id}', [PengajuanBeasiswaController::class, 'showTracking'])->name('pengajuan.tracking');
