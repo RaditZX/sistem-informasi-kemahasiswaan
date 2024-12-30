@@ -63,7 +63,6 @@
             </script>
         @endif
         @yield('content')
-
     </main>
 
     <script src="{{ asset('assets/js/alert.js') }}"></script>

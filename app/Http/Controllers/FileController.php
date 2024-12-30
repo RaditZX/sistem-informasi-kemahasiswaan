@@ -35,8 +35,6 @@ class FileController extends Controller
         }
     }
 
-
-
     public function uploadFileLocal(Request $request)
     {
         $request->validate([
@@ -60,9 +58,6 @@ class FileController extends Controller
 
         return response()->json(['url' => $url]);
     }
-
-
-
 
     public function viewFile($url)
     {
@@ -90,11 +85,6 @@ class FileController extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',  // Display inline
         ]);
     }
-
-
-
-
-
 
     public function uploadFile(Request $request)
     {

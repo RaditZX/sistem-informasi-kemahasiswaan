@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\MaddingController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PenerimaBeasiswaController;
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
 
     Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
     Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
+    Route::post('/beasiswa/edit/{id}', [BeasiswaController::class, 'edit'])->name('beasiswa.edit');
     Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
     Route::get('/import-data-penerima', [PenerimaBeasiswaController::class, 'create'])->name('beasiswa.import-data-beasiswa');
     Route::post('/import-data-penerima', [PenerimaBeasiswaController::class, 'store'])->name('penerimabeasiswa.import-data-beasiswa');
@@ -62,6 +64,11 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::post('/export-pengumuman-beasiswa/{id}',[PenerimaBeasiswaController::class, 'exportPenerimaBeasiswaInExcel'])->name('beasiswa.export-data-beasiswa');
 
 });
+
+
+
+// ========================================================================================
+// BEASISWA ROUTES ========================================================================
 
 Route::controller(PengajuanBeasiswaController::class)->group(function () {
     Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
@@ -91,14 +98,28 @@ Route::middleware('auth')->group(function () {
         return view('pages.Beasiswa.form-beasiswa');
     });
     Route::resource('pengaturan', PengaturanController::class);
-    Route::patch('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::patch('/pengaturan/updatefoto/{user}', [PengaturanController::class, 'updatefoto'])->name('pengaturan.updatefoto');
+    Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');
     Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
     Route::get('/dokumen/{url}', [FileController::class, 'viewFile'])->name('viewfile');
+
+    Route::controller(MaddingController::class)->group(function () {
+        Route::get('/madding', [MaddingController::class, 'index'])->name('madding.index');
+    });
 });
 
+Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
+Route::get('/detail-beasiswa-kipk', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
+Route::get('/detail-beasiswa-eksternal', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
+Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
+Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 
+Route::controller(PengajuanBeasiswaController::class)->group(function () {
+    Route::get('/pengajuan-beasiswa/{id}',[PengajuanBeasiswaController::class, 'create'])->name('pengajuan.create');
+    Route::post('/pengajuan/store/{id}', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
+    Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
+    Route::get('pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
+});
 
-
-
-
+Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.uploadFile');

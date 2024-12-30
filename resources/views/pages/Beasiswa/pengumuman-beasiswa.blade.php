@@ -1,4 +1,4 @@
-@extends('layouts.filter')
+
 @extends('layouts.main')
 @section('content')
     @include('component.navbar', [

@@ -11,4 +11,9 @@ class PenerimaBeasiswa extends Model
 
      // Tentukan kolom yang bisa diisi secara massal
      protected $fillable = ['nim','beasiswa_id'];
+
+     public function beasiswa()
+     {
+     return $this->belongsTo(Beasiswa::class, 'beasiswa_id');
+     }
 }

@@ -16,13 +16,14 @@
                 <i class="fas fa-search absolute left-3 text-gray-500"></i>
                 <form method="GET" action="{{ route('beasiswa.list-beasiswa-staff') }}" class="w-full">
                     <input type="text" name="search" id="searchInput" placeholder="Cari Beasiswa"
-                           class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
-                           value="{{ request('search') }}">
+                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+                        value="{{ request('search') }}">
                 </form>
             </div>
             <div class="relative flex items-center">
                 <i class="fas fa-filter absolute left-3 text-white"></i>
-                <div class="pl-10 pr-4 py-2 bg-orange-500 rounded shadow-lg p-2 w-auto cursor-pointer" onclick="showPopup()">
+                <div class="pl-10 pr-4 py-2 bg-orange-500 rounded shadow-lg p-2 w-auto cursor-pointer"
+                    onclick="showPopup()">
                     <p class="text-xs sm:text-base text-white">Filter</p>
                 </div>
             </div>
@@ -36,16 +37,16 @@
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full table-fixed border border-none">
+            <table class="min-w-full table-auto border border-none">
                 <thead>
                     <tr>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Nama</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Penyelenggara</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Tanggal Mulai</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Tanggal Berakhir</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Action</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Status</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700"></th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Nama</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Penyelenggara</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Tanggal Mulai</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Tanggal Berakhir</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Action</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Status</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,106 +112,10 @@
                 </tbody>
             </table>
         </div>
+
+
     </div>
     <div class="p-5">
         {{ $beasiswa->links() }}
-    </div>
-    {{-- Filter Popup --}}
-    <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center">
-        <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
-            <div class="absolute top-4 right-4">
-                <button onclick="hidePopup()" aria-label="Close" class="text-gray-500 hover:text-gray-700">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-            <div class="p-4">
-                <form action="{{ url('/list-beasiswa-staff') }}" method="GET">
-                    <div class="flex flex-col sm:flex-row justify-start gap-12 sm:gap-24">
-                        <!-- Left Section: Checkboxes -->
-                        <div class="flex flex-col items-start gap-6 sm:w-1/2">
-                            <p class="text-xl font-semibold text-gray-700">Filter</p>
-
-                            <!-- Jenis Beasiswa Section -->
-                            <p class="text-sm sm:text-base font-medium text-gray-600">Jenis Beasiswa</p>
-                            <div class="flex flex-row items-start gap-4">
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="jenis_beasiswa[]" value="half"
-                                        {{ in_array('half', request('jenis_beasiswa', [])) ? 'checked' : '' }}
-                                        class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                    <label for="half" class="ml-2 text-sm text-gray-600">Half</label>
-                                </div>
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="jenis_beasiswa[]" value="full"
-                                        {{ in_array('full', request('jenis_beasiswa', [])) ? 'checked' : '' }}
-                                        class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                    <label for="full" class="ml-2 text-sm text-gray-600">Full</label>
-                                </div>
-                            </div>
-
-                            <!-- Jenjang Pendidikan Section -->
-                            <p class="text-sm sm:text-base font-medium text-gray-600">Jenjang Pendidikan</p>
-                            <div class="flex flex-row items-start gap-4">
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="jenjang_pendidikan[]" value="D3"
-                                        {{ in_array('D3', request('jenjang_pendidikan', [])) ? 'checked' : '' }}
-                                        class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                    <label for="D3" class="ml-2 text-sm text-gray-600">D3</label>
-                                </div>
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="jenjang_pendidikan[]" value="D4"
-                                        {{ in_array('D4', request('jenjang_pendidikan', [])) ? 'checked' : '' }}
-                                        class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                    <label for="D4" class="ml-2 text-sm text-gray-600">D4</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Section: Dropdowns -->
-                        <div class="flex flex-col items-start gap-6 sm:w-1/2 mt-6">
-                            <!-- Tipe Beasiswa Section -->
-                            <p class="text-sm sm:text-base font-medium text-gray-600">Tipe Beasiswa</p>
-                            <div class="w-full">
-                                <select name="tipe_beasiswa" id="tipe_beasiswa"
-                                    class="mt-2 block w-full rounded-full border border-gray-300 p-3 focus:border-orange-400 focus:ring-orange-300">
-                                    <option value="">Select Tipe Beasiswa</option>
-                                    <option value="kipk" {{ request('tipe_beasiswa') == 'kipk' ? 'selected' : '' }}>KIPK
-                                    </option>
-                                    <option value="internal"
-                                        {{ request('tipe_beasiswa') == 'internal' ? 'selected' : '' }}>Internal</option>
-                                    <option value="eksternal"
-                                        {{ request('tipe_beasiswa') == 'eksternal' ? 'selected' : '' }}>Eksternal</option>
-                                </select>
-                            </div>
-
-                            <!-- Jurusan Section -->
-                            <p class="text-sm sm:text-base font-medium text-gray-600">Jurusan Khusus:</p>
-                            <div class="w-full">
-                                <select name="jurusan" id="jurusan"
-                                    class="block w-full rounded-full border border-gray-300 p-3 focus:border-orange-400 focus:ring-orange-300">
-                                    <option value="">Pilih Jurusan</option>
-                                    <option value="Teknik Informatika"
-                                        {{ request('jurusan') == 'Teknik Informatika' ? 'selected' : '' }}>Teknik
-                                        Informatika</option>
-                                    <option value="Teknik Sipil"
-                                        {{ request('jurusan') == 'Teknik Sipil' ? 'selected' : '' }}>Teknik Sipil</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Buttons Section -->
-                    <div class="flex flex-row justify-between gap-4 mt-6">
-                        <button type="submit"
-                            class="w-1/2 bg-blue-500 p-3 text-white rounded-full shadow-md hover:bg-blue-600">Apply</button>
-                        <button type="button" onclick="hidePopup()"
-                            class="w-1/2 bg-red-500 p-3 text-white rounded-full shadow-md hover:bg-red-600">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 @endsection

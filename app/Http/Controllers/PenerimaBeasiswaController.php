@@ -11,6 +11,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Jurusan;
 
 class PenerimaBeasiswaController extends Controller
 {
@@ -57,11 +58,11 @@ class PenerimaBeasiswaController extends Controller
 
         // Data pengguna untuk view
         $user = Auth::user();
-
+        $jurusan = Jurusan::all();
 
 
         // Kirim data ke view
-        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'notificationData'));
+        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'notificationData','jurusan'));
     }
 
     /**

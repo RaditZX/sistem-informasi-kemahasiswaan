@@ -13,7 +13,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $data = DB::table('beasiswa as b')
-            ->selectRaw('
+        ->selectRaw('
         COUNT(DISTINCT b.id) AS total_beasiswa,
         COUNT(DISTINCT CASE WHEN now() < b.tanggal_berakhir THEN b.id END) AS beasiswa_on_going,
         COUNT(CASE WHEN pb.status = 1 THEN 1 END) AS pengajuan_diajukan,
@@ -27,17 +27,15 @@ class DashboardController extends Controller
         SUM(CASE WHEN EXTRACT(YEAR FROM pb.tanggal_pengajuan) = EXTRACT(YEAR FROM CURRENT_DATE) - 2 THEN 1 ELSE 0 END) AS pengajuan_2_tahun_lalu,
         SUM(CASE WHEN EXTRACT(YEAR FROM pb.tanggal_pengajuan) = EXTRACT(YEAR FROM CURRENT_DATE) - 3 THEN 1 ELSE 0 END) AS pengajuan_3_tahun_lalu,
         SUM(CASE WHEN EXTRACT(YEAR FROM pb.tanggal_pengajuan) = EXTRACT(YEAR FROM CURRENT_DATE) - 4 THEN 1 ELSE 0 END) AS pengajuan_4_tahun_lalu
-    ')
-            ->leftJoin('pengajuan_beasiswa as pb', 'b.id', '=', 'pb.beasiswa_id')
-            ->first();
-
+        ')
+        ->leftJoin('pengajuan_beasiswa as pb', 'b.id', '=', 'pb.beasiswa_id')
+        ->first();
 
         $jurusan = $request->input('nama_jurusan')
             ? $request->input('nama_jurusan')
             : DB::table('jurusan')->selectRaw('nama_jurusan')->first()->nama_jurusan;
 
         $currentYear = now()->year;
-
 
         $data1 = DB::table('pengajuan_beasiswa as pb')
             ->selectRaw("
@@ -61,8 +59,6 @@ class DashboardController extends Controller
             ->where('j.nama_jurusan', '=', $jurusan)
             ->first();
 
-
-
         $beasiswa = Beasiswa::where('tanggal_berakhir', '>=', now())
             ->where('tanggal_mulai', '<=', now())
             ->paginate(6);
@@ -75,8 +71,6 @@ class DashboardController extends Controller
 
         $jmlPenerima = PenerimaBeasiswa::count();
 
-
-
-        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan','notificationData', 'jmlPenerima'));
+        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan', 'notificationData', 'jmlPenerima'));
     }
 }

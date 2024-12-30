@@ -74,11 +74,12 @@ class AuthController extends Controller
                     }
                 }
 
+
                 // Regenerate the session ID to prevent session fixation attacks
                 $request->session()->regenerate();
 
 
-                return $mhs ? redirect()->intended('/beasiswa') : redirect()->intended('/dashboard');
+                return $mhs ? redirect()->intended('/madding') : redirect()->intended('/dashboard');
             } else {
                 return redirect('/login')->with('error', 'Silahkan Verifikasi Email anda');
             }
