@@ -32,10 +32,6 @@ class PengaturanController extends Controller
         $nama_depan = $user->nama_depan;
         $nama_belakang = $user->nama_belakang;
 
-        // Data notifikasi
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
         // Default data untuk NIM, NIP, dan no_hp
         $nim = null;
         $nip = null;
@@ -73,7 +69,6 @@ class PengaturanController extends Controller
             'nama_belakang',
             'phone',
             'user_img',
-            'notificationData',
             'no_hp',
             'jk',
             'role_name',

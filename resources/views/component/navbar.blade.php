@@ -272,6 +272,16 @@
                         <a href="javascript:;" class="block p-0 text-sm transition-all ease-nav-brand text-slate-500"
                             dropdown-trigger aria-expanded="false">
                             <i class="cursor-pointer fa fa-bell"></i>
+                            <!-- Tampilkan titik merah jika ada notifikasi yang belum dibaca -->
+                            @if(isset($notificationData) && $notificationData->where('read', false)->count() > 0)
+                            
+                                <span class="absolute right-0 top-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                                @if(isset($notificationData) && $notificationData->where('read', true)->count() > 0)
+                            
+                                <span></span>
+                            
+                            @endif
+                            @endif
                         </a>
 
                         <ul dropdown-menu class="text-sm transform-dropdown before:font-awesome before:leading-default before:duration-350 before:ease-soft lg:shadow-soft-3xl duration-250 min-w-44 before:sm:right-7.5 before:text-5.5 pointer-events-none absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 opacity-0 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8'] sm:-mr-6 lg:absolute lg:right-0 lg:left-auto lg:mt-2 lg:block lg:cursor-pointer">
@@ -280,36 +290,40 @@
                             @if(isset($notificationData) && count($notificationData) > 0)
                                 <!-- Looping through notifications -->
                                 @foreach ($notificationData as $notification)
-                                    <li class="relative mb-2">
-                                        <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" href="javascript:;">
-                                            <div class="flex py-1">
-                                                <div class="my-auto">
-                                                <i class="cursor-pointer fa fa-bell inline-flex items-center justify-center mr-4 text-sm text-grey h-9 w-9 max-w-none rounded-xl" aria-hidden="true"></i>
-                                                </div>
-                                                <div class="flex flex-col justify-center">
-                                                    <!-- Display status of the notification -->
-                                                    <h6 class="mb-1 text-sm font-normal leading-normal">
-                                                        <p>Beasiswa {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}</p>
-                                                        {{ $notification->pengajuanBeasiswa->Status->isi_status }}
-                                                    </h6>
-                                                    <p class="mb-0 text-xs leading-tight text-slate-400">
-                                                        <i class="mr-1 fa fa-clock"></i>
-                                                        {{ $notification->created_at }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endforeach
+                        <li class="relative mb-2" data-id="{{ $notification->id }}">
+                            <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors"
+                                href="javascript:;" onclick="markAsRead(this)">
+                                <div class="flex py-1">
+                                    <div class="my-auto">
+                                        <i class="cursor-pointer fa fa-bell inline-flex items-center justify-center mr-4 text-sm text-grey h-9 w-9 max-w-none rounded-xl" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="flex flex-col justify-center notification-content">
+                                        @if(!$notification->read)
+                                            <!-- Tampilkan titik merah jika notifikasi belum dibaca -->
+                                            <span class="absolute right-0 top-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                                        @endif
+                                        <h6 class="mb-1 text-sm font-normal leading-normal">
+                                            Beasiswa {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}
+                                            {{ $notification->pengajuanBeasiswa->Status->isi_status }}
+                                        </h6>
+                                        <p class="text-xs text-gray-400">
+                                            <i class="mr-1 fa fa-clock"></i>
+                                            {{ $notification->created_at }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
                             @else
                                 <!-- If there are no notifications, show this message -->
                                 <li class="relative mb-2">
                                     <p class="text-center text-gray-500 py-2">No new notifications</p>
                                 </li>
                             @endif
-
-                        </ul>   
+                        </ul>
                     </li>
+
 
                 </ul>
             </div>
@@ -368,4 +382,48 @@
                 });
             }
         });
+
+        function markAsRead(element) {
+            const notificationId = element.closest('li').getAttribute('data-id');
+            console.log('Notification ID:', notificationId); // Debug ID
+
+            fetch(`/notifications/mark-as-read/${notificationId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hapus titik merah (span) setelah notifikasi dibaca
+                    const notificationElement = element.closest('li');
+                    const redDot = notificationElement.querySelector('span.bg-red-500');
+                    if (redDot) {
+                        redDot.remove();
+                    }
+
+                    // Jika tidak ada lagi titik merah, hilangkan titik merah di bell icon
+                    const unreadDots = document.querySelectorAll('li span.bg-red-500');
+                    if (unreadDots.length === 0) {
+                        document.querySelector('i.fa-bell').nextElementSibling?.remove();
+                    }
+                } else {
+                    console.error('Gagal memperbarui notifikasi:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Terjadi kesalahan:', error);
+            });
+        }
+
+        // Seleksi elemen
+        document.querySelectorAll('.notification-content').forEach(item => {
+            item.addEventListener('click', () => {
+                // Refresh halaman
+                location.reload();
+            });
+        });
+
     </script>

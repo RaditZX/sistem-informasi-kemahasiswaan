@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer("user_id");
             $table->integer("id_pengajuan_beasiswa");
             $table->integer("status");
+            $table->boolean("read")->default(false); // Menambahkan kolom read
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
@@ -27,7 +28,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down(): voids
     {
         Schema::dropIfExists('notifikasi');
     }

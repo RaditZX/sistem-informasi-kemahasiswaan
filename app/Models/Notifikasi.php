@@ -17,6 +17,7 @@ class Notifikasi extends Model
         'user_id',
         'id_pengajuan_beasiswa',
         'status',
+        'read', // Menambahkan kolom 'read'
     ];
 
     // Tentukan jika ada relasi, contoh ke model User (user yang menerima notifikasi)
