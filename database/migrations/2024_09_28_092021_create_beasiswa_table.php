@@ -46,6 +46,7 @@ return new class extends Migration
         Schema::create('syarat_dokumen', function (Blueprint $table) {
             $table->id();
             $table->string('dokumen');
+            $table->string('link_dokumen');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });

@@ -61,6 +61,8 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/beasiswa/search-dokumen', [BeasiswaController::class, 'search_dokumen'])->name('Beasiswa.search_dokumen');
     Route::get('/beasiswa/search-benefit', [BeasiswaController::class, 'search_benefit'])->name('Beasiswa.search_benefit');
     Route::get('/beasiswa/search-jenjang', [BeasiswaController::class, 'search_jenjang'])->name('Beasiswa.search_jenjang');
+    Route::get('/beasiswa/get-templates', [BeasiswaController::class, 'getBeasiswaTemplate'])->name('Beasiswa.getTemplates');
+    Route::get('/beasiswa/get-beasiswa/{id}', [BeasiswaController::class, 'getBeasiswa'])->name('Beasiswa.getBeasiswa');
     Route::post('/export-pengumuman-beasiswa/{id}',[PenerimaBeasiswaController::class, 'exportPenerimaBeasiswaInExcel'])->name('beasiswa.export-data-beasiswa');
 
 });
