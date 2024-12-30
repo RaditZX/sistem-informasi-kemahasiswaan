@@ -26,27 +26,58 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-5">
+    @php
+        // Cek apakah ada beasiswa yang sudah diterima
+        $isAnyBeasiswaReceived = count($beasiswaUserTipe) > 0; // Jika sudah ada yang diterima
+        $currentDate = now(); // Ambil tanggal sekarang
+        $oneYearLater = now()->addYear(); // Tanggal satu tahun dari sekarang
+    @endphp
 
-        @foreach ($beasiswa as $ba)
-        @php
-        $status = ($ba->tanggal_mulai <= now() && $ba->tanggal_berakhir >= now())
+    @foreach ($beasiswa as $ba)
+    @php
+        // Default status
+        $status = ($ba->tanggal_mulai <= $currentDate && $ba->tanggal_berakhir >= $currentDate) 
             ? "Berlangsung"
-            : ($ba->tanggal_mulai > now()
+            : ($ba->tanggal_mulai > $currentDate
                 ? "Upcoming"
                 : "Past");
-        @endphp
-        @if($ba->tipe_beasiswa === "kipk")
-        <a href="/detail-beasiswa-kipk/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
-        @elseif($ba->tipe_beasiswa === "eksternal")
-        <a href="/detail-beasiswa-eksternal/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
-        @else
-        <a href="/beasiswa/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
-        @endif
-            <div class="p-2 relative">
-                @if($status === 'Upcoming' || $status === 'Past')
+
+        // Cek apakah beasiswa sudah diterima
+        $isReceived = collect($beasiswaUserTipe)->firstWhere('id', $ba->id);
+
+        if ($isReceived) {
+            // Jika sudah diterima, set status dari data controller
+            $status = $isReceived['status']; 
+        }
+
+        // Jika sudah ada beasiswa yang diterima, set status semua beasiswa menjadi Closed, kecuali untuk yang 'half' dan masih berlaku
+        if ($isAnyBeasiswaReceived && !($ba->status == 'half' && $ba->tanggal_berakhir > $currentDate && $ba->tanggal_berakhir <= $oneYearLater)) {
+            $status = 'Closed';
+        }
+
+        // Jika beasiswa sudah diterima, tidak bisa didaftar lagi
+        $canRegister = !$isAnyBeasiswaReceived || ($ba->status == 'half' && $ba->tanggal_berakhir > $currentDate && $ba->tanggal_berakhir <= $oneYearLater); // jika ada yang diterima, tidak bisa daftar lagi kecuali yang 'half' dalam rentang satu tahun ke depan
+
+    @endphp
+
+            @if($ba->tipe_beasiswa === "kipk")
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-kipk/'.$ba->id : '#' }}" 
+                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}" 
+                    data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
+            @elseif($ba->tipe_beasiswa === "eksternal")
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-eksternal/'.$ba->id : '#' }}" 
+                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}" 
+                    data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
+            @else
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/beasiswa/'.$ba->id : '#' }}" 
+                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}" 
+                    data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
+            @endif
+                <div class="p-2 relative">
+            @if($status !== 'Berlangsung')
                 <div class="absolute inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center rounded-lg">
                     <div class="w-max border border-white rounded-xl p-2 px-5">
-                    <p class="text-white font-bold text-xl">{{ $status }}</p>
+                        <p class="text-white font-bold text-xl">{{ $status }}</p>
                     </div>
                 </div>
                 @endif
@@ -65,10 +96,17 @@
                     <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2" }}
                         class="w-5 h-5 rounded-full" alt="KEMENDIKBUD">
                     <p class="text-xs font-bold ">{{ $ba->sumber }}</p>
-                </div>
             </div>
-        </a>
-        @endforeach
+            <p class="font-bold text-justify mb-1">{{ $ba->nama_beasiswa }}</p>
+            <p class="text-xs text-justify mb-2">{{ $ba->deskripsi }}</p>
+            <div class="flex flex-auto justify-left gap-3">
+                <img src="{{ $ba->sumber_logo ? $ba->sumber_logo : 'https://example.com/default-logo.jpg' }}" 
+                    class="w-5 h-5 rounded-full" alt="{{ $ba->sumber }}">
+                <p class="text-xs font-bold">{{ $ba->sumber }}</p>
+            </div>
+        </div>
+    </a>
+    @endforeach
 
         {{-- Filter Popup --}}
         <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center">
@@ -152,7 +190,7 @@
                         <!-- Buttons Section -->
                         <div class="flex flex-row justify-between gap-4 mt-6">
                             <button type="submit"
-                                class="w-1/2 bg-blue-500 p-3 text-white rounded-full shadow-md hover:bg-blue-600">Apply</button>
+                                class="w-1/2 bg-orange-500 p-3 text-white rounded-full shadow-md hover:bg-blue-600">Apply</button>
                             <button type="button" onclick="hidePopup()"
                                 class="w-1/2 bg-red-500 p-3 text-white rounded-full shadow-md hover:bg-red-600">Close</button>
                         </div>
