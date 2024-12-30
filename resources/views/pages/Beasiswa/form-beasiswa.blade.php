@@ -2,6 +2,7 @@
 
 @section('content')
     @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null, 'notificationData'=>$notificationData])
+{{-- @dd($beasiswa) --}}
 
 @if ($beasiswa != null)
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -588,19 +589,21 @@
     </script>
 @endsection
 
-@section('scriptsForEditBeasiswa')
-<script>
+@if ($beasiswa != null)
+    @section('scriptsForEditBeasiswa')
+    <script>
 
-    var beasiswa =  {!! json_encode($beasiswa, JSON_HEX_TAG) !!} 
-    var syarat =  {!! json_encode($syarat, JSON_HEX_TAG) !!} 
-    var jenjang =  {!! json_encode($jenjang, JSON_HEX_TAG) !!} 
-    var dokumen =  {!! json_encode($dokumen, JSON_HEX_TAG) !!} 
-    var link_dokumen =  {!! json_encode($link_dokumen, JSON_HEX_TAG) !!} 
-    var benefit =  {!! json_encode($benefit, JSON_HEX_TAG) !!} 
-    var poster =  {!! json_encode($poster, JSON_HEX_TAG) !!} 
-    
-    window.addEventListener('load', function() {
-    loadBeasiswaData();
-    });
-</script>
-@endsection
+        var beasiswa =  {!! json_encode($beasiswa, JSON_HEX_TAG) !!} 
+        var syarat =  {!! json_encode($syarat, JSON_HEX_TAG) !!} 
+        var jenjang =  {!! json_encode($jenjang, JSON_HEX_TAG) !!} 
+        var dokumen =  {!! json_encode($dokumen, JSON_HEX_TAG) !!} 
+        var link_dokumen =  {!! json_encode($link_dokumen, JSON_HEX_TAG) !!} 
+        var benefit =  {!! json_encode($benefit, JSON_HEX_TAG) !!} 
+        var poster =  {!! json_encode($poster, JSON_HEX_TAG) !!} 
+        
+        window.addEventListener('load', function() {
+        loadBeasiswaData();
+        });
+    </script>
+    @endsection
+@endif
