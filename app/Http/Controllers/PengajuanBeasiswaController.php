@@ -105,7 +105,8 @@ class PengajuanBeasiswaController extends Controller
                         'beasiswa.*',
                         'users.nama_depan',
                         'pengajuan_beasiswa.status',
-                        'pengajuan_beasiswa.tanggal_pengajuan'
+                        'pengajuan_beasiswa.tanggal_pengajuan',
+                        'pengajuan_beasiswa.id as id_pengajuan'
                     )
                     ->whereIn('pengajuan_beasiswa.status', $statusCode)
                     ->get();

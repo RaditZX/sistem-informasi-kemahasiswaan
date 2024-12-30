@@ -1,8 +1,6 @@
-@extends('layouts.filter')
 @extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
-
 @include('component.navbar', [
     'path' => "Tracking Beasiswa > " . $dataPengajuan->nama_beasiswa,
     'id' => null
@@ -176,7 +174,6 @@
                 </div>
                 @endif
 
-                <!-- Hidden input field for role_id -->
                 <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
                 <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
             </form>

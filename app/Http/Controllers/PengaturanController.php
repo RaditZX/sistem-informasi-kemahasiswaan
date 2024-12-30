@@ -51,8 +51,8 @@ class PengaturanController extends Controller
         if ($user->reviewer) {
             $nip = $user->reviewer->nip; // Ambil NIP dari reviewer
         }
-        
-        
+
+
         // Tentukan role_name
         $role_name = $user->reviewer && $user->reviewer->role
             ? $user->reviewer->role->role_name
@@ -105,7 +105,7 @@ class PengaturanController extends Controller
         if ($request->hasFile('new_img')) {
             // Create a new Request object for uploading the file
             $newRequest = new Request();
-            
+
             // Set the uploaded file into the new request object
             $newRequest->files->set('file', $request->file('new_img'));
 
@@ -188,7 +188,6 @@ class PengaturanController extends Controller
                     'nama_depan' => 'required|string|max:255',
                     'nama_belakang' => 'required|string|max:255',
                     'jk' => 'required|string|in:Pria,Wanita',
-                    'no_hp' => 'nullable|string|max:15',
                 ]);
 
                 // Cari user berdasarkan ID
@@ -201,26 +200,13 @@ class PengaturanController extends Controller
                     'jenis_kelamin' => $request->input('jk', $user->jenis_kelamin),
                 ]);
 
-                // Update data reviewer jika ada
-                $reviewer->update([
-                    'no_hp' => $request->input('no_hp', $reviewer->no_hp),
-                ]);
-
                 return redirect()->route('pengaturan.index')->with('success', 'Profil reviewer berhasil diperbarui.');
             }
 
             return redirect()->route('pengaturan.index')->with('error', 'User tidak ditemukan.');
 
         } catch (\Exception $e) {
-            return redirect()->route('pengaturan.index')->with('error', 'Terjadi kesalahan saat memperbarui profil. Silakan coba lagi.');
+            return redirect()->route('pengaturan.index')->with('error', 'Terjadi kesalahan saat memperbarui profil. Silakan coba lagi. Peringatan! NIM tidak bisa diganti jika anda telah menerima beasiswa');
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

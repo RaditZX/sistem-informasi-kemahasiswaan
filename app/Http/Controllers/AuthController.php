@@ -5,10 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
 use Kreait\Firebase\Factory;
 use App\Models\Mahasiswa;
@@ -74,10 +70,8 @@ class AuthController extends Controller
                     }
                 }
 
-
                 // Regenerate the session ID to prevent session fixation attacks
                 $request->session()->regenerate();
-
 
                 return $mhs ? redirect()->intended('/madding') : redirect()->intended('/dashboard');
             } else {

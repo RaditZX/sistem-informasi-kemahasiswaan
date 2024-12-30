@@ -95,11 +95,8 @@ class PenerimaBeasiswaController extends Controller
 
         try {
             $file = $request->file('excelFile');
-            $penerima = (new FastExcel)->import($file, function ($line) {
+            (new FastExcel)->import($file, function ($line) {
                 // Validasi setiap baris data
-
-
-
                 $data = Validator::make($line, [
                     'nim' => 'required|integer',
                     'beasiswa' => 'required|string|exists:beasiswa,nama_beasiswa',
@@ -132,8 +129,6 @@ class PenerimaBeasiswaController extends Controller
                     }
                 }
             });
-
-
             return redirect()->route('beasiswa.import-data-beasiswa',)->with('success', 'Beasiswa created successfully.');
         } catch (\Throwable $e) {
             // Tangani error
@@ -162,29 +157,6 @@ class PenerimaBeasiswaController extends Controller
         return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'notificationData', 'beasiswa','reviewer'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PenerimaBeasiswa $penerimaBeasiswa)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PenerimaBeasiswa $penerimaBeasiswa)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PenerimaBeasiswa $penerimaBeasiswa)
-    {
-        //
-    }
 
     public function exportPenerimaBeasiswaInExcel(string $id)
     {
