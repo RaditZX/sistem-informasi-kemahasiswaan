@@ -1,7 +1,7 @@
 @extends('layouts.filter')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null,'notificationData'=>$notificationData])
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
 
     {{-- Filter Button and Search Column --}}
     <div class="p-2">
@@ -85,15 +85,6 @@
                 <p class="text-xs text-justify mb-2">
                     {{ \Illuminate\Support\Str::limit($ba->deskripsi, 300, '...') }}
                 </p>
-                <div class="flex flex-auto justify-left gap-3">
-                    <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2" }}
-                        class="w-5 h-5 rounded-full" alt="KEMENDIKBUD">
-                    <p class="text-xs font-bold ">{{ $ba->sumber }}</p>
-            </div>
-            <p class="font-bold text-justify mb-1">{{ $ba->nama_beasiswa }}</p>
-            <p class="text-xs text-justify mb-2">
-                {{ implode(' ', array_slice(explode(' ', $ba->deskripsi), 0, 30)) }}{{ str_word_count($ba->deskripsi) > 30 ? '...' : '' }}
-            </p>
 
             <div class="flex flex-auto justify-left gap-3">
                 <img src="{{ $ba->sumber_logo ? $ba->sumber_logo : 'https://example.com/default-logo.jpg' }}"

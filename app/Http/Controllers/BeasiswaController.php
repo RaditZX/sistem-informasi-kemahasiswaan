@@ -36,10 +36,6 @@ class BeasiswaController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
-        // Get notification data
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
         // Prepare the query for Beasiswa
         $query = Beasiswa::query();
 
@@ -103,7 +99,6 @@ class BeasiswaController extends Controller
         // Return the view with data
         return view('pages.Beasiswa.list-beasiswa', compact(
             'beasiswa',
-            'notificationData',
             'penerimaBeasiswa',
             'beasiswaUserTipe',
             'jurusan'
@@ -112,9 +107,6 @@ class BeasiswaController extends Controller
     public function getListBeasiswaForStaff(Request $request)
     {
         $query = Beasiswa::query();
-
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
 
         // Filter `search` berdasarkan `nama_beasiswa`
         if ($request->has('search') && $request->input('search') !== '') {
@@ -149,24 +141,22 @@ class BeasiswaController extends Controller
 
         $jurusan = Jurusan::all();
 
-        return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa', 'notificationData','jurusan'));
+        return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa', 'jurusan'));
 
     }
 
     public function getDetailBeasiswaKipk($id)
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $beasiswa = Beasiswa::findOrFail($id);
-        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('notificationData','beasiswa'));
+        $jurusan = Jurusan::all();
+        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('beasiswa', 'jurusan'));
     }
 
     public function getDetailBeasiswaEksternal($id)
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $beasiswa = Beasiswa::findOrFail($id);
-        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('notificationData','beasiswa'));
+        $jurusan = Jurusan::all();
+        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('beasiswa', 'jurusan'));
     }
 
 
@@ -175,11 +165,9 @@ class BeasiswaController extends Controller
      */
     public function create()
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $beasiswa = null;
         $syarat = null;
-        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'notificationData'));
+        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat'));
     }
 
     /**
@@ -348,9 +336,6 @@ class BeasiswaController extends Controller
         $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
         $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
 
-        // Get notification data
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $user = Auth::user();
         $mhsNIM = Mahasiswa::where('user_id', $user->id)->first();
         $checkPengajuan = $mhsNIM ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)->exists() : false;
@@ -366,7 +351,7 @@ class BeasiswaController extends Controller
             'poster' => $poster,
             'isMengajukan' => $checkPengajuan,
             'isMhs' => $mhsNIM
-        ], compact('notificationData'));
+        ]);
 
     }
 
@@ -385,12 +370,11 @@ class BeasiswaController extends Controller
 
 
         $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
+
 
         // dd($dokumen, $link_dokumen);
         // Kirim data ke view
-        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'jenjang', 'dokumen', 'link_dokumen', 'benefit', 'poster', 'notificationData'));
+        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'jenjang', 'dokumen', 'link_dokumen', 'benefit', 'poster'));
 
     }
 

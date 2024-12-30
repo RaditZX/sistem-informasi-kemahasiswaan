@@ -3,8 +3,7 @@
 @section('content')
     @include('component.navbar', [
         'path' => 'List Beasiswa',
-        'id' => null,
-        'notificationData' => $notificationData,
+        'id' => null
     ])
     <div class="p-3 px-8 mt-10">
         <div class="flex flex-col lg:flex-row">

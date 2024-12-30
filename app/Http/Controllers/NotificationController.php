@@ -11,20 +11,35 @@ use Illuminate\Support\Facades\Log;
 class NotificationController extends Controller
 {
     public function getNotifData()
-{
-    try {
-        // Get all notifications
-        return Notifikasi::where('user_id', auth()->id())  // Filter berdasarkan user_id
-                                    ->with('pengajuanBeasiswa.Beasiswa', 'pengajuanBeasiswa.Status') // Eager load relasi untuk menghindari N+1 query
-                                    ->get();
+    {
+        try {
+            $notifikasi = Notifikasi::where('user_id', auth()->id())
+                ->with('pengajuanBeasiswa.Beasiswa', 'pengajuanBeasiswa.Status')
+                ->get();
 
+            $unreadCount = Notifikasi::where('user_id', auth()->id())
+                ->where('read', false)
+                ->count();
 
-
-    } catch (\Exception $e) {
-        // Log the error and return an internal server error response
-        Log::error('Error fetching notifications: ' . $e->getMessage());
-        return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['notifications' => $notifikasi, 'unreadCount' => $unreadCount]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching notifications: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
+
+    public function markAsRead($id)
+    {
+        try {
+            $notification = Notifikasi::findOrFail($id);
+            $notification->read = true; // Mark as read
+            $notification->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            Log::error('Error marking notification as read: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
 }

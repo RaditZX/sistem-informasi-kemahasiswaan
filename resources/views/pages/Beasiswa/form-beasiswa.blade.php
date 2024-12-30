@@ -1,7 +1,7 @@
 @extends('layouts.main2')
 
 @section('content')
-    @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null, 'notificationData'=>$notificationData])
+    @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null])
 
 @if ($beasiswa != null)
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -560,7 +560,7 @@
     </div>
 
 @endif
-@endsection
+
 
 @section('scripts')
     <script>
@@ -605,4 +605,5 @@
     });
 </script>
 @endif
+@endsection
 @endsection
