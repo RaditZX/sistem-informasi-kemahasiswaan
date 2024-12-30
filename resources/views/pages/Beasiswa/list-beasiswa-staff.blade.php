@@ -3,8 +3,7 @@
 @section('content')
     @include('component.navbar', [
         'path' => 'List Beasiswa',
-        'id' => null,
-        'notificationData' => $notificationData,
+        'id' => null
     ])
 
 

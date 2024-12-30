@@ -1,5 +1,4 @@
 @extends('layouts.filter')
-@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
 

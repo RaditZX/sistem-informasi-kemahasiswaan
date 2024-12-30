@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\NotificationController;
 use App\Models\beasiswa;
 use App\Models\PenerimaBeasiswa;
 use App\Models\Reviewer;
@@ -20,9 +19,6 @@ class PenerimaBeasiswaController extends Controller
     public function index(Request $request)
     {
         $query = Beasiswa::query();
-
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
 
         // Filter `search` berdasarkan `nama_beasiswa`
         if ($request->has('search') && $request->input('search') !== '') {
@@ -61,7 +57,7 @@ class PenerimaBeasiswaController extends Controller
 
 
         // Kirim data ke view
-        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'notificationData'));
+        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa'));
     }
 
     /**
@@ -69,9 +65,7 @@ class PenerimaBeasiswaController extends Controller
      */
     public function create()
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.import-data-beasiswa', compact('notificationData'));
+        return view('pages.Beasiswa.import-data-beasiswa');
     }
 
     /**
@@ -152,13 +146,11 @@ class PenerimaBeasiswaController extends Controller
             ->join('jurusan', 'prodi.jurusan_id', '=', 'jurusan.id')
             ->where('beasiswa_id', '=', $id)
             ->get();
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $user = Auth::user();
         $reviewer = Reviewer::where('user_id', $user->id)->first();
         $beasiswa = Beasiswa::findOrFail($id);
 
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'notificationData', 'beasiswa','reviewer'));
+        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'beasiswa','reviewer'));
     }
 
     /**

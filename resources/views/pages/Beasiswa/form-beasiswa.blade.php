@@ -1,7 +1,7 @@
 @extends('layouts.main2')
 
 @section('content')
-    @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null, 'notificationData'=>$notificationData])
+    @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null])
 {{-- @dd($beasiswa) --}}
 
 @if ($beasiswa != null)
