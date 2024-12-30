@@ -290,31 +290,31 @@
                             @if(isset($notificationData) && count($notificationData) > 0)
                                 <!-- Looping through notifications -->
                                 @foreach ($notificationData as $notification)
-                                <li class="relative mb-2" data-id="{{ $notification->id }}">
-                                    <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors"
-                                        href="javascript:;" onclick="markAsRead(this)">
-                                        <div class="flex py-1">
-                                            <div class="my-auto">
-                                                <i class="cursor-pointer fa fa-bell inline-flex items-center justify-center mr-4 text-sm text-grey h-9 w-9 max-w-none rounded-xl" aria-hidden="true"></i>
-                                            </div>
-                                            <div class="flex flex-col justify-center notification-content">
-                                                @if(!$notification->read)
-                                                    <!-- Tampilkan titik merah jika notifikasi belum dibaca -->
-                                                    <span class="absolute right-0 top-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                                                @endif
-                                                <h6 class="mb-1 text-sm font-normal leading-normal">
-                                                    <p>Beasiswa {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}<p>
-                                                    {{ $notification->pengajuanBeasiswa->Status->isi_status }}
-                                                </h6>
-                                                <p class="text-xs text-gray-400">
-                                                    <i class="mr-1 fa fa-clock"></i>
-                                                    {{ $notification->created_at }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            @endforeach
+                        <li class="relative mb-2" data-id="{{ $notification->id }}">
+                            <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors"
+                                href="javascript:;" onclick="markAsRead(this)">
+                                <div class="flex py-1">
+                                    <div class="my-auto">
+                                        <i class="cursor-pointer fa fa-bell inline-flex items-center justify-center mr-4 text-sm text-grey h-9 w-9 max-w-none rounded-xl" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="flex flex-col justify-center notification-content">
+                                        @if(!$notification->read)
+                                            <!-- Tampilkan titik merah jika notifikasi belum dibaca -->
+                                            <span class="absolute right-0 top-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                                        @endif
+                                        <h6 class="mb-1 text-sm font-normal leading-normal">
+                                            Beasiswa {{ $notification->pengajuanBeasiswa->Beasiswa->nama_beasiswa }}
+                                            {{ $notification->pengajuanBeasiswa->Status->isi_status }}
+                                        </h6>
+                                        <p class="text-xs text-gray-400">
+                                            <i class="mr-1 fa fa-clock"></i>
+                                            {{ $notification->created_at }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
                             @else
                                 <!-- If there are no notifications, show this message -->
                                 <li class="relative mb-2">
