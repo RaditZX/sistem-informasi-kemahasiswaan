@@ -12,6 +12,8 @@ class userController extends Controller
     public function index()
     {
         // Using the 'view' helper function
+        $notifController = new NotificationController();
+        $notificationData = $notifController->getNotifData();
         return view('user.index', ['user' => "hello world"]);
         
         // Alternatively, using 'compact' method

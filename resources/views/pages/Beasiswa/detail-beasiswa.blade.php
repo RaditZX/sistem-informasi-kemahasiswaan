@@ -3,7 +3,8 @@
 
     @include('component.navbar', [
         'path' => 'Detail Beasiswa',
-        'id' => $id
+        'id' => $id,
+        'notificationData' => $notificationData,
     ])
 
     <div class="p-4">

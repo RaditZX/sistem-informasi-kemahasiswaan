@@ -2,7 +2,7 @@
 @extends('layouts.main')
 
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null, 'notificationData'=>$notificationData])
     <div class="p-3 mt-3 flex flex-row">
         <p class="text-2xl lg:text-3xl font-bold text-black">Import Data Penerima Beasiswa</p>
     </div>

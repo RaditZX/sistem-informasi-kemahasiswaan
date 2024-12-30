@@ -1,8 +1,9 @@
 @extends('layouts.filter')
+@extends('layouts.notification')
 @extends('layouts.main')
 
 @section('content')
-@include('component.navbar', ['path' => 'Pengaturan', 'id' => null])
+@include('component.navbar', ['path' => 'Pengaturan', 'id' => null, 'notificationData' => $notificationData])
 
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <!-- Flash Message Section -->

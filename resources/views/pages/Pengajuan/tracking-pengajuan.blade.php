@@ -1,4 +1,5 @@
 @extends('layouts.filter')
+@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
 
@@ -228,7 +229,7 @@
             </div>
         @endif
     </div>
-
+@endsection
 
 <script>
     function toggleAccordion(element) {
@@ -290,4 +291,3 @@
     // Start the timer when the page loads
     window.onload = startCountdown;
 </script>
-@endsection

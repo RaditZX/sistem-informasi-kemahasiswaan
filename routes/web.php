@@ -84,8 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('tracking-pengajuan', PengajuanBeasiswaController::class);
     Route::get('/pengumuman-beasiswa/{id}', [PenerimaBeasiswaController::class, 'show'])->name('beasiswa.pengumuman-beasiswa');
     Route::get('/pengumuman-beasiswa', [PenerimaBeasiswaController::class, 'index'])->name('pengumuman-beasiswa.index');
-    Route::get('/notifications', [NotificationController::class, 'getNotifData'])->name('notifications.index');
-    Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
+    Route::get('/get-notif-data', [NotificationController::class, 'getNotifData'])->name('notifications');
     Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
     Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
     Route::resource('beasiswa', BeasiswaController::class);

@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null,'notificationData'=>$notificationData])
     <style>
         .bg-gradient-to-tl {
             background: linear-gradient(to right, orange, rgb(213, 213, 21));
