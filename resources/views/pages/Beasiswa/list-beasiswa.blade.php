@@ -85,7 +85,6 @@
                 <p class="text-xs text-justify mb-2">
                     {{ \Illuminate\Support\Str::limit($ba->deskripsi, 300, '...') }}
                 </p>
-
             <div class="flex flex-auto justify-left gap-3">
                 <img src="{{ $ba->sumber_logo ? $ba->sumber_logo : 'https://example.com/default-logo.jpg' }}"
                     class="w-5 h-5 rounded-full" alt="{{ $ba->sumber }}">

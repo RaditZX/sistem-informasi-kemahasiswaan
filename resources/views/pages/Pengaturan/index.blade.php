@@ -165,7 +165,6 @@
                         </div>
                     </div>
 
-
                     <!-- Beasiswa Section -->
                     @if($mahasiswa)
                     @if($beasiswa->isNotEmpty())
@@ -191,7 +190,6 @@
                     </p>
                     @endif
                     @endif
-
             </div>
             <!-- Notifikasi Section -->
             <section id="notifikasi" class="tab-content hidden mt-10">
