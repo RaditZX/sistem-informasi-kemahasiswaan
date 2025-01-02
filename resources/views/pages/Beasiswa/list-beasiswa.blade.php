@@ -1,7 +1,7 @@
 @extends('layouts.filter')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null,'notificationData'=>$notificationData])
+    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null])
 
     {{-- Filter Button and Search Column --}}
     <div class="p-2">
@@ -36,7 +36,7 @@
     @foreach ($beasiswa as $ba)
     @php
         // Default status
-        $status = ($ba->tanggal_mulai <= $currentDate && $ba->tanggal_berakhir >= $currentDate) 
+        $status = ($ba->tanggal_mulai <= $currentDate && $ba->tanggal_berakhir >= $currentDate)
             ? "Berlangsung"
             : ($ba->tanggal_mulai > $currentDate
                 ? "Upcoming"
@@ -46,31 +46,24 @@
         $isReceived = collect($beasiswaUserTipe)->firstWhere('id', $ba->id);
 
         if ($isReceived) {
-            // Jika sudah diterima, set status dari data controller
-            $status = $isReceived['status']; 
+            $status = $isReceived['status'];
         }
-
-        // Jika sudah ada beasiswa yang diterima, set status semua beasiswa menjadi Closed, kecuali untuk yang 'half' dan masih berlaku
         if ($isAnyBeasiswaReceived && !($ba->status == 'half' && $ba->tanggal_berakhir > $currentDate && $ba->tanggal_berakhir <= $oneYearLater)) {
             $status = 'Closed';
         }
-
-        // Jika beasiswa sudah diterima, tidak bisa didaftar lagi
         $canRegister = !$isAnyBeasiswaReceived || ($ba->status == 'half' && $ba->tanggal_berakhir > $currentDate && $ba->tanggal_berakhir <= $oneYearLater); // jika ada yang diterima, tidak bisa daftar lagi kecuali yang 'half' dalam rentang satu tahun ke depan
-
     @endphp
-
             @if($ba->tipe_beasiswa === "kipk")
-                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-kipk/'.$ba->id : '#' }}" 
-                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}" 
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-kipk/'.$ba->id : '#' }}"
+                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}"
                     data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
             @elseif($ba->tipe_beasiswa === "eksternal")
-                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-eksternal/'.$ba->id : '#' }}" 
-                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}" 
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-eksternal/'.$ba->id : '#' }}"
+                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}"
                     data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
             @else
-                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/beasiswa/'.$ba->id : '#' }}" 
-                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}" 
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/beasiswa/'.$ba->id : '#' }}"
+                    class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}"
                     data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
             @endif
                 <div class="p-2 relative">
@@ -92,15 +85,8 @@
                 <p class="text-xs text-justify mb-2">
                     {{ \Illuminate\Support\Str::limit($ba->deskripsi, 300, '...') }}
                 </p>
-                <div class="flex flex-auto justify-left gap-3">
-                    <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.InKvUSEGq1ZVmF1-PiX8YQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&cb=13&pid=3.1&rm=2" }}
-                        class="w-5 h-5 rounded-full" alt="KEMENDIKBUD">
-                    <p class="text-xs font-bold ">{{ $ba->sumber }}</p>
-            </div>
-            <p class="font-bold text-justify mb-1">{{ $ba->nama_beasiswa }}</p>
-            <p class="text-xs text-justify mb-2">{{ $ba->deskripsi }}</p>
             <div class="flex flex-auto justify-left gap-3">
-                <img src="{{ $ba->sumber_logo ? $ba->sumber_logo : 'https://example.com/default-logo.jpg' }}" 
+                <img src="{{ $ba->sumber_logo ? $ba->sumber_logo : 'https://example.com/default-logo.jpg' }}"
                     class="w-5 h-5 rounded-full" alt="{{ $ba->sumber }}">
                 <p class="text-xs font-bold">{{ $ba->sumber }}</p>
             </div>
@@ -108,98 +94,11 @@
     </a>
     @endforeach
 
-        {{-- Filter Popup --}}
-        <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center">
-            <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
-                <div class="absolute top-4 right-4">
-                    <button onclick="hidePopup()" aria-label="Close" class="text-gray-500 hover:text-gray-700">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <form action="{{ url('/beasiswa') }}" method="GET">
-                        <div class="flex flex-col sm:flex-row justify-start gap-12 sm:gap-24">
-                            <!-- Left Section: Checkboxes -->
-                            <div class="flex flex-col items-start gap-6 sm:w-1/2">
-                                <p class="text-xl font-semibold text-gray-700">Filter</p>
 
-                                <!-- Jenis Beasiswa Section -->
-                                <p class="text-sm sm:text-base font-medium text-gray-600">Jenis Beasiswa</p>
-                                <div class="flex flex-row items-start gap-4">
-                                    <div class="flex items-center">
-                                        <input type="checkbox" name="jenis_beasiswa[]" value="half"
-                                            {{ in_array('half', request('jenis_beasiswa', [])) ? 'checked' : '' }}
-                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                        <label for="half" class="ml-2 text-sm text-gray-600">Half</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" name="jenis_beasiswa[]" value="full"
-                                            {{ in_array('full', request('jenis_beasiswa', [])) ? 'checked' : '' }}
-                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                        <label for="full" class="ml-2 text-sm text-gray-600">Full</label>
-                                    </div>
-                                </div>
-
-                                <!-- Jenjang Pendidikan Section -->
-                                <p class="text-sm sm:text-base font-medium text-gray-600">Jenjang Pendidikan</p>
-                                <div class="flex flex-row items-start gap-4">
-                                    <div class="flex items-center">
-                                        <input type="checkbox" name="jenjang_pendidikan[]" value="D3"
-                                            {{ in_array('D3', request('jenjang_pendidikan', [])) ? 'checked' : '' }}
-                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                        <label for="D3" class="ml-2 text-sm text-gray-600">D3</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" name="jenjang_pendidikan[]" value="D4"
-                                            {{ in_array('D4', request('jenjang_pendidikan', [])) ? 'checked' : '' }}
-                                            class="rounded-full border-gray-300 focus:ring-0 focus:ring-offset-0 text-orange-500 h-8 w-8" />
-                                        <label for="D4" class="ml-2 text-sm text-gray-600">D4</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Right Section: Dropdowns -->
-                            <div class="flex flex-col items-start gap-6 sm:w-1/2 mt-6">
-                                <!-- Tipe Beasiswa Section -->
-                                <p class="text-sm sm:text-base font-medium text-gray-600">Tipe Beasiswa</p>
-                                <div class="w-full">
-                                    <select name="tipe_beasiswa" id="tipe_beasiswa"
-                                        class="mt-2 block w-full rounded-full border border-gray-300 p-3 focus:border-orange-400 focus:ring-orange-300">
-                                        <option value="">Select Tipe Beasiswa</option>
-                                        <option value="kipk" {{ request('tipe_beasiswa') == 'kipk' ? 'selected' : '' }}>KIPK</option>
-                                        <option value="internal" {{ request('tipe_beasiswa') == 'internal' ? 'selected' : '' }}>Internal</option>
-                                        <option value="eksternal" {{ request('tipe_beasiswa') == 'eksternal' ? 'selected' : '' }}>Eksternal</option>
-                                    </select>
-                                </div>
-
-                                <!-- Jurusan Section -->
-                                <p class="text-sm sm:text-base font-medium text-gray-600">Jurusan Khusus:</p>
-                                <div class="w-full">
-                                    <select name="jurusan" id="jurusan"
-                                        class="block w-full rounded-full border border-gray-300 p-3 focus:border-orange-400 focus:ring-orange-300">
-                                        <option value="">Pilih Jurusan</option>
-                                        <option value="Teknik Informatika" {{ request('jurusan') == 'Teknik Informatika' ? 'selected' : '' }}>Teknik Informatika</option>
-                                        <option value="Teknik Sipil" {{ request('jurusan') == 'Teknik Sipil' ? 'selected' : '' }}>Teknik Sipil</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Buttons Section -->
-                        <div class="flex flex-row justify-between gap-4 mt-6">
-                            <button type="submit"
-                                class="w-1/2 bg-orange-500 p-3 text-white rounded-full shadow-md hover:bg-blue-600">Apply</button>
-                            <button type="button" onclick="hidePopup()"
-                                class="w-1/2 bg-red-500 p-3 text-white rounded-full shadow-md hover:bg-red-600">Close</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
 
 
     </div>
+
+
 @endsection

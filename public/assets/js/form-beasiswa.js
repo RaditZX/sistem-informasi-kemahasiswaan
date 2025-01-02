@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
             hidePopup();
         }
     });
-    
 });
 
 function fetchJenjangTags() {

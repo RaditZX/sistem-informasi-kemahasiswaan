@@ -1,8 +1,7 @@
 @extends('layouts.main2')
 
 @section('content')
-    @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null, 'notificationData'=>$notificationData])
-{{-- @dd($beasiswa) --}}
+    @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null])
 
 @if ($beasiswa != null)
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -174,16 +173,18 @@
                                 <input
                                     type="text"
                                     id="dokumen-1"
-                                    name="nama_dokumen[]" 
+                                    name="nama_dokumen[]"
+
                                     placeholder="Masukkan dokumen"
                                     class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     oninput="fetchDokumenTags(1)"
                                     onkeydown="handleDokumenKeydown(event, 1)"
                                 />
-                                <div id="syarat-suggestions-dokumen-1" 
+
+                                <div id="syarat-suggestions-dokumen-1"
                                      class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
                             </div>
-                    
+
                             <!-- Input Unggah Format Dokumen -->
                             <div class="col-span-5">
                                 <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
@@ -196,7 +197,7 @@
                                 />
                                 <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
                             </div>
-                    
+
                             <div class="col-span-1 justify-center flex items-center mt-7">
                                 <div class="bg-red-400 hover:bg-red-600 rounded">
                                     <button
@@ -237,7 +238,7 @@
                         </div>
                         <button onclick="event.preventDefault(); removeAllFiles();" class="text-red-500 ml-2 hover:underline">Hapus Semua</button>
                         <div id="preview-container" class="flex flex-wrap gap-4 mt-2"></div> <!-- Preview gambar -->
-                        
+
                         <div id="hidden-input-container"></div>
 
                         <!-- Modal untuk menampilkan gambar besar -->
@@ -264,7 +265,6 @@
                 <div class="bg-[#FF8E07] rounded cursor-pointer p-1 mb-2 hover:cursor-pointer flex items-center" onclick="showPopup()">
                     <span class="text-xl mx-2">+</span> Template Data Beasiswa
                 </div>
-                
 
                 <form id="beasiswa-form" action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -406,7 +406,7 @@
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                     <br>
-                    
+
 
                     <!-- Jenjang Pendidikan -->
                     <div class="relative">
@@ -419,7 +419,7 @@
                         <div id="jenjang-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto "></div>
                         <div id="tag-counter-jenjang" class="mb-2 text-sm text-gray-600">Jumlah jenjang yang dipilih: 0</div>
                     </div>
-                    
+
 
                     <!-- Syarat Beasiswa -->
                     <div class="relative">
@@ -439,7 +439,7 @@
                         <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
                         <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2">
                         </div>
-                        
+
                         <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
                         class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                         oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
@@ -455,16 +455,15 @@
                                 <input
                                     type="text"
                                     id="dokumen-1"
-                                    name="nama_dokumen[]" 
+                                    name="nama_dokumen[]"
                                     placeholder="Masukkan dokumen"
                                     class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     oninput="fetchDokumenTags(1)"
                                     onkeydown="handleDokumenKeydown(event, 1)"
                                 />
-                                <div id="syarat-suggestions-dokumen-1" 
+                                <div id="syarat-suggestions-dokumen-1"
                                      class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
                             </div>
-                    
                             <!-- Input Unggah Format Dokumen -->
                             <div class="col-span-5">
                                 <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
@@ -477,7 +476,6 @@
                                 />
                                 <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
                             </div>
-                    
                             <div class="col-span-1 justify-center flex items-center mt-7">
                                 <div class="bg-red-400 hover:bg-red-600 rounded">
                                     <button
@@ -491,7 +489,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Tombol Tambah Syarat Dokumen -->
                     <div class="mt-4">
                         <button
@@ -503,8 +500,6 @@
                             <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
                         </button>
                     </div>
-                
-                    
                     <br>
                     <p class="@error('poster') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
                     <div class="mb-4">
@@ -536,7 +531,6 @@
     </div>
 
     {{-- popup --}}
-  
     <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center z-50">
         <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
             {{-- Tombol Close --}}
@@ -547,10 +541,10 @@
                     </svg>
                 </button>
             </div>
-    
+
             {{-- Header --}}
             <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center">Pilih Template Beasiswa</h2>
-    
+
             {{-- Daftar Template Beasiswa --}}
             <ul id="template-list" class="space-y-4">
                 <li id="loading-indicator" class="text-center text-gray-600">Memuat template...</li>
@@ -558,10 +552,9 @@
 
             <div id="pagination-controls" class="py-3 hidden"></div>
         </div>
-    </div>            
-    
+    </div>
+
 @endif
-@endsection
 
 @section('scripts')
     <script>
@@ -589,21 +582,22 @@
     </script>
 @endsection
 
-@if ($beasiswa != null)
-    @section('scriptsForEditBeasiswa')
-    <script>
+@section('scriptsForEditBeasiswa')
+@if($beasiswa != null)
+<script>
 
-        var beasiswa =  {!! json_encode($beasiswa, JSON_HEX_TAG) !!} 
-        var syarat =  {!! json_encode($syarat, JSON_HEX_TAG) !!} 
-        var jenjang =  {!! json_encode($jenjang, JSON_HEX_TAG) !!} 
-        var dokumen =  {!! json_encode($dokumen, JSON_HEX_TAG) !!} 
-        var link_dokumen =  {!! json_encode($link_dokumen, JSON_HEX_TAG) !!} 
-        var benefit =  {!! json_encode($benefit, JSON_HEX_TAG) !!} 
-        var poster =  {!! json_encode($poster, JSON_HEX_TAG) !!} 
-        
-        window.addEventListener('load', function() {
-        loadBeasiswaData();
-        });
-    </script>
-    @endsection
+    var beasiswa =  {!! json_encode($beasiswa, JSON_HEX_TAG) !!}
+    var syarat =  {!! json_encode($syarat, JSON_HEX_TAG) !!}
+    var jenjang =  {!! json_encode($jenjang, JSON_HEX_TAG) !!}
+    var dokumen =  {!! json_encode($dokumen, JSON_HEX_TAG) !!}
+    var link_dokumen =  {!! json_encode($link_dokumen, JSON_HEX_TAG) !!}
+    var benefit =  {!! json_encode($benefit, JSON_HEX_TAG) !!}
+    var poster =  {!! json_encode($poster, JSON_HEX_TAG) !!}
+
+    window.addEventListener('load', function() {
+    loadBeasiswaData();
+    });
+</script>
 @endif
+@endsection
+@endsection

@@ -3,8 +3,7 @@
 @section('content')
     @include('component.navbar', [
         'path' => 'List Beasiswa',
-        'id' => null,
-        'notificationData' => $notificationData,
+        'id' => null
     ])
 
 
@@ -16,13 +15,14 @@
                 <i class="fas fa-search absolute left-3 text-gray-500"></i>
                 <form method="GET" action="{{ route('beasiswa.list-beasiswa-staff') }}" class="w-full">
                     <input type="text" name="search" id="searchInput" placeholder="Cari Beasiswa"
-                           class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
-                           value="{{ request('search') }}">
+                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+                        value="{{ request('search') }}">
                 </form>
             </div>
             <div class="relative flex items-center">
                 <i class="fas fa-filter absolute left-3 text-white"></i>
-                <div class="pl-10 pr-4 py-2 bg-orange-500 rounded shadow-lg p-2 w-auto cursor-pointer" onclick="showPopup()">
+                <div class="pl-10 pr-4 py-2 bg-orange-500 rounded shadow-lg p-2 w-auto cursor-pointer"
+                    onclick="showPopup()">
                     <p class="text-xs sm:text-base text-white">Filter</p>
                 </div>
             </div>
@@ -36,16 +36,16 @@
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full table-fixed border border-none">
+            <table class="min-w-full table-auto border border-none">
                 <thead>
                     <tr>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Nama</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Penyelenggara</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Tanggal Mulai</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Tanggal Berakhir</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Action</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700">Status</th>
-                        <th class="w-1/6 px-4 py-2 text-center font-bold text-gray-700"></th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Nama</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Penyelenggara</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Tanggal Mulai</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Tanggal Berakhir</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Action</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700">Status</th>
+                        <th class="px-4 py-2 text-center font-bold text-gray-700"></th>
                     </tr>
                 </thead>
                 <tbody>

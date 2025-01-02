@@ -1,9 +1,7 @@
-@extends('layouts.filter')
-@extends('layouts.notification')
 @extends('layouts.main')
 
 @section('content')
-@include('component.navbar', ['path' => 'Pengaturan', 'id' => null, 'notificationData' => $notificationData])
+@include('component.navbar', ['path' => 'Pengaturan', 'id' => null])
 
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <!-- Flash Message Section -->
@@ -152,7 +150,7 @@
                                         <label for="nim" class="block text-sm font-medium">NIM</label>
                                         <input id="nim" name="nim" type="text" class="block w-full mt-2 text-sm border-gray-300 rounded-md shadow-sm" value="{{ $nim }}">
                                     </div>
-                                
+
 
                                 <div class="mt-4">
                                     <label for="no_hp" class="block text-sm font-medium">Nomor Handphone</label>
@@ -166,7 +164,6 @@
                             </form>
                         </div>
                     </div>
-                
 
                     <!-- Beasiswa Section -->
                     @if($mahasiswa)
@@ -193,7 +190,6 @@
                     </p>
                     @endif
                     @endif
-                    
             </div>
             <!-- Notifikasi Section -->
             <section id="notifikasi" class="tab-content hidden mt-10">

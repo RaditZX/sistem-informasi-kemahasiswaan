@@ -3,25 +3,8 @@
 @section('content')
     @include('component.navbar', [
         'path' => 'List Beasiswa',
-        'id' => null,
-        'notificationData' => $notificationData,
+        'id' => null
     ])
-
-    @if (session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                showAlert('success', 'Success', "{{ session('success') }}");
-            });
-        </script>
-    @endif
-
-    @if (session('error'))
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                showAlert('error', 'Error', "{{ session('error') }}");
-            });
-        </script>
-    @endif
 
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="container px-4 py-6 sm:px-0">

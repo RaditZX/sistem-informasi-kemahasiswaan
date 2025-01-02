@@ -1,8 +1,5 @@
-@extends('layouts.filter')
-@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
-
 @include('component.navbar', [
     'path' => "Tracking Beasiswa > " . $dataPengajuan->nama_beasiswa,
     'id' => null
@@ -163,7 +160,7 @@
             <form action="{{ route('pengajuan.update-progress', $dataPengajuan->id) }}" method="POST" class="my-8 px-4">
                 @csrf
                 @method('PATCH')
-                
+
                 @if ($dataPengajuan->status != 11)
                 <div>
                     <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Your message</label>

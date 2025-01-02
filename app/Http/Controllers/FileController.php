@@ -72,8 +72,6 @@ class FileController extends Controller
         // Get the MIME type of the file
         $mimeType = mime_content_type($filePath);
 
-
-
         // If it's a PDF, force set the MIME type to application/pdf
         if ($mimeType === 'application/octet-stream' || $mimeType === 'application/pdf') {
             $mimeType = 'application/pdf';  // Override to force PDF type

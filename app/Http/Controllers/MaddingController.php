@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Beasiswa;
 use App\Models\PenerimaBeasiswa;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -20,7 +19,6 @@ class MaddingController extends Controller
         // Get today's date
         $today = Carbon::today();
 
-        // Get newest beasiswa based on tanggal_mulai
         // Get newest beasiswa based on tanggal_mulai
         $newestBeasiswa = Beasiswa::leftJoin('jenjang_pendidikan', 'jenjang_pendidikan.beasiswa_id', '=', 'beasiswa.id')
         ->leftJoin('poster_beasiswa', 'poster_beasiswa.beasiswa_id', '=', 'beasiswa.id') // Add poster_beasiswa join

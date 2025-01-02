@@ -32,18 +32,13 @@ class PengajuanBeasiswaController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
 
-        return view('pages.Pengajuan.tracking-pengajuan', compact('notificationData'));
+        return view('pages.Pengajuan.tracking-pengajuan');
     }
 
 
     public function listPengajuanStaff()
     {
-        // Fetch notification data
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
 
         $user = Auth::user();
 
@@ -105,7 +100,8 @@ class PengajuanBeasiswaController extends Controller
                         'beasiswa.*',
                         'users.nama_depan',
                         'pengajuan_beasiswa.status',
-                        'pengajuan_beasiswa.tanggal_pengajuan'
+                        'pengajuan_beasiswa.tanggal_pengajuan',
+                        'pengajuan_beasiswa.id as id_pengajuan'
                     )
                     ->whereIn('pengajuan_beasiswa.status', $statusCode)
                     ->get();
@@ -116,7 +112,7 @@ class PengajuanBeasiswaController extends Controller
         $namaBeasiswa = Beasiswa::pluck('nama_beasiswa');
 
         // Return the view with the data
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan', 'notificationData', 'namaBeasiswa'));
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan', 'namaBeasiswa'));
     }
 
     public function create(string $id)
@@ -133,11 +129,9 @@ class PengajuanBeasiswaController extends Controller
         ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
         WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$id]);
 
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $pengajuan = null;
         $dokumenPengajuan = null;
-        return view('pages.Beasiswa.pengajuan-beasiswa', compact('notificationData', 'user', 'pengajuan', 'dokumenPengajuan', 'mhs', 'jurusan', 'prodi', 'dokumen'));
+        return view('pages.Beasiswa.pengajuan-beasiswa', compact('user', 'pengajuan', 'dokumenPengajuan', 'mhs', 'jurusan', 'prodi', 'dokumen'));
     }
 
     /**
@@ -259,9 +253,7 @@ class PengajuanBeasiswaController extends Controller
         ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
         WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$beasiswaID]);
 
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.pengajuan-beasiswa', ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan, 'notificationData' => $notificationData, 'prodi' => $prodi, 'jurusan' => $jurusan, 'user' => $user, 'mhs' => $mhs, 'dokumen' => $dokumen]);
+        return view('pages.Beasiswa.pengajuan-beasiswa', ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan, 'prodi' => $prodi, 'jurusan' => $jurusan, 'user' => $user, 'mhs' => $mhs, 'dokumen' => $dokumen]);
     }
 
     /**
