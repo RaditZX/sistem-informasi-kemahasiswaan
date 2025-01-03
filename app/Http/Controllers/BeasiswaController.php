@@ -16,7 +16,6 @@ use App\Models\Prodi;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 
@@ -24,83 +23,33 @@ use Illuminate\Support\Facades\DB;
 
 class BeasiswaController extends Controller
 {
+    private $notifController;
+
+    public function __construct(NotificationController $notifController)
+    {
+        $this->notifController = $notifController;
+    }
 
     public function getBeasiswaDataBaseOnBeasiswaId(int $id){
-        $beasiswa = Beasiswa::findOrFail($id);
-        return $beasiswa;
+        return Beasiswa::findOrFail($id);
+
     }
 
     public function index(Request $request)
     {
-        // Get the authenticated user
         $user = Auth::user();
-        $user_id = $user->id;
+        $notificationData = $this->notifController->getNotifData();
 
-        // Get notification data
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
+        $query = $this->buildBeasiswaQuery($request);
+        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
 
-        // Prepare the query for Beasiswa
-        $query = Beasiswa::query();
-
-        // Filter search by 'nama_beasiswa'
-        if ($request->has('search') && $request->input('search') !== '') {
-            $searchTerm = $request->input('search');
-            $query->where('nama_beasiswa', 'ilike', "%{$searchTerm}%");
-        }
-
-        // Filter by 'jenis_beasiswa'
-        if ($request->has('jenis_beasiswa') && !empty($request->input('jenis_beasiswa'))) {
-            $jenisBeasiswa = $request->input('jenis_beasiswa');
-            foreach ($jenisBeasiswa as $jenis) {
-                $query->orWhere('jenis_beasiswa', $jenis);
-            }
-        }
-
-        // Filter by 'tipe_beasiswa' (full or half)
-        if ($request->has('tipe_beasiswa') && !empty($request->input('tipe_beasiswa'))) {
-            $tipeBeasiswa = $request->input('tipe_beasiswa');
-            $query->where('tipe_beasiswa', $tipeBeasiswa); // Filter by full or half
-        }
-
-        // Filter by 'jurusan' in 'syarat_beasiswa'
-        if ($request->has('jurusan') && !empty($request->input('jurusan'))) {
-            $jurusan = $request->input('jurusan');
-            $query->whereHas('syaratBeasiswa', function ($q) use ($jurusan) {
-                $q->where('syarat', 'like', "%{$jurusan}%");
-            });
-        }
-
-        // Retrieve beasiswa data, join with 'poster_beasiswa', and paginate
-        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
-                          ->paginate(8);
-
-        // Ambil data mahasiswa dan beasiswa yang diterima
-        $mahasiswa = Mahasiswa::where('user_id', $user_id)->first();
+        $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
         $penerimaBeasiswa = $mahasiswa ? $mahasiswa->penerimaBeasiswa()->with('beasiswa')->get() : [];
 
-        // Olah data untuk menentukan tipe beasiswa yang diterima
-        $beasiswaUserTipe = [];
-        foreach ($penerimaBeasiswa as $item) {
-        $jenis = $item->beasiswa->jenis_beasiswa; // Ambil tipe beasiswa (full atau half)
-        $createdAt = $item->created_at; // Tanggal pengumuman
+        $beasiswaUserTipe = $this->mapBeasiswaUserTipe($penerimaBeasiswa);
 
-        if ($jenis === 'full') {
-            $status = 'Closed Permanently';
-        } elseif ($jenis === 'half' && $createdAt->addYear() > now()) {
-            $status = 'Closed';
-        } else {
-            $status = 'Open Again';
-        }
+        $jurusan = Jurusan::all();
 
-        $beasiswaUserTipe[] = [
-            'id' => $item->beasiswa->id,
-            'jenis' => $jenis,
-            'status' => $status,
-        ];
-    }
-    $jurusan = Jurusan::all();
-        // Return the view with data
         return view('pages.Beasiswa.list-beasiswa', compact(
             'beasiswa',
             'notificationData',
@@ -109,48 +58,69 @@ class BeasiswaController extends Controller
             'jurusan'
         ));
     }
+
     public function getListBeasiswaForStaff(Request $request)
+    {
+        $notificationData = $this->notifController->getNotifData();
+
+        $query = $this->buildBeasiswaQuery($request);
+        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(10);
+
+        $jurusan = Jurusan::all();
+
+        return view('pages.Beasiswa.list-beasiswa-staff', compact('beasiswa', 'notificationData', 'jurusan'));
+    }
+
+    private function buildBeasiswaQuery(Request $request)
     {
         $query = Beasiswa::query();
 
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
-        // Filter `search` berdasarkan `nama_beasiswa`
-        if ($request->has('search') && $request->input('search') !== '') {
+        if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where('nama_beasiswa', 'ilike', "%{$searchTerm}%");
         }
 
-        // Filter `jenis_beasiswa`
-        if ($request->has('jenis_beasiswa') && !empty($request->input('jenis_beasiswa'))) {
+        if ($request->filled('jenis_beasiswa')) {
             $jenisBeasiswa = $request->input('jenis_beasiswa');
             foreach ($jenisBeasiswa as $jenis) {
                 $query->orWhere('jenis_beasiswa', $jenis);
             }
         }
 
-        // Filter `tipe_beasiswa`
-        if ($request->has('tipe_beasiswa') && !empty($request->input('tipe_beasiswa'))) {
+        if ($request->filled('tipe_beasiswa')) {
             $query->where('tipe_beasiswa', $request->input('tipe_beasiswa'));
         }
 
-        // Filter `jurusan` dalam `syarat_beasiswa`
-        if ($request->has('jurusan') && !empty($request->input('jurusan'))) {
+        if ($request->filled('jurusan')) {
             $jurusan = $request->input('jurusan');
             $query->whereHas('syaratBeasiswa', function ($q) use ($jurusan) {
                 $q->where('syarat', 'like', "%{$jurusan}%");
             });
         }
 
-        // Jalankan query dan paginasi hasilnya
-        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
-                  ->paginate(10);
+        return $query;
+    }
 
-        $jurusan = Jurusan::all();
+    private function mapBeasiswaUserTipe($penerimaBeasiswa)
+    {
+        return $penerimaBeasiswa->map(function ($item) {
+            $jenis = $item->beasiswa->jenis_beasiswa;
+            $createdAt = $item->created_at;
 
-        return view('pages.Beasiswa.list-beasiswa-staff',compact('beasiswa', 'notificationData','jurusan'));
+            if ($jenis === 'full') {
+                $status = 'Closed Permanently';
+            } elseif ($jenis === 'half' && $createdAt->addYear() > now()) {
+                $status = 'Closed';
+            } else {
+                $status = 'Open Again';
+            }
 
+            return [
+                'id' => $item->beasiswa->id,
+                'jenis' => $jenis,
+                'status' => $status,
+            ];
+        })->toArray();
     }
 
     public function getDetailBeasiswaKipk($id)
@@ -187,7 +157,6 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
 
         // Validasi input
         $validatedData = $request->validate($this->validation_rules, $this->validation_messages);
@@ -240,8 +209,6 @@ class BeasiswaController extends Controller
                 }
             }
         }
-
-        // dd($request, $existingposters, $request->file('poster'), $fileUrls);
 
         // Simpan poster beasiswa
         foreach ($fileUrls as $url){
@@ -297,7 +264,6 @@ class BeasiswaController extends Controller
             }
         }
 
-        // dd($validatedData['nama_dokumen'], $dokumenUrls);
         if (isset($validatedData['nama_dokumen'])) {
             $index = 0;
             foreach ($validatedData['nama_dokumen'] as $dokumen) {
@@ -399,7 +365,6 @@ class BeasiswaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // dd($request);
         // validasi
         $validatedData = $request->validate($this->validation_rules, $this->validation_messages);
 
@@ -445,7 +410,6 @@ class BeasiswaController extends Controller
                     // dd($fileUrls);
                 }
             }
-            // dd($fileUrls);
 
             if (isset($request->poster)) {
                 foreach ($request->poster as $poster) {
@@ -580,8 +544,7 @@ class BeasiswaController extends Controller
 
 
             // return redirect()->back()->withErrors(['msg' => 'Terjadi kesalahan saat memperbarui data beasiswa.']);
-                // ->withInput($request->all())
-                // ->withErrors(['msg' => 'Terjadi kesalahan saat memperbarui data beasiswa.']);
+            //     ->withErrors(['msg' => 'Terjadi kesalahan saat memperbarui data beasiswa.']);
         }
     }
 
@@ -645,8 +608,6 @@ class BeasiswaController extends Controller
             'last_page' => $templates->lastPage(),
         ]);
     }
-
-
 
     public function getBeasiswa($id)
     {

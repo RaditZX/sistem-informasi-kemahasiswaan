@@ -90,24 +90,9 @@
                         class="w-5 h-5 rounded-full" alt="KEMENDIKBUD">
                     <p class="text-xs font-bold ">{{ $ba->sumber }}</p>
             </div>
-            <p class="font-bold text-justify mb-1">{{ $ba->nama_beasiswa }}</p>
-            <p class="text-xs text-justify mb-2">
-                {{ implode(' ', array_slice(explode(' ', $ba->deskripsi), 0, 30)) }}{{ str_word_count($ba->deskripsi) > 30 ? '...' : '' }}
-            </p>
-
-            <div class="flex flex-auto justify-left gap-3">
-                <img src="{{ $ba->sumber_logo ? $ba->sumber_logo : 'https://example.com/default-logo.jpg' }}"
-                    class="w-5 h-5 rounded-full" alt="{{ $ba->sumber }}">
-                <p class="text-xs font-bold">{{ $ba->sumber }}</p>
-            </div>
         </div>
     </a>
     @endforeach
-
-
-
-
-
     </div>
 
 
