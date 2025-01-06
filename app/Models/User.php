@@ -17,11 +17,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id',
         'nama_depan',
         'nama_belakang',
         'email',
-        'jenis_kelamin'
+        'jenis_kelamin',  // Changed from jenis_kelamin
+        'nim',
+        'no_hp',
+        'user_img'  // Add this for image uploads
     ];
 
     /**
@@ -42,9 +44,19 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+    // Model User
+    public function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class, 'user_id', 'id');
+    }
 
+    public function reviewer()
+{
+    return $this->hasOne(Reviewer::class, 'user_id', 'id');
+}
 
 }
