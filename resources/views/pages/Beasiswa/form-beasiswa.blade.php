@@ -174,11 +174,13 @@
                                     type="text"
                                     id="dokumen-1"
                                     name="nama_dokumen[]"
+
                                     placeholder="Masukkan dokumen"
                                     class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     oninput="fetchDokumenTags(1)"
                                     onkeydown="handleDokumenKeydown(event, 1)"
                                 />
+
                                 <div id="syarat-suggestions-dokumen-1"
                                      class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
                             </div>
@@ -209,7 +211,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Tombol Tambah Syarat Dokumen -->
                     <div class="mt-4">
                         <button
@@ -263,7 +265,6 @@
                 <div class="bg-[#FF8E07] rounded cursor-pointer p-1 mb-2 hover:cursor-pointer flex items-center" onclick="showPopup()">
                     <span class="text-xl mx-2">+</span> Template Data Beasiswa
                 </div>
-
 
                 <form id="beasiswa-form" action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -463,7 +464,6 @@
                                 <div id="syarat-suggestions-dokumen-1"
                                      class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
                             </div>
-
                             <!-- Input Unggah Format Dokumen -->
                             <div class="col-span-5">
                                 <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
@@ -476,7 +476,6 @@
                                 />
                                 <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
                             </div>
-
                             <div class="col-span-1 justify-center flex items-center mt-7">
                                 <div class="bg-red-400 hover:bg-red-600 rounded">
                                     <button
@@ -490,7 +489,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Tombol Tambah Syarat Dokumen -->
                     <div class="mt-4">
                         <button
@@ -502,8 +500,6 @@
                             <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
                         </button>
                     </div>
-
-
                     <br>
                     <p class="@error('poster') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
                     <div class="mb-4">
@@ -535,7 +531,6 @@
     </div>
 
     {{-- popup --}}
-
     <div id="popup" class="fixed inset-0 bg-opacity-50 backdrop-blur-md hidden flex items-center justify-center z-50">
         <div class="bg-white w-full sm:w-3/4 p-6 sm:p-8 rounded-3xl shadow-xl max-w-lg mx-auto relative">
             {{-- Tombol Close --}}
@@ -560,7 +555,6 @@
     </div>
 
 @endif
-
 
 @section('scripts')
     <script>

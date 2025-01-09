@@ -49,6 +49,12 @@ document.addEventListener('DOMContentLoaded', function () {
         createHiddenInput();
         form.submit();
     })
+    
+    $(document).mouseup(function (e) {
+        if ($(e.target).closest("#popup > div").length === 0) {
+            hidePopup();
+        }
+    });
 });
 
 function fetchJenjangTags() {
