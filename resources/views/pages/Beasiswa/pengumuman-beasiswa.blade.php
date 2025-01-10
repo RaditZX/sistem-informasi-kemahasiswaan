@@ -1,12 +1,11 @@
-@extends('layouts.filter')
+
 @extends('layouts.main')
 @section('content')
     @include('component.navbar', [
         'path' => 'List Beasiswa',
-        'id' => null,
-        'notificationData' => $notificationData,
+        'id' => null
     ])
-    <div class="p-3 mt-10">
+    <div class="p-3 px-8 mt-10">
         <div class="flex flex-col lg:flex-row">
             <div class="flex flex-col gap-3 mt-16 lg:basis-1/2">
                 <p class="text-2xl lg:text-3xl font-bold text-black">Pengumuman {{ $beasiswa->nama_beasiswa }}</p>
@@ -14,6 +13,7 @@
                     Berikut merupakan daftar mahasiswa penerima {{ $beasiswa->nama_beasiswa }}. Selamat dan
                     semangat untuk seluruh mahasiswa!
                 </p>
+                @if(isset($reviewer->role_id) && $reviewer->role_id == 1)
                 <div class="flex flex-col md:flex-row gap-2 mt-5">
                     <form action="{{ route('beasiswa.export-data-beasiswa', ['id' => request()->route('id')]) }}"
                         method="POST">
@@ -24,6 +24,7 @@
                     </form>
 
                 </div>
+                @endif
             </div>
             <div class="flex justify-center lg:basis-1/2 mt-5 lg:mt-0">
                 <img src="{{ asset('assets/img/penerima.png') }}" class="w-full max-w-sm lg:max-h-80 rounded-lg"
@@ -44,9 +45,6 @@
                                     <tr>
                                         <th
                                             class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                            NIM</th>
-                                        <th
-                                            class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                             Nama</th>
                                         <th
                                             class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
@@ -63,10 +61,6 @@
                                 <tbody>
                                     @foreach ($penerima_beasiswa as $pb)
                                         <tr>
-                                            <td
-                                                class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                                <p class="mb-0 text-xs font-semibold leading-tight"> {{ $pb->nim }}</p>
-                                            </td>
                                             <td
                                                 class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                                 <div class="flex px-2 py-1">

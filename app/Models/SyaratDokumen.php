@@ -11,7 +11,7 @@ class SyaratDokumen extends Model
 
     protected $table = 'syarat_dokumen';
 
-    protected $fillable = ['dokumen'];
+    protected $fillable = ['dokumen', 'link_dokumen'];
 
     // Relasi ke Beasiswa (many to one)
     public function beasiswa()

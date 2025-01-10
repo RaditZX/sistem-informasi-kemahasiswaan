@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\NotificationController;
 use App\Models\beasiswa;
 use App\Models\PenerimaBeasiswa;
+use App\Models\Reviewer;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Jurusan;
 
 class PenerimaBeasiswaController extends Controller
 {
@@ -19,9 +20,6 @@ class PenerimaBeasiswaController extends Controller
     public function index(Request $request)
     {
         $query = Beasiswa::query();
-
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
 
         // Filter `search` berdasarkan `nama_beasiswa`
         if ($request->has('search') && $request->input('search') !== '') {
@@ -56,11 +54,11 @@ class PenerimaBeasiswaController extends Controller
 
         // Data pengguna untuk view
         $user = Auth::user();
-
+        $jurusan = Jurusan::all();
 
 
         // Kirim data ke view
-        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'notificationData'));
+        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'jurusan'));
     }
 
     /**
@@ -68,9 +66,7 @@ class PenerimaBeasiswaController extends Controller
      */
     public function create()
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-        return view('pages.Beasiswa.import-data-beasiswa', compact('notificationData'));
+        return view('pages.Beasiswa.import-data-beasiswa');
     }
 
     /**
@@ -93,11 +89,8 @@ class PenerimaBeasiswaController extends Controller
 
         try {
             $file = $request->file('excelFile');
-            $penerima = (new FastExcel)->import($file, function ($line) {
+            (new FastExcel)->import($file, function ($line) {
                 // Validasi setiap baris data
-
-
-
                 $data = Validator::make($line, [
                     'nim' => 'required|integer',
                     'beasiswa' => 'required|string|exists:beasiswa,nama_beasiswa',
@@ -130,8 +123,6 @@ class PenerimaBeasiswaController extends Controller
                     }
                 }
             });
-
-
             return redirect()->route('beasiswa.import-data-beasiswa',)->with('success', 'Beasiswa created successfully.');
         } catch (\Throwable $e) {
             // Tangani error
@@ -151,37 +142,13 @@ class PenerimaBeasiswaController extends Controller
             ->join('jurusan', 'prodi.jurusan_id', '=', 'jurusan.id')
             ->where('beasiswa_id', '=', $id)
             ->get();
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
-
+        $user = Auth::user();
+        $reviewer = Reviewer::where('user_id', $user->id)->first();
         $beasiswa = Beasiswa::findOrFail($id);
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'notificationData', 'beasiswa'));
+
+        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'beasiswa','reviewer'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PenerimaBeasiswa $penerimaBeasiswa)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PenerimaBeasiswa $penerimaBeasiswa)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PenerimaBeasiswa $penerimaBeasiswa)
-    {
-        //
-    }
 
     public function exportPenerimaBeasiswaInExcel(string $id)
     {

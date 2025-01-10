@@ -35,8 +35,6 @@ class MailController extends Controller
             return null;
         }
 
-
-
         $emailMahasiswa = User::where('id','=', $notification->user_id)->first();
 
         if ($emailMahasiswa) {

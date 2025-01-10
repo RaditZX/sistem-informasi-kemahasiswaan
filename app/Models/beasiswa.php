@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class beasiswa extends Model
+class Beasiswa extends Model
 {
     use HasFactory;
 
@@ -27,8 +27,6 @@ class beasiswa extends Model
     {
         return $this->belongsToMany(BenefitBeasiswa::class, 'beasiswa_benefit');
     }
-
-    // Relasi satu ke banyak dengan SyaratDokumen
     public function syaratDokumen()
     {
         return $this->belongsToMany(SyaratDokumen::class,'beasiswa_syarat_dokumen');

@@ -32,10 +32,6 @@ class PengaturanController extends Controller
         $nama_depan = $user->nama_depan;
         $nama_belakang = $user->nama_belakang;
 
-        // Data notifikasi
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
         // Default data untuk NIM, NIP, dan no_hp
         $nim = null;
         $nip = null;
@@ -51,8 +47,8 @@ class PengaturanController extends Controller
         if ($user->reviewer) {
             $nip = $user->reviewer->nip; // Ambil NIP dari reviewer
         }
-        
-        
+
+
         // Tentukan role_name
         $role_name = $user->reviewer && $user->reviewer->role
             ? $user->reviewer->role->role_name
@@ -73,7 +69,6 @@ class PengaturanController extends Controller
             'nama_belakang',
             'phone',
             'user_img',
-            'notificationData',
             'no_hp',
             'jk',
             'role_name',
@@ -85,38 +80,6 @@ class PengaturanController extends Controller
     }
 
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -137,7 +100,7 @@ class PengaturanController extends Controller
         if ($request->hasFile('new_img')) {
             // Create a new Request object for uploading the file
             $newRequest = new Request();
-            
+
             // Set the uploaded file into the new request object
             $newRequest->files->set('file', $request->file('new_img'));
 
@@ -220,7 +183,6 @@ class PengaturanController extends Controller
                     'nama_depan' => 'required|string|max:255',
                     'nama_belakang' => 'required|string|max:255',
                     'jk' => 'required|string|in:Pria,Wanita',
-                    'no_hp' => 'nullable|string|max:15',
                 ]);
 
                 // Cari user berdasarkan ID
@@ -233,26 +195,13 @@ class PengaturanController extends Controller
                     'jenis_kelamin' => $request->input('jk', $user->jenis_kelamin),
                 ]);
 
-                // Update data reviewer jika ada
-                $reviewer->update([
-                    'no_hp' => $request->input('no_hp', $reviewer->no_hp),
-                ]);
-
                 return redirect()->route('pengaturan.index')->with('success', 'Profil reviewer berhasil diperbarui.');
             }
 
             return redirect()->route('pengaturan.index')->with('error', 'User tidak ditemukan.');
 
         } catch (\Exception $e) {
-            return redirect()->route('pengaturan.index')->with('error', 'Terjadi kesalahan saat memperbarui profil. Silakan coba lagi.');
+            return redirect()->route('pengaturan.index')->with('error', 'Terjadi kesalahan saat memperbarui profil. Silakan coba lagi. Peringatan! NIM tidak bisa diganti jika anda telah menerima beasiswa');
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

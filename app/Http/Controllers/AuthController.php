@@ -5,15 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
 use Kreait\Firebase\Factory;
 use App\Models\Mahasiswa;
 use App\Models\Prodi;
 use App\Models\Reviewer;
+use Kreait\Firebase\Exception\AuthException;
+use Kreait\Firebase\Exception\FirebaseException;
 
 class AuthController extends Controller
 {
@@ -71,13 +69,11 @@ class AuthController extends Controller
                         return back()->withErrors(['email' => 'User not found or invalid role.'])->onlyInput('email');
                     }
                 }
-                
 
                 // Regenerate the session ID to prevent session fixation attacks
                 $request->session()->regenerate();
 
-
-                return $mhs ? redirect()->intended('/beasiswa') : redirect()->intended('/dashboard');
+                return $mhs ? redirect()->intended('/madding') : redirect()->intended('/dashboard');
             } else {
                 return redirect('/login')->with('error', 'Silahkan Verifikasi Email anda');
             }
@@ -173,49 +169,28 @@ class AuthController extends Controller
         return redirect()->intended('/login');
     }
 
-
-    public function forgotPassword(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'auth_code' => 'required'
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json(['message' => 'Email tidak ditemukan!'], 400);
-        }
-
-        if ($request->auth_code !== '123456') {
-            return response()->json(['message' => 'Kode autentikasi salah!'], 400);
-        }
-
-        Session::put('auth_email', $request->email);
-        return response()->json(['message' => 'Verified!'], 200);
-    }
-
     /**
      * Handle reset password submission.
      */
-    public function resetPassword(Request $request)
-    {
-        $request->validate([
-            'password' => 'required|min:6|confirmed',
-        ]);
 
-        $email = Session::get('auth_email');
-        if (!$email) {
-            return response()->json(['message' => 'Unauthorized request. Please restart the process.'], 400);
-        }
+     public function resetPassword(Request $request)
+     {
+         $request->validate([
+             'email' => 'required|email',
+         ]);
 
-        $user = User::where('email', $email)->first();
-        $user->password = Hash::make($request->password);
-        $user->save();
+         $email = $request->email;
 
-        Session::forget('auth_email');
-        return response()->json(['message' => 'Password updated successfully!'], 200);
-    }
+         try {
+             // Send password reset email using Firebase
+             $this->firebaseAuth->sendPasswordResetLink($email);
+
+             return redirect('/reset-password')->with('success', 'Link Reset Password telah dikirimkan ke Email');
+         } catch (AuthException | FirebaseException $e) {
+             return response()->json(['message' => 'Failed to send password reset link. Please try again later.'], 400);
+         }
+     }
+
 
     /**
      * Logout the user.
@@ -239,4 +214,11 @@ class AuthController extends Controller
     {
         return view('pages.Auth.register'); // Path to your registration view file
     }
+
+    public function showResetPasswordForm()
+    {
+        return view('pages.Auth.reset-password'); // Path to your registration view file
+    }
+
+
 }

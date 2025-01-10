@@ -1,6 +1,9 @@
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'List Beasiswa', 'id' => null,'notificationData'=>$notificationData])
+    @include('component.navbar', [
+        'path' => 'List Beasiswa',
+        'id' => null
+    ])
     <style>
         .bg-gradient-to-tl {
             background: linear-gradient(to right, orange, rgb(213, 213, 21));
@@ -278,11 +281,14 @@
                 <div
                     class="border-black/12.5 shadow-soft-xl relative flex h-96 min-w-0 flex-col break-words rounded-2xl p-2 border-0 border-solid bg-white bg-clip-border">
                     <h3 class="font-semibold mb-2">Pengajuan Berdasarkan Jurusan</h3>
-                    <div  class="flex gap-3">
+                    <div class="flex gap-3">
                         <label for="jurusanSelect">Filter by Jurusan:</label>
                         <form method="GET" action="{{ route('dashboard.index') }}" class="max-w-sm">
-                            <select id="countries" name="nama_jurusan" class="bg-gray-50 border border-gray-300 text-white-900 text-sm rounded-lg" onchange="this.form.submit()">
-                                <option value="">Select Jurusan</option> <!-- Optional: Placeholder for the dropdown -->
+                            <select id="countries" name="nama_jurusan"
+                                class="bg-gray-50 border border-gray-300 text-white-900 text-sm rounded-lg"
+                                onchange="this.form.submit()">
+                                <option value="">Select Jurusan</option>
+                                <!-- Optional: Placeholder for the dropdown -->
                                 @foreach ($jurusan as $jr)
                                     <option value="{{ $jr->nama_jurusan }}"
                                         {{ request()->input('nama_jurusan') == $jr->nama_jurusan ? 'selected' : '' }}>
@@ -313,18 +319,26 @@
             type: 'doughnut',
             data: {
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [@json($data->pengajuan_diajukan),1, 1, 1, 8],
-                    // data: [@json($data->pengajuan_diterima), @json($data->pengajuan_diproses), @json($data->pengajuan_direvisi), @json($data->pengajuan_ditolak)],
-                    backgroundColor: [
-                        'rgb(170, 0, 170)',
-                        'rgb(0, 170, 0)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)',
-                        'rgb(255, 99, 132)'
+                    data: [
+                        @json($data->pengajuan_diajukan),
+                        @json($data->pengajuan_diterima),
+                        @json($data->pengajuan_direvisi),
+                        @json($data->pengajuan_ditolak)
                     ],
-                    hoverOffset: 4
-                }]
+                    backgroundColor: [
+                        'rgb(170, 0, 170)', // Diajukan
+                        'rgb(0, 170, 0)', // Diterima
+                        'rgb(255, 205, 86)', // Direvisi
+                        'rgb(255, 99, 132)' // Ditolak
+                    ],
+                    label: 'jumlah' // Label for the dataset
+                }],
+                labels: [
+                    'Diajukan', // Label for first segment
+                    'Diterima', // Label for second segment
+                    'Direvisi', // Label for third segment
+                    'Ditolak'
+                ]
             },
             options: {
                 responsive: true,
@@ -338,16 +352,27 @@
                         },
                         align: 'end',
                         anchor: 'end',
-                        offset: 10,
+                        offset: 5,
                         formatter: (value, context) => {
-                            const customLabels = ['Diajukan','Diterima', 'Diproses', 'Direvisi', 'Ditolak'];
-                            return `${customLabels[context.dataIndex]}: ${value}`; // Custom label and value
+                            const labels = context.chart.data.labels; // Get the labels array
+                            const label = labels[context.dataIndex]; // Get the label for the hovered segment
+
+                            // Only return the label and value if the value is greater than 0
+                            if (value > 0) {
+                                return `${label}: ${value}`;
+                            } else {
+                                return ''; // Hide the label if value is 0 or less
+                            }
                         }
+
                     }
-                }
+                },
             },
             plugins: [ChartDataLabels]
         });
+
+
+
 
         const ctx1 = document.getElementById('myChart1').getContext('2d');
 

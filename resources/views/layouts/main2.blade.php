@@ -10,12 +10,12 @@
 
     <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    {{-- <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script> --}}
     <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
-
+    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
     <!-- Main Styling -->
     <link href="{{ asset('assets/css/soft-ui-dashboard-tailwind.css?v=1.0.5') }}" rel="stylesheet" />
 
@@ -69,9 +69,12 @@
             </script>
         @endif
     </main>
-
-
+    @yield('content')
+    
+    
 </body>
-@yield('content')
-
+@yield('scripts')
+@if ($beasiswa != null)
+    @yield('scriptsForEditBeasiswa')
+@endif
 </html>

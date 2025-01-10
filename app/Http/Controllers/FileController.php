@@ -62,7 +62,7 @@ class FileController extends Controller
     public function viewFile($url)
     {
         // Path to the file in storage
-        $filePath = storage_path('app/public/dokumen/' . $url);
+        $filePath = storage_path(path: 'app/public/dokumen/' . $url);
 
         // Check if the file exists
         if (!file_exists($filePath)) {
@@ -71,8 +71,6 @@ class FileController extends Controller
 
         // Get the MIME type of the file
         $mimeType = mime_content_type($filePath);
-
-
 
         // If it's a PDF, force set the MIME type to application/pdf
         if ($mimeType === 'application/octet-stream' || $mimeType === 'application/pdf') {

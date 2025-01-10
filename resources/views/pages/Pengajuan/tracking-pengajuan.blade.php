@@ -1,8 +1,5 @@
-@extends('layouts.filter')
-@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
-
 @include('component.navbar', [
     'path' => "Tracking Beasiswa > " . $dataPengajuan->nama_beasiswa,
     'id' => null
@@ -149,10 +146,7 @@
                         </button>
                         <div class="accordion-content hidden p-4 bg-gray-50 transition-all duration-200 max-h-0 overflow-hidden">
                             <p class="text-sm text-gray-500 mb-4">Preview for {{ $document->dokumen }}:</p>
-
                             <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="100%" height="500" type="application/pdf">
-                            {{-- <embed src="{{ route('viewfile',['url' => $dataDokumenPengajuan[$n]->nama_dokumen ]) }}" width="100%" height="800" type="application/pdf"> --}}
-
                             @php
                                 $n += 1;
                             @endphp
@@ -166,7 +160,7 @@
             <form action="{{ route('pengajuan.update-progress', $dataPengajuan->id) }}" method="POST" class="my-8 px-4">
                 @csrf
                 @method('PATCH')
-                
+
                 @if ($dataPengajuan->status != 11)
                 <div>
                     <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Your message</label>
@@ -179,7 +173,6 @@
                 </div>
                 @endif
 
-                <!-- Hidden input field for role_id -->
                 <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
                 <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
             </form>
