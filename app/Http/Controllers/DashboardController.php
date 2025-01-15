@@ -20,12 +20,9 @@ class DashboardController extends Controller
         $beasiswa = $this->getOngoingBeasiswa();
         $jurusanList = DB::table('jurusan')->pluck('nama_jurusan');
 
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
         $jmlPenerima = PenerimaBeasiswa::count();
 
-        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'pengajuanTahun', 'jurusanList', 'notificationData', 'jmlPenerima'));
+        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'pengajuanTahun', 'jurusanList', 'jmlPenerima'));
     }
 
     private function getBeasiswaStatistics()

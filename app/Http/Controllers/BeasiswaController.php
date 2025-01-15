@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Str;
 
 
 
@@ -38,7 +38,6 @@ class BeasiswaController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $notificationData = $this->notifController->getNotifData();
 
         $query = $this->buildBeasiswaQuery($request);
         $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
@@ -52,7 +51,6 @@ class BeasiswaController extends Controller
 
         return view('pages.Beasiswa.list-beasiswa', compact(
             'beasiswa',
-            'notificationData',
             'penerimaBeasiswa',
             'beasiswaUserTipe',
             'jurusan'
@@ -68,7 +66,7 @@ class BeasiswaController extends Controller
 
         $jurusan = Jurusan::all();
 
-        return view('pages.Beasiswa.list-beasiswa-staff', compact('beasiswa', 'notificationData', 'jurusan'));
+        return view('pages.Beasiswa.list-beasiswa-staff', compact('beasiswa', 'jurusan'));
     }
 
     private function buildBeasiswaQuery(Request $request)
@@ -125,18 +123,16 @@ class BeasiswaController extends Controller
 
     public function getDetailBeasiswaKipk($id)
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $beasiswa = Beasiswa::findOrFail($id);
-        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('notificationData','beasiswa'));
+        $jurusan = Jurusan::all();
+        return view('pages.Beasiswa.detail-beasiswa-kipk', compact('beasiswa', 'jurusan'));
     }
 
     public function getDetailBeasiswaEksternal($id)
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $beasiswa = Beasiswa::findOrFail($id);
-        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('notificationData','beasiswa'));
+        $jurusan = Jurusan::all();
+        return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('beasiswa', 'jurusan'));
     }
 
 
@@ -145,11 +141,9 @@ class BeasiswaController extends Controller
      */
     public function create()
     {
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $beasiswa = null;
         $syarat = null;
-        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'notificationData'));
+        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat'));
     }
 
     /**
@@ -314,9 +308,6 @@ class BeasiswaController extends Controller
         $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
         $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
 
-        // Get notification data
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
         $user = Auth::user();
         $mhsNIM = Mahasiswa::where('user_id', $user->id)->first();
         $checkPengajuan = $mhsNIM ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)->exists() : false;
@@ -332,7 +323,7 @@ class BeasiswaController extends Controller
             'poster' => $poster,
             'isMengajukan' => $checkPengajuan,
             'isMhs' => $mhsNIM
-        ], compact('notificationData'));
+        ]);
 
     }
 
@@ -351,12 +342,9 @@ class BeasiswaController extends Controller
 
 
         $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
 
-        // dd($dokumen, $link_dokumen);
         // Kirim data ke view
-        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'jenjang', 'dokumen', 'link_dokumen', 'benefit', 'poster', 'notificationData'));
+        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'jenjang', 'dokumen', 'link_dokumen', 'benefit', 'poster'));
 
     }
 
@@ -367,7 +355,6 @@ class BeasiswaController extends Controller
     {
         // validasi
         $validatedData = $request->validate($this->validation_rules, $this->validation_messages);
-
         // Modifikasi tanggal_berakhir
         $tanggal_berakhir = Carbon::parse($request->tanggal_berakhir)->subDays(5);
 
@@ -506,13 +493,9 @@ class BeasiswaController extends Controller
                         ]);
                         $index++;
                     }
-
                     $beasiswa->syaratDokumen()->attach($existingDokumen->id);
                 }
             }
-
-
-
             // Simpan atau update jenjang pendidikan, jika ada
             if (isset($validatedData['jenjang_pendidikan'])) {
                 $beasiswa->jenjangPendidikan()->delete();
@@ -601,6 +584,12 @@ class BeasiswaController extends Controller
         $templates = beasiswa::select('id', 'nama_beasiswa', 'deskripsi')
             ->orderBy('updated_at', 'desc')
             ->paginate(5);
+
+        // Perpendek deskripsi
+        $templates->getCollection()->transform(function ($item) {
+            $item->deskripsi = Str::limit($item->deskripsi, 100, '...');
+            return $item;
+        });
 
         return response()->json([
             'data' => $templates->items(),

@@ -1,7 +1,7 @@
 @extends('layouts.filter')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'Pengumuman Beasiswa', 'id' => null,'notificationData'=>$notificationData])
+    @include('component.navbar', ['path' => 'Pengumuman Beasiswa', 'id' => null])
 
     {{-- Filter Button and Search Column --}}
     <div class="p-2">

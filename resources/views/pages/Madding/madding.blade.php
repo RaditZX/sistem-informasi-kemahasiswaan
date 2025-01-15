@@ -1,5 +1,3 @@
-
-@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
 
@@ -22,7 +20,7 @@
                     Lihat Lebih Banyak
                 </a>
             </div>
-        </div>
+        </div>        
         <div class="madding-content">
             <div class="madding-content-1">
                 <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
@@ -57,7 +55,7 @@
                             </button>
                         </li>
                     </ul>
-                </div>
+                </div>                
                 <div id="default-styled-tab-content">
                     <div class="hidden p-4 rounded-lg bg-gray-100 rounded-xl grid grid-rows-[auto 1fr 1fr 1fr] grid-cols-4 max-[440px]:grid-cols-1 max-[440px]:gap-6 gap-4 shadow-lg" id="styled-newest" role="tabpanel" aria-labelledby="newest-tab">
                         @php
@@ -78,7 +76,6 @@
                                     @php
                                         $beasiswa = $newestBeasiswa[$index];
                                     @endphp
-
                                     @if ($index === 0)
                                         <div class="row-span-2 col-span-2 max-[440px]:col-span-1 max-[440px]:h-auto max-[1280px]:col-span-2 flex flex-col rounded-2xl h-full">
                                             <div class="flex flex-col bg-white border-2 border-gray-600 rounded-lg shadow flex-1">
@@ -86,7 +83,6 @@
                                                     <img class="w-full md:w-1/2 object-cover rounded-t-lg md:rounded-none md:rounded-l-lg max-[440px]:hidden max-[1280px]:hidden"
                                                         src="{{ $beasiswa->link_poster }}"
                                                         alt="Poster Beasiswa">
-
                                                     <div class="flex flex-col justify-between p-4 md:p-6 leading-normal">
                                                         <div class="mb-4">
                                                             <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $beasiswa->tipe_beasiswa }}</span>
@@ -126,7 +122,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                  
                                     @else
                                         <div class="row-span-2 max-[440px]:col-span-1 max-[440px]:h-auto max-[1280px]:col-span-2 flex flex-col rounded-2xl h-full">
                                             <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4] h-full">
@@ -159,7 +155,7 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                 
                                     @endif
                                 @else
                                     @if (!$comingSoonDisplayed)
@@ -238,7 +234,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                     
                                     @else
                                     <div class="row-span-2 max-[440px]:col-span-1 max-[440px]:h-auto max-[1280px]:col-span-2 flex flex-col rounded-2xl h-full">
                                         <div class="flex-1 bg-white border-2 border-gray-600 rounded-lg shadow flex flex-col hover:bg-[#fffdf4] h-full">
@@ -308,7 +304,7 @@
                 </a>
             </div>
         </div>
-
+        
         <div class="madding-content grid grid-cols-4 gap-4 max-[1279px]:grid-cols-3 max-[799px]:grid-cols-1 max-[768px]:grid-cols-auto-fit max-[768px]:gap-4"
              style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
             @forelse ($newestMahasiswaAccepted as $penerima)
@@ -344,7 +340,6 @@
                 </div>
             @endforelse
         </div>
-
         <!-- Pagination Section -->
         <div class="py-5">
             {{ $newestMahasiswaAccepted->links() }}

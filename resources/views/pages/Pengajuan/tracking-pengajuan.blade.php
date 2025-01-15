@@ -1,4 +1,3 @@
-@extends('layouts.notification')
 @extends('layouts.main')
 @section('content')
 @include('component.navbar', [

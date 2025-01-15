@@ -96,7 +96,11 @@ class BeasiswaSeeder extends Seeder
             'nama_beasiswa' => 'Beasiswa Prestasi Nasional',
             'deskripsi' => 'Beasiswa untuk mahasiswa dengan prestasi akademik dan non-akademik terbaik.',
             'tipe_beasiswa' => 'eksternal',
+<<<<<<< HEAD
             'jenis_beasiswa' => 'full',
+=======
+            'jenis_beasiswa' => 'half',
+>>>>>>> a089f6b9d9fa98e39fcbd5aa7d2ec6b4260e0123
             'kuota' => 30,
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-03-01',

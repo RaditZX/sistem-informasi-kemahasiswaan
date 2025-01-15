@@ -31,20 +31,17 @@ class PengajuanBeasiswaController extends Controller
      */
     public function index()
     {
-        $notificationData = $this->getNotificationData();
-
-        return view('pages.Pengajuan.tracking-pengajuan', compact('notificationData'));
+        return view('pages.Pengajuan.tracking-pengajuan');
     }
 
 
     public function listPengajuanStaff()
     {
-        $notificationData = $this->getNotificationData();
         $user = Auth::user();
         $listPengajuan = $this->getListPengajuan($user);
         $namaBeasiswa = Beasiswa::pluck('nama_beasiswa');
 
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan', 'notificationData', 'namaBeasiswa'));
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan','namaBeasiswa'));
     }
 
 
@@ -57,11 +54,7 @@ class PengajuanBeasiswaController extends Controller
         $jurusan = $this->getJurusanById($prodi->jurusan_id);
         $dokumen = $this->getDokumenByBeasiswaId($id);
 
-        $notifController = new NotificationController();
-        $notificationData = $notifController->getNotifData();
-
         return view('pages.Beasiswa.pengajuan-beasiswa', [
-            'notificationData' => $notificationData,
             'user' => $user,
             'pengajuan' => null,
             'dokumenPengajuan' => null,
@@ -124,12 +117,9 @@ class PengajuanBeasiswaController extends Controller
 
         $dokumen = $this->getBeasiswaDocuments($pengajuanBeasiswa->beasiswa_id);
 
-        $notificationData = (new NotificationController())->getNotifData();
-
         return view('pages.Beasiswa.pengajuan-beasiswa', [
             'pengajuan' => $pengajuanBeasiswa,
             'dokumen_pengajuan' => $dokumenPengajuan,
-            'notificationData' => $notificationData,
             'prodi' => $prodi,
             'jurusan' => $jurusan,
             'user' => $user,
