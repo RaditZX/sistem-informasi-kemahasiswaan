@@ -1,4 +1,4 @@
-let formCounter = 1; // jumlah input dokumen
+let dokumenCounter = 1; // jumlah input dokumen
 let selectedDokumen = [];
 let selectedFiles = []; 
 
@@ -43,13 +43,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    const form = document.getElementById('beasiswa-form');
+    const form = document.getElementById('beasiswa-form-internal');
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         createHiddenInput();
         form.submit();
     })
-    
+
     $(document).mouseup(function (e) {
         if ($(e.target).closest("#popup > div").length === 0) {
             hidePopup();
@@ -507,40 +507,40 @@ function getFileName(url) {
 
 // Membuat form row baru
 function createFormRow() {
-    if (typeof formCounter === 'undefined') {let formCounter = 1;}
+    if (typeof dokumenCounter === 'undefined') {let dokumenCounter = 1;}
     console.log("creating form");
-    formCounter++;
-    console.log(formCounter);
+    dokumenCounter++;
+    console.log(dokumenCounter);
 
     const formContainer = document.getElementById("form-container");
     const newFormRow = document.createElement("div");
     newFormRow.className = "mt-3 grid grid-cols-12 gap-4 items-center";
-    newFormRow.id = `form-row-${formCounter}`;
+    newFormRow.id = `form-row-${dokumenCounter}`;
 
     newFormRow.innerHTML = `
         <div class="col-span-6 relative">
             <input
                 type="text"
-                id="dokumen-${formCounter}"
+                id="dokumen-${dokumenCounter}"
                 name="nama_dokumen[]" 
                 placeholder="Masukkan dokumen"
                 class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                oninput="fetchDokumenTags(${formCounter})"
-                onkeydown="handleDokumenKeydown(event, ${formCounter})"
+                oninput="fetchDokumenTags(${dokumenCounter})"
+                onkeydown="handleDokumenKeydown(event, ${dokumenCounter})"
             />
-            <div id="syarat-suggestions-dokumen-${formCounter}" 
+            <div id="syarat-suggestions-dokumen-${dokumenCounter}" 
                     class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
         </div>
         <div class="col-span-5">
-            <label for="unggah-${formCounter}" class="block text-sm font-medium text-gray-700 mb-1"></label>
+            <label for="unggah-${dokumenCounter}" class="block text-sm font-medium text-gray-700 mb-1"></label>
             <input
                 type="file"
-                id="unggah-${formCounter}"
+                id="unggah-${dokumenCounter}"
                 class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
                 name="dokumen_file[]" 
-                onchange="addDokumenFile(this.files[0], ${formCounter})"
+                onchange="addDokumenFile(this.files[0], ${dokumenCounter})"
             />
-            <span id="dokumen-name-${formCounter}" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
+            <span id="dokumen-name-${dokumenCounter}" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
         </div>
 
         <div class="col-span-1 justify-center flex items-center">
@@ -548,7 +548,7 @@ function createFormRow() {
                 <button
                     type="button"
                     class="px-3 text-sm font-medium"
-                    onclick="removeFormRow(${formCounter})"
+                    onclick="removeFormRow(${dokumenCounter})"
                 >
                     X
                 </button>
@@ -579,7 +579,7 @@ function removeFormRow(rowId) {
     selectedDokumen = selectedDokumen.filter(ulink => ulink !== link);
 
     console.log(selectedDokumen);
-    formCounter--;
+    dokumenCounter--;
 
     // Update ID dan penomoran baris lainnya
     let rows = document.querySelectorAll('[id^="form-row-"]');
@@ -732,7 +732,7 @@ function cleanInputFields() {
         console.log(item, index+1);
         removeFormRow(index+1);  // Assuming this function handles creating new rows for documents
     });
-    formCounter = 1;
+    dokumenCounter = 1;
 }
 
 function selectTemplate(templateID) {

@@ -55,10 +55,10 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
     Route::get('/import-data-penerima', [PenerimaBeasiswaController::class, 'create'])->name('beasiswa.import-data-beasiswa');
     Route::post('/import-data-penerima', [PenerimaBeasiswaController::class, 'store'])->name('penerimabeasiswa.import-data-beasiswa');
-    Route::get('/beasiswa/search-syarat', [BeasiswaController::class, 'search_syarat'])->name('Beasiswa.search_syarat');
-    Route::get('/beasiswa/search-dokumen', [BeasiswaController::class, 'search_dokumen'])->name('Beasiswa.search_dokumen');
-    Route::get('/beasiswa/search-benefit', [BeasiswaController::class, 'search_benefit'])->name('Beasiswa.search_benefit');
-    Route::get('/beasiswa/search-jenjang', [BeasiswaController::class, 'search_jenjang'])->name('Beasiswa.search_jenjang');
+    Route::get('/beasiswa/search-syarat', [BeasiswaController::class, 'searchSyarat'])->name('Beasiswa.search_syarat');
+    Route::get('/beasiswa/search-dokumen', [BeasiswaController::class, 'searchDokumen'])->name('Beasiswa.search_dokumen');
+    Route::get('/beasiswa/search-benefit', [BeasiswaController::class, 'searchBenefit'])->name('Beasiswa.search_benefit');
+    Route::get('/beasiswa/search-jenjang', [BeasiswaController::class, 'searchJenjang'])->name('Beasiswa.search_jenjang');
     Route::get('/beasiswa/get-templates', [BeasiswaController::class, 'getBeasiswaTemplate'])->name('Beasiswa.getTemplates');
     Route::get('/beasiswa/get-beasiswa/{id}', [BeasiswaController::class, 'getBeasiswa'])->name('Beasiswa.getBeasiswa');
     Route::post('/export-pengumuman-beasiswa/{id}',[PenerimaBeasiswaController::class, 'exportPenerimaBeasiswaInExcel'])->name('beasiswa.export-data-beasiswa');
@@ -78,7 +78,7 @@ Route::post('/upload',[FileController::class,'uploadFile'])->name('upload.upload
 // Route::middleware('auth')->group(function () {
 // PENGAJUAN ROUTES =======================================================================
 Route::middleware('auth')->group(function () {
-    Route::get('/beasiswa/search-syarat', [BeasiswaController::class, 'search_syarat'])->name('Beasiswa.search_syarat');
+    Route::get('/beasiswa/search-syarat', [BeasiswaController::class, 'searchSyarat'])->name('Beasiswa.search_syarat');
     Route::resource('tracking-pengajuan', PengajuanBeasiswaController::class);
     Route::get('/pengumuman-beasiswa/{id}', [PenerimaBeasiswaController::class, 'show'])->name('beasiswa.pengumuman-beasiswa');
     Route::get('/pengumuman-beasiswa', [PenerimaBeasiswaController::class, 'index'])->name('pengumuman-beasiswa.index');
