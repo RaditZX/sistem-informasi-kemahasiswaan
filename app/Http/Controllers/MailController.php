@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\Controller;
 use App\Mail\NotificationMail;
 use App\Models\PengajuanBeasiswa;
@@ -9,25 +10,26 @@ use App\Models\Reviewer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class MailController extends Controller
 {
     public function getNotificationData(bool $isReviewer)
     {
-        if($isReviewer){
+        if ($isReviewer) {
             $notification = DB::table('notifikasi')
-            ->join('kode_status', 'kode_status.id', '=', 'notifikasi.status')
-            ->select('user_id', 'isi_status')
-            ->latest('created_at')
-            ->skip(1)
-            ->take(1)
-            ->first();
-        }else{
-            $notification = DB::table('notifikasi')->join('kode_status', 'kode_status.id','=', 'notifikasi.status' )
-            ->select('user_id', 'isi_status')
-            ->latest('created_at')
-            ->first();
+                ->join('kode_status', 'kode_status.id', '=', 'notifikasi.status')
+                ->select('user_id', 'isi_status')
+                ->latest('created_at')
+                ->skip(1)
+                ->take(1)
+                ->first();
+        } else {
+            $notification = DB::table('notifikasi')->join('kode_status', 'kode_status.id', '=', 'notifikasi.status')
+                ->select('user_id', 'isi_status')
+                ->latest('created_at')
+                ->first();
         }
 
 
@@ -35,7 +37,7 @@ class MailController extends Controller
             return null;
         }
 
-        $emailMahasiswa = User::where('id','=', $notification->user_id)->first();
+        $emailMahasiswa = User::where('id', '=', $notification->user_id)->first();
 
         if ($emailMahasiswa) {
             $notification->email = $emailMahasiswa->email;
@@ -46,7 +48,8 @@ class MailController extends Controller
     }
 
 
-    public function mahasiswaPengajuanMessage(string $nim, int $id){
+    public function mahasiswaPengajuanMessage(string $nim, int $id)
+    {
         $bs = new BeasiswaController();
         $beasiswaData = $bs->getBeasiswaDataBaseOnBeasiswaId($id);
 
@@ -55,7 +58,7 @@ class MailController extends Controller
                 " oleh mahasiswa dengan NIM " . $nim,
             'message' => "Yth. Mahasiswa,\n\n" .
                 "Kami ingin memberitahukan bahwa pengajuan beasiswa Anda pada program beasiswa " .
-                $beasiswaData->nama_beasiswa . " telah diterima. " .
+                $beasiswaData->nama_beasiswa . " telah diterima dan akan segera di proses. " .
                 "Pengajuan ini diajukan oleh mahasiswa dengan NIM: " . $nim . "\n\n" .
                 "Jika Anda memiliki pertanyaan lebih lanjut, silakan hubungi kami.\n\n" .
                 "Hormat kami,\n" .
@@ -63,7 +66,8 @@ class MailController extends Controller
         ];
     }
 
-    public function reviewerPengajuanMessage(string $nim, int $id){
+    public function reviewerPengajuanMessage(string $nim, int $id)
+    {
         $bs = new BeasiswaController();
         $beasiswaData = $bs->getBeasiswaDataBaseOnBeasiswaId($id);
 
@@ -73,24 +77,58 @@ class MailController extends Controller
             'message' => "Yth. Reviewer Staff Kemahasiswaan,\n\n" .
                 "Kami ingin memberitahukan bahwa pengajuan beasiswa Anda pada program beasiswa " .
                 $beasiswaData->nama_beasiswa  .
-                "Pengajuan ini diajukan oleh mahasiswa dengan NIM: " . $nim . "\n\n" .
+                " Pengajuan ini diajukan oleh mahasiswa dengan NIM: " . $nim . "\n\n" .
                 "Jika Anda memiliki pertanyaan lebih lanjut, silakan hubungi kami.\n\n" .
                 "Hormat kami,\n" .
                 "Tim Beasiswa"
         ];
     }
 
-    public function sendMail(Request $request, bool $isReviewer)
+    public function verifikasiEmailMessage($userId)
     {
+        // Hash the user ID to create a verification token
+        $hashedUserId = Hash::make($userId);
+
+        // Save the hashed token to the database
+        $user = User::find($userId);
+        $user->email_verification_token = $hashedUserId;
+        $user->save();
+
+        // Generate the verification link with the token as a query parameter
+        $verificationLink = route('verify-email') . '?token=' . urlencode($hashedUserId);
+
+        // Construct the message content
+        $messageContent = "Yth. Mahasiswa,\n\n" .
+            "Terima kasih telah mendaftar di Sistem Informasi Kemahasiswaan. Mohon untuk memverifikasi email Anda dengan mengklik tautan berikut:\n\n" .
+            $verificationLink . "\n\n" .
+            "Jika Anda tidak merasa melakukan pendaftaran, harap abaikan email ini.\n\n" .
+            "Hormat kami,\n" .
+            "Tim Sistem Informasi Kemahasiswaan";
+
+        // Return the email details including the subject, recipient email, and message
+        return [
+            'email' => $user->email,
+            'nama' => "Verifikasi Email - Sistem Informasi Kemahasiswaan",
+            'message' => $messageContent
+        ];
+    }
+
+    public function sendMail(Request $request, bool $isReviewer, bool $isRegister)
+    {
+
         $validated = $request->validate([
             'nama' => 'required|string',
             'message' => 'required|string',
         ]);
 
-        $notification = $this->getNotificationData($isReviewer);
+        if($isRegister){
+            $userData = $request;
+        } else{
+            $userData = $this->getNotificationData($isReviewer);
 
-        if (!$notification || empty($notification->email)) {
-            return response()->json(['message' => 'No email found for the notification'], 404);
+            if (!$userData || empty($userData->email)) {
+                return response()->json(['message' => 'No email found for the notification'], 404);
+            }
         }
 
         $data = [
@@ -98,17 +136,13 @@ class MailController extends Controller
             'message' => $validated['message'],
         ];
 
-
         try {
             // Attempt to send the email
-            Mail::to($notification->email)->send(new NotificationMail($data));
+            Mail::to($userData->email)->send(new NotificationMail($data));
 
             // Return success response
             return response()->json(['message' => 'Email sent successfully']);
         } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            dd($e);
-
             // Return an error response
             return response()->json([
                 'message' => 'Failed to send email',
@@ -149,5 +183,4 @@ class MailController extends Controller
 
         return response()->json(['message' => 'Reviewer email not found'], 404);
     }
-
 }

@@ -25,14 +25,12 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-5">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-5">
     @php
-        // Cek apakah ada beasiswa yang sudah diterima
         $isAnyBeasiswaReceived = count($beasiswaUserTipe) > 0; // Jika sudah ada yang diterima
-        $currentDate = now(); // Ambil tanggal sekarang
-        $oneYearLater = now()->addYear(); // Tanggal satu tahun dari sekarang
+        $currentDate = now();
+        $oneYearLater = now()->addYear();
     @endphp
-
     @foreach ($beasiswa as $ba)
     @php
         // Default status
@@ -41,10 +39,7 @@
             : ($ba->tanggal_mulai > $currentDate
                 ? "Upcoming"
                 : "Past");
-
-        // Cek apakah beasiswa sudah diterima
         $isReceived = collect($beasiswaUserTipe)->firstWhere('id', $ba->id);
-
         if ($isReceived) {
             $status = $isReceived['status'];
         }
@@ -54,15 +49,15 @@
         $canRegister = !$isAnyBeasiswaReceived || ($ba->status == 'half' && $ba->tanggal_berakhir > $currentDate && $ba->tanggal_berakhir <= $oneYearLater); // jika ada yang diterima, tidak bisa daftar lagi kecuali yang 'half' dalam rentang satu tahun ke depan
     @endphp
             @if($ba->tipe_beasiswa === "kipk")
-                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-kipk/'.$ba->id : '#' }}"
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? route('beasiswa.detail-beasiswa-eksternal',['id'=> $ba->id]) : '#' }}"
                     class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}"
                     data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
             @elseif($ba->tipe_beasiswa === "eksternal")
-                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/detail-beasiswa-eksternal/'.$ba->id : '#' }}"
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? route('beasiswa.detail-beasiswa-kipk',['id'=> $ba->id]) : '#' }}"
                     class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}"
                     data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
             @else
-                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? '/beasiswa/'.$ba->id : '#' }}"
+                <a href="{{ $canRegister && $status !== 'Closed' && $status !== 'Closed Permanently' ? route('beasiswa.show',['id'=> $ba->id]) : '#' }}"
                     class="beasiswa-card {{ $status === 'Closed' || $status === 'Closed Permanently' ? 'disabled' : '' }}"
                     data-nama-beasiswa="{{ $ba->nama_beasiswa }}">
             @endif
@@ -75,11 +70,11 @@
                 </div>
                 @endif
                 <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.ZZHzMoUorhjfqzXJHS80XQHaJQ&w=223&h=279&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2" }}
-                    style="border-radius: 15px;" class="mb-3 h-400" width="100%" height="100%" alt="beasiswa">
+                    style="border-radius: 15px;" class="mb-3 max-h-96" width="100%" height="100%" alt="beasiswa">
                 <div class="flex justify-center gap-2 mb-1" style="max-height: 35px">
-                    <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">{{ $ba->jenis_beasiswa }}</div>
-                    <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">Kuota: {{ $ba->kuota }}</div>
-                    <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">{{ $ba->kuota }}</div>
+                    <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-1 flex justify-center" style="border-radius: 10px;">{{ $ba->jenis_beasiswa }}</div>
+                    <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-1 flex justify-center" style="border-radius: 10px;">Kuota:{{ $ba->kuota }}</div>
+                    <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-1 flex justify-center" style="border-radius: 10px;">{{ $ba->tipe_beasiswa }}</div>
                 </div>
                 <p class="font-bold text-justify mb-1">{{ $ba->nama_beasiswa }}</p>
                 <p class="text-xs text-justify mb-2">
@@ -93,11 +88,6 @@
         </div>
     </a>
     @endforeach
-
-
-
-
-
     </div>
 
 

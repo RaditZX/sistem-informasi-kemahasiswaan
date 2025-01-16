@@ -48,7 +48,7 @@
                 <p class="text-sm text-gray-700">{{ $beasiswa->deskripsi }}</p>
                 @if (isset($isMhs) && !$isMengajukan)
                     @if ($status === 'Berlangsung')
-                        <a href="/pengajuan-beasiswa/{{ $id }}"
+                        <a href="{{ route('pengajuan.create',['id'=> $id]) }}"
                             class="mt-4 inline-flex items-center bg-yellow-400 px-4 py-2 rounded-lg shadow">
                             <span class="text-black font-medium">Apply Now</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black"

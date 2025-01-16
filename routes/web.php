@@ -9,7 +9,6 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PenerimaBeasiswaController;
 use App\Http\Controllers\PengajuanBeasiswaController;
-use App\Http\Controllers\PengajuanDokumenController;
 use App\Http\Controllers\PengaturanController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,12 +22,16 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register','register')->name('auth.register');
 
     // Forgot password process
-    Route::post('/forgot-password', 'forgotPassword')->name('password.forgot');
+    Route::get('/reset-password', 'showResetPasswordForm')->name('password.forgot');
     Route::post('/verify-code', 'verifyCode')->name('password.verifyCode');
-    Route::get('/reset-password', 'showResetPasswordForm')->name('password.reset');
+    Route::get('/forgot-password', 'showResetForm')->name('password.reset');
     Route::post('/reset-password', 'resetPassword')->name('password.update');
+    Route::post('/change-password', 'changePassword')->name('password.change');
     Route::post('/logout', 'logout')->name('logout');
     Route::post('/mahasiswa/create/{id}','insertMahasiswaData')->name('mahasiswa.insert');
+    Route::get('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
+
+
 
     // Register Information
     Route::get('/register-information/{id}', [AuthController::class, 'getRegisterInformation'])->name('auth.register-information');
@@ -41,7 +44,6 @@ Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {
         Route::get('/pengajuan-beasiswa/edit/{id}',[PengajuanBeasiswaController::class, 'show'])->name('pengajuan.show');
         Route::post('/pengajuan/store/{id}', [PengajuanBeasiswaController::class, 'store'])->name('pengajuan.store');
         Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
-
     });
     Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 });
@@ -50,7 +52,10 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/import-data-beasiswa', [BeasiswaController::class, 'getImportDataBeasiswa'])->name('beasiswa.import-data-beasiswa');
     Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
-    Route::post('/form-beasiswa', [BeasiswaController::class, 'store'])->name('beasiswa.store');
+    Route::get('/beasiswa/create', [BeasiswaController::class, 'create'])->name('beasiswa.create');
+    Route::post('/beasiswa/store', [BeasiswaController::class, 'store'])->name('beasiswa.store');
+    Route::delete('/beasiswa/destory', [BeasiswaController::class, 'destroy'])->name('beasiswa.destroy');
+    Route::get('/beasiswa/edit/{id}', [BeasiswaController::class, 'update'])->name('beasiswa.update');
     Route::post('/beasiswa/edit/{id}', [BeasiswaController::class, 'edit'])->name('beasiswa.edit');
     Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
     Route::get('/import-data-penerima', [PenerimaBeasiswaController::class, 'create'])->name('beasiswa.import-data-beasiswa');
@@ -86,7 +91,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
     Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
     Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
-    Route::resource('beasiswa', BeasiswaController::class);
+    Route::get('/beasiswa/{id}',[BeasiswaController::class,'show'])->name('beasiswa.show');
     Route::resource('pengaturan', PengaturanController::class);
     Route::patch('/pengaturan/updatefoto/{user}', [PengaturanController::class, 'updatefoto'])->name('pengaturan.updatefoto');
     Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');

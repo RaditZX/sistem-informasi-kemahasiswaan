@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $subject ?? 'Pemberitahuan Pengajuan Beasiswa' }}</title>
     <style>
         /* Tambahkan CSS Anda di sini */
         body {
@@ -38,24 +35,24 @@
 </head>
 <body>
     <div class="email-container">
-        <!-- Header Section -->
         <div class="email-header">
             <img src="{{ asset('assets/img/logo-polban.png') }}" alt="Logo">
+            <h2>Reset Password</h2>
         </div>
+        <p>Halo,</p>
+        <p>Kami menerima permintaan untuk mereset password akun Anda. Klik tombol di bawah ini untuk mereset password Anda:</p>
+        <p class="flex justify-center items-center" style="text-align: center; font-weight:bold">
+            <!-- Form with Button -->
+            <form action="{{ $actionUrl }}" method="GET" style="text-align: center;">
+                <button type="submit" style="background-color: #ff7300; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; display: inline-block;">
+                    Reset Password
+                </button>
+            </form>
+        </p>
 
-        <!-- Content Section -->
-        <div class="content">
-            <p>{{ $data['message'] }}</p>
-
-            <p>Terima kasih atas perhatian Anda.</p>
-            <p>Salam hangat,</p>
-            <p>Tim Beasiswa Politeknik Negeri Bandung</p>
-
-        </div>
-
-        <!-- Footer Section -->
-        <div class="footer">
-            <p>Politeknik Negeri Bandung, Jl. Gegerkalong Hilir, Kota Bandung, Indonesia</p>
+        <p>Jika Anda tidak meminta reset password, abaikan email ini.</p>
+        <div class="email-footer">
+            <p>&copy; {{ now()->year }} {{ config('app.name') }}. All rights reserved.</p>
         </div>
     </div>
 </body>

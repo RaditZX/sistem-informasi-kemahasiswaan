@@ -39,8 +39,8 @@
                             @error('password')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
-                            <span class="pt-2 block">Forgot your password? <a href="/reset-password" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
-                            <span class="pt-2 block">Dont have account? <a href="/register" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
+                            <span class="text-sm block">Forgot your password? <a href="{{ route('password.forgot') }}" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
+                            <span class="text-sm">Dont have account? <a href="{{ route('auth.register') }}" id="forgotPasswordLink" class="text-blue-500"><strong>Click here</strong></a></span>
                         </div>
                     </div>
                     <div class="mt-6">

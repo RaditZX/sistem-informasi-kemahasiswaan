@@ -5,10 +5,6 @@
         'path' => 'List Beasiswa',
         'id' => null
     ])
-
-
-
-    {{-- Filter, Tanngal Button dan Kolom Pencarian --}}
     <div class="p-2">
         <div class="flex flex-row-reverse p-5 gap-3">
             <div class="relative flex items-center">
@@ -28,7 +24,7 @@
             </div>
             <div class="relative flex items-center">
                 <i class="fas fa-plus absolute left-3 text-white"></i>
-                <a href="/beasiswa/create">
+                <a href={{ route('beasiswa.create') }}>
                     <div class="pl-10 pr-4 py-2 bg-orange-500 rounded shadow-lg p-2 w-auto cursor-pointer">
                         <p class="text-xs sm:text-base text-white">Tambah</p>
                     </div>
@@ -128,7 +124,8 @@
                 </button>
             </div>
             <div class="p-4">
-                <form action="{{ url('/list-beasiswa-staff') }}" method="GET">
+
+                <form action="{{ route('beasiswa.list-beasiswa-staff') }}" method="GET">
                     <div class="flex flex-col sm:flex-row justify-start gap-12 sm:gap-24">
                         <!-- Left Section: Checkboxes -->
                         <div class="flex flex-col items-start gap-6 sm:w-1/2">
