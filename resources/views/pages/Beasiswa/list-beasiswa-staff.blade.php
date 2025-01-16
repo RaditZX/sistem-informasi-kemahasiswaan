@@ -124,6 +124,7 @@
                 </button>
             </div>
             <div class="p-4">
+
                 <form action="{{ route('beasiswa.list-beasiswa-staff') }}" method="GET">
                     <div class="flex flex-col sm:flex-row justify-start gap-12 sm:gap-24">
                         <!-- Left Section: Checkboxes -->

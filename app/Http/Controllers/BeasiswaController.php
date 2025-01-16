@@ -28,7 +28,7 @@ class BeasiswaController extends Controller
 
     }
 
-    public function index(Request $request)
+     public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -231,7 +231,7 @@ class BeasiswaController extends Controller
                 $beasiswa->benefitBeasiswa()->attach($existingBenefit->id);
             }
         }
-
+      
         if ($request->hasFile('dokumen_file')){
             foreach ($request->file('dokumen_file') as $file) {
                     $newRequest = new Request();
@@ -457,7 +457,7 @@ class BeasiswaController extends Controller
                         $newRequest = new Request();
                         $newRequest->files->set('file', $file);
                         $newRequest->merge(['path' => 'dokumen']);
-
+    
                         // Call the uploadFile method from FileController
                         $fileController = new FileController();
                         $uploadedFileUrl = $fileController->uploadFileLocal($newRequest);
@@ -472,11 +472,11 @@ class BeasiswaController extends Controller
                 $index = 0;
                 foreach ($validatedData['nama_dokumen'] as $dokumen) {
                     $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
-
-
+    
+    
                     if(!$existingDokumen){
                         $existingDokumen = SyaratDokumen::create([
-                            'dokumen' => $dokumen,
+                            'dokumen' => $dokumen, 
                             'link_dokumen' => $dokumenUrls[$index],
                         ]);
                         $index++;
@@ -561,7 +561,7 @@ class BeasiswaController extends Controller
         return response()->json($tags);
     }
 
-    public function getBeasiswaTemplate(Request $request)
+     public function getBeasiswaTemplate(Request $request)
     {
         $templates = beasiswa::select('id', 'nama_beasiswa', 'deskripsi')
             ->orderBy('updated_at', 'desc')
@@ -580,17 +580,18 @@ class BeasiswaController extends Controller
         ]);
     }
 
+
     public function getBeasiswa($id)
     {
         // Ambil data dari database berdasarkan ID
         $beasiswa = Beasiswa::with([
-            'syaratBeasiswa',
-            'jenjangPendidikan',
-            'benefitBeasiswa',
-            'syaratDokumen',
+            'syaratBeasiswa', 
+            'jenjangPendidikan', 
+            'benefitBeasiswa', 
+            'syaratDokumen', 
             'posterBeasiswa'
         ])->find($id); // Just use find($id) without 'id' and without get()
-
+        
         // Cek apakah data beasiswa ditemukan
         if (!$beasiswa) {
             return response()->json(['message' => 'Beasiswa not found'], 404);

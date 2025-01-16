@@ -37,6 +37,7 @@ class PenerimaBeasiswaController extends Controller
         return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'jurusan'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      */

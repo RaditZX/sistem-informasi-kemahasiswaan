@@ -78,5 +78,11 @@ class DashboardController extends Controller
         return Beasiswa::where('tanggal_berakhir', '>=', now())
             ->where('tanggal_mulai', '<=', now())
             ->paginate(6);
+
+        $jurusan = DB::table('jurusan')->selectRaw('nama_jurusan')->get();
+
+        $jmlPenerima = PenerimaBeasiswa::count();
+
+        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'data1', 'jurusan', 'jmlPenerima'));
     }
 }
