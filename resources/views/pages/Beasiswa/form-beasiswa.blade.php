@@ -7,7 +7,7 @@
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
             <div class="bg-white rounded-lg p-6">
-                <form id="beasiswa-form" action="{{ url("beasiswa/$beasiswa->id") }}" method="POST" enctype="multipart/form-data">
+                <form id="beasiswa-form" action="{{ route('beasiswa.edit',['id'=>$beasiswa->id]) }}" method="POST" enctype="multipart/form-data">
                     @method('PATCH')
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -211,7 +211,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Tombol Tambah Syarat Dokumen -->
                     <div class="mt-4">
                         <button

@@ -7,7 +7,6 @@ use App\Models\Beasiswa;
 use App\Models\SyaratBeasiswa;
 use App\Models\BenefitBeasiswa;
 use App\Models\SyaratDokumen;
-use App\Models\JenjangPendidikan;
 use Carbon\Carbon;
 
 class BeasiswaSeeder extends Seeder
@@ -96,12 +95,8 @@ class BeasiswaSeeder extends Seeder
             'nama_beasiswa' => 'Beasiswa Prestasi Nasional',
             'deskripsi' => 'Beasiswa untuk mahasiswa dengan prestasi akademik dan non-akademik terbaik.',
             'tipe_beasiswa' => 'eksternal',
-<<<<<<< HEAD
             'jenis_beasiswa' => 'full',
-=======
-            'jenis_beasiswa' => 'half',
->>>>>>> a089f6b9d9fa98e39fcbd5aa7d2ec6b4260e0123
-            'kuota' => 30,
+            'kuota'=>30,
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-03-01',
             'tanggal_berakhir' => '2024-06-30',

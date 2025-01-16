@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Beasiswa;
+use App\Models\Jurusan;
 use App\Models\PenerimaBeasiswa;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -18,11 +19,11 @@ class DashboardController extends Controller
         $data = $this->getBeasiswaStatistics();
         $pengajuanTahun = $this->getPengajuanStatistics($jurusan, $currentYear);
         $beasiswa = $this->getOngoingBeasiswa();
-        $jurusanList = DB::table('jurusan')->pluck('nama_jurusan');
+        $jurusan = Jurusan::all();
 
         $jmlPenerima = PenerimaBeasiswa::count();
 
-        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'pengajuanTahun', 'jurusanList', 'jmlPenerima'));
+        return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'pengajuanTahun', 'jurusan', 'jmlPenerima'));
     }
 
     private function getBeasiswaStatistics()

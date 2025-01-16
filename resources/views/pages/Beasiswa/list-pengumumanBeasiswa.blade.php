@@ -24,7 +24,7 @@
             </div>
             @if (session('auth')['role'] === 'reviewer')
             <div class=" basis-1/12 flex rounded p-5">
-            <a href="/import-data-penerima">
+            <a href="{{ route('beasiswa.import-data-beasiswa') }}">
                 <div class="border border-black-500 rounded-lg text-center p-2 px-4 basis-1/2">
                     <p class="text-black font-bold">+</p>
                 </div>
@@ -37,10 +37,10 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-5">
 
         @foreach ($beasiswa as $ba)
-        <a href="/pengumuman-beasiswa/{{ $ba->id }}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
+        <a href="{{ route('beasiswa.pengumuman-beasiswa',['id'=>$ba->id]) }}}}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
             <div class="p-2">
                 <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.ZZHzMoUorhjfqzXJHS80XQHaJQ&w=223&h=279&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2" }}
-                    style="border-radius: 15px;" class="mb-3 h-400" alt="beasiswa">
+                    style="border-radius: 15px;" class="mb-3 max-h-96" width="100%" alt="beasiswa">
                 <div class="flex justify-center gap-2 mb-1" style="max-height: 35px">
                     <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">{{ $ba->jenis_beasiswa }}</div>
                     <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">Kuota: {{ $ba->kuota }}</div>
@@ -70,7 +70,7 @@
                     </button>
                 </div>
                 <div class="p-4">
-                    <form action="{{ url('/beasiswa') }}" method="GET">
+                    <form action="{{ route('beasiswa.index') }}" method="GET">
                         <div class="flex flex-col sm:flex-row justify-start gap-12 sm:gap-24">
                             <!-- Left Section: Checkboxes -->
                             <div class="flex flex-col items-start gap-6 sm:w-1/2">

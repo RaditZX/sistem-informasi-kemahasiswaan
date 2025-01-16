@@ -28,7 +28,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): voids
+    public function down(): void
     {
         Schema::dropIfExists('notifikasi');
     }

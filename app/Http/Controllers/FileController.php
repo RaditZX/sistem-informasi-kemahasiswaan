@@ -42,6 +42,7 @@ class FileController extends Controller
             'path' => 'required|string',
         ]);
 
+
         $file = $request->file('file');
         $path = $request->path;
 
@@ -51,10 +52,9 @@ class FileController extends Controller
 
         // Set Content-Disposition: inline (untuk menampilkan di browser)
         $storage = LaravelStorage::disk('public');
-        $storage->setVisibility($storedPath, 'public'); // Set visibility to public (if needed)
+        $storage->setVisibility($storedPath, 'public');
 
-        // You can then set Content-Disposition for Firebase Storage or another service if necessary
-        $url = asset('storage/' . $storedPath);  // URL to access the file
+        $url = asset('storage/' . $storedPath);
 
         return response()->json(['url' => $url]);
     }
@@ -74,7 +74,7 @@ class FileController extends Controller
 
         // If it's a PDF, force set the MIME type to application/pdf
         if ($mimeType === 'application/octet-stream' || $mimeType === 'application/pdf') {
-            $mimeType = 'application/pdf';  // Override to force PDF type
+            $mimeType = 'application/pdf';
         }
 
         // Return the file with 'Content-Disposition' header set to 'inline'

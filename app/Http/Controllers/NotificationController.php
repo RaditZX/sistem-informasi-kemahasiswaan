@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 // NotificationController.php
 use App\Models\Notifikasi;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
-
 
 class NotificationController extends Controller
 {

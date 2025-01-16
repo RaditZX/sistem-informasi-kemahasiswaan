@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\beasiswa;
+use App\Http\Controllers\BeasiswaController;
+use App\Models\Beasiswa;
+use App\Models\Jurusan;
 use App\Models\PenerimaBeasiswa;
+use App\Models\PengajuanBeasiswa;
 use App\Models\Reviewer;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Jurusan;
 
 class PenerimaBeasiswaController extends Controller
 {
@@ -19,43 +23,15 @@ class PenerimaBeasiswaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Beasiswa::query();
-
-        // Filter `search` berdasarkan `nama_beasiswa`
-        if ($request->has('search') && $request->input('search') !== '') {
-            $searchTerm = $request->input('search');
-            $query->where('nama_beasiswa', 'ilike', "%{$searchTerm}%");
-        }
-
-        // Filter `jenis_beasiswa`
-        if ($request->has('jenis_beasiswa') && !empty($request->input('jenis_beasiswa'))) {
-            $jenisBeasiswa = $request->input('jenis_beasiswa');
-            foreach ($jenisBeasiswa as $jenis) {
-                $query->orWhere('jenis_beasiswa', $jenis);
-            }
-        }
-
-        // Filter `tipe_beasiswa`
-        if ($request->has('tipe_beasiswa') && !empty($request->input('tipe_beasiswa'))) {
-            $query->where('tipe_beasiswa', $request->input('tipe_beasiswa'));
-        }
-
-        // Filter `jurusan` dalam `syarat_beasiswa`
-        if ($request->has('jurusan') && !empty($request->input('jurusan'))) {
-            $jurusan = $request->input('jurusan');
-            $query->whereHas('syaratBeasiswa', function ($q) use ($jurusan) {
-                $q->where('syarat', 'like', "%{$jurusan}%");
-            });
-        }
+        $beasiswaController = new BeasiswaController();
+        $query = $beasiswaController->buildBeasiswaQuery($request);
 
         // Jalankan query dan paginasi hasilnya
         $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
             ->paginate(8);
 
         // Data pengguna untuk view
-        $user = Auth::user();
         $jurusan = Jurusan::all();
-
 
         // Kirim data ke view
         return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'jurusan'));
@@ -89,44 +65,66 @@ class PenerimaBeasiswaController extends Controller
 
         try {
             $file = $request->file('excelFile');
-            (new FastExcel)->import($file, function ($line) {
-                // Validasi setiap baris data
-                $data = Validator::make($line, [
-                    'nim' => 'required|integer',
-                    'beasiswa' => 'required|string|exists:beasiswa,nama_beasiswa',
-                ])->validate();
+            DB::transaction(function () use ($file) {
+                (new FastExcel)->import($file, function ($line) {
+                    // Validate each row of data
+                    $data = Validator::make($line, [
+                        'nim' => 'required|integer',
+                        'beasiswa' => 'required|string|exists:beasiswa,nama_beasiswa',
+                    ])->validate();
 
-                $beasiswa = Beasiswa::where('nama_beasiswa', $data['beasiswa'])->first();
+                    $beasiswa = Beasiswa::where('nama_beasiswa', $data['beasiswa'])->first();
 
-                if (!$beasiswa) {
-                    throw new \Exception("Beasiswa with name {$data['beasiswa']} not found.");
-                }
+                    if (!$beasiswa) {
+                        throw new \Exception("Beasiswa with name {$data['beasiswa']} not found.");
+                    }
 
-                $beasiswaID = $beasiswa->id;
+                    $beasiswaID = $beasiswa->id;
 
-                $penerimaBeasiswa = PenerimaBeasiswa::where('nim', $data['nim'])->first();
+                    $penerimaBeasiswa = PenerimaBeasiswa::where('nim', $data['nim'])->first();
 
-                if (!$penerimaBeasiswa) {
-                    PenerimaBeasiswa::create([
-                        'nim' => $data['nim'],
-                        'beasiswa_id' => $beasiswaID,
-                    ]);
-                } else {
-                    if ($beasiswa->jenis_beasiswa === 'half') {
-                        $oneYearAgo = now()->subYear();
-                        if ($penerimaBeasiswa->created_at <= $oneYearAgo) {
+                    if (!$penerimaBeasiswa) {
+                        // Handle external or KIPK type beasiswa
+                        if (!in_array($beasiswa->tipe_beasiswa, ['eksternal', 'kipk'])) {
+                            $checkPengajuan = PengajuanBeasiswa::where('nim', $data['nim'])
+                                ->where('beasiswa_id', $beasiswaID)
+                                ->exists();
+
+                            if ($checkPengajuan) {
+                                PenerimaBeasiswa::create([
+                                    'nim' => $data['nim'],
+                                    'beasiswa_id' => $beasiswaID,
+                                ]);
+                            }
+                        } else {
                             PenerimaBeasiswa::create([
                                 'nim' => $data['nim'],
                                 'beasiswa_id' => $beasiswaID,
                             ]);
                         }
+                    } else {
+                        // Handle half-type beasiswa
+                        if ($beasiswa->jenis_beasiswa === 'half') {
+                            $oneYearAgo = now()->subYear();
+
+                            if ($penerimaBeasiswa->created_at <= $oneYearAgo) {
+                                PenerimaBeasiswa::create([
+                                    'nim' => $data['nim'],
+                                    'beasiswa_id' => $beasiswaID,
+                                ]);
+                            }
+                        }
                     }
-                }
+                });
             });
-            return redirect()->route('beasiswa.import-data-beasiswa',)->with('success', 'Beasiswa created successfully.');
+
+            return redirect()->route('beasiswa.import-data-beasiswa')
+                ->with('success', 'Beasiswa data imported successfully.');
         } catch (\Throwable $e) {
-            // Tangani error
-            return redirect()->route('beasiswa.import-data-beasiswa',)->with('success', 'Beasiswa created successfully.');
+            Log::error('Beasiswa Import Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+            return redirect()->route('beasiswa.import-data-beasiswa')
+                ->with('error', 'Failed to import beasiswa data.');
         }
     }
 
@@ -183,7 +181,7 @@ class PenerimaBeasiswaController extends Controller
                 'Jurusan' => $item->nama_jurusan,
                 'Prodi' => $item->nama_prodi,
                 'Beasiswa' => $item->nama_beasiswa,
-                'Tanggal Diterima' => $item->created_at->format('Y-m-d'), // Optional: Format date for readability
+                'Tanggal Diterima' => $item->created_at->format('Y-m-d')
             ];
         });
 

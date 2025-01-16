@@ -23,13 +23,6 @@ use Illuminate\Support\Str;
 
 class BeasiswaController extends Controller
 {
-    private $notifController;
-
-    public function __construct(NotificationController $notifController)
-    {
-        $this->notifController = $notifController;
-    }
-
     public function getBeasiswaDataBaseOnBeasiswaId(int $id){
         return Beasiswa::findOrFail($id);
 
@@ -59,8 +52,6 @@ class BeasiswaController extends Controller
 
     public function getListBeasiswaForStaff(Request $request)
     {
-        $notificationData = $this->notifController->getNotifData();
-
         $query = $this->buildBeasiswaQuery($request);
         $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(10);
 
@@ -69,7 +60,7 @@ class BeasiswaController extends Controller
         return view('pages.Beasiswa.list-beasiswa-staff', compact('beasiswa', 'jurusan'));
     }
 
-    private function buildBeasiswaQuery(Request $request)
+    public function buildBeasiswaQuery(Request $request)
     {
         $query = Beasiswa::query();
 
@@ -151,8 +142,6 @@ class BeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-
-        // Validasi input
         $validatedData = $request->validate($this->validation_rules, $this->validation_messages);
 
          // Modifikasi tanggal_berakhir
@@ -394,7 +383,6 @@ class BeasiswaController extends Controller
 
                     // Store the uploaded file URL in the array
                     $fileUrls[] = $uploadedFileUrl->getData()->url ?? null;
-                    // dd($fileUrls);
                 }
             }
 
@@ -514,20 +502,14 @@ class BeasiswaController extends Controller
             } else {
                 $beasiswa->jenjangPendidikan()->delete();
             }
-
-
             // Log the updated scholarship data
             Log::info('Beasiswa updated successfully: ', [$beasiswa]);
-            // dd($beasiswa->syaratBeasiswa, $beasiswa->benefitBeasiswa, $beasiswa->syaratDokumen, $beasiswa->jenjangPendidikan, $beasiswa->posterBeasiswa, $beasiswa);
-
             return redirect()->route('beasiswa.list-beasiswa-staff')->with('success', 'Data beasiswa berhasil diperbarui.');
 
         } catch (\Exception $e) {
             Log::error('Error updating scholarship: ', ['error' => $e->getMessage()]);
 
-
-            // return redirect()->back()->withErrors(['msg' => 'Terjadi kesalahan saat memperbarui data beasiswa.']);
-            //     ->withErrors(['msg' => 'Terjadi kesalahan saat memperbarui data beasiswa.']);
+            return redirect('/beasiswa')->with('error', 'Terjadi kesalahan saat memperbarui data beasiswa');
         }
     }
 
