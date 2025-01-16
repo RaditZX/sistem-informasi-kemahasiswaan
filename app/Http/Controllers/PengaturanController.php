@@ -79,8 +79,6 @@ class PengaturanController extends Controller
         ));
     }
 
-
-
     /**
      * Update the specified resource in storage.
      */
@@ -112,14 +110,13 @@ class PengaturanController extends Controller
             $response = $fileController->uploadFileLocal($newRequest);
 
             // Get the response data from the JsonResponse
-            $responseData = $response->getData(true); // Convert the JSON response to an array
+            $responseData = $response->getData(true);
 
             // Check if the URL was returned successfully
             if (isset($responseData['url'])) {
-                // Update the user's 'foto' field with the URL from the uploadFileLocal method
                 User::where('id', $id)
                     ->update([
-                        'foto' => $responseData['url'] // Use the URL from the response
+                        'foto' => $responseData['url']
                     ]);
 
                 return redirect()->route('pengaturan.index')->with('success', 'Profile updated successfully');

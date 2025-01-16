@@ -442,9 +442,9 @@
                 ], // Example labels
                 datasets: [{
                     // Hide the label by not including it
-                    data: [@json($data1->jumlah_5_tahun_lalu), @json($data1->jumlah_4_tahun_lalu),
-                        @json($data1->jumlah_3_tahun_lalu), @json($data1->jumlah_2_tahun_lalu),
-                        @json($data1->jumlah_tahun_lalu), @json($data1->jumlah_tahun_sekarang)
+                    data: [@json($pengajuanTahun->jumlah_5_tahun_lalu), @json($pengajuanTahun->jumlah_4_tahun_lalu),
+                        @json($pengajuanTahun->jumlah_3_tahun_lalu), @json($pengajuanTahun->jumlah_2_tahun_lalu),
+                        @json($pengajuanTahun->jumlah_tahun_lalu), @json($pengajuanTahun->jumlah_tahun_sekarang)
                     ],
                     backgroundColor: [
                         'rgba(255, 99, 132, 1)',

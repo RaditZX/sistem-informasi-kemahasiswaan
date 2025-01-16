@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\MailController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PengajuanDokumenController;
 use App\Mail\NotificationMail;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
@@ -26,320 +24,127 @@ use Illuminate\Support\Facades\Mail;
 
 class PengajuanBeasiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $user = Auth::user();
-
-        return view('pages.Pengajuan.tracking-pengajuan');
-    }
-
-
     public function listPengajuanStaff()
     {
-
         $user = Auth::user();
-
-        // Determine user type (Mahasiswa, Kajur, or other staff)
-        $mhs = Mahasiswa::where('user_id', $user->id)->first();
-        $listPengajuan = collect(); // Initialize an empty collection for listPengajuan
-
-        if ($mhs) {
-            // If user is a Mahasiswa, fetch their submissions
-            $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
-                ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
-                ->join('users', 'mahasiswa.user_id', '=', 'users.id')
-                ->join('kode_status', 'kode_status.id', '=', 'pengajuan_beasiswa.status')
-                ->select(
-                    'beasiswa.nama_beasiswa',
-                    'beasiswa.sumber',
-                    'users.nama_depan',
-                    'pengajuan_beasiswa.status',
-                    'pengajuan_beasiswa.tanggal_pengajuan',
-                    'kode_status.isi_status',
-                    'pengajuan_beasiswa.id as id_pengajuan'
-                )
-                ->where('mahasiswa.nim', '=', $mhs->nim)
-                ->get();
-        } else {
-            // Check the role
-            $reviewer = Reviewer::where('user_id', $user->id)->first();
-
-            if ($reviewer->role_id === 2) {
-                $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
-                    ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
-                    ->join('prodi', 'prodi.id', '=', 'mahasiswa.prodi_id')
-                    ->join('jurusan', 'jurusan.id', '=', 'prodi.jurusan_id')
-                    ->join('users', 'mahasiswa.user_id', '=', 'users.id')
-                    ->select(
-                        'beasiswa.nama_beasiswa',
-                        'beasiswa.sumber',
-                        'users.nama_depan',
-                        'pengajuan_beasiswa.status',
-                        'pengajuan_beasiswa.tanggal_pengajuan',
-                        'pengajuan_beasiswa.id as id_pengajuan'
-                    )
-                    ->where('jurusan.kajur_id', $user->id)
-                    ->whereIn('pengajuan_beasiswa.status', [4, 5])
-                    ->get();
-            } else {
-                if ($reviewer->role_id === 1) {
-                    $statusCode = [1, 2, 3];
-                } elseif ($reviewer->role_id === 3) {
-                    $statusCode = [6, 7];
-                } else {
-                    $statusCode = [8, 9];
-                }
-
-                $listPengajuan = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
-                    ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
-                    ->join('users', 'mahasiswa.user_id', '=', 'users.id')
-                    ->select(
-                        'beasiswa.*',
-                        'users.nama_depan',
-                        'pengajuan_beasiswa.status',
-                        'pengajuan_beasiswa.tanggal_pengajuan',
-                        'pengajuan_beasiswa.id as id_pengajuan'
-                    )
-                    ->whereIn('pengajuan_beasiswa.status', $statusCode)
-                    ->get();
-            }
-        }
-
-        // Fetch names of all Beasiswa
+        $listPengajuan = $this->getListPengajuan($user);
         $namaBeasiswa = Beasiswa::pluck('nama_beasiswa');
 
-        // Return the view with the data
-        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan', 'namaBeasiswa'));
+        return view('pages.Beasiswa.list-pengaju-beasiswa', compact('listPengajuan','namaBeasiswa'));
     }
+
 
     public function create(string $id)
     {
         $user = Auth::user();
-        $mhs = Mahasiswa::where('user_id', '=', $user->id)->first();
-        $prodi = Prodi::where('id', $mhs->prodi_id)->first();
-        $jurusan = Jurusan::where('id', $prodi->jurusan_id)->first();
+        $mhs = $this->getMahasiswaByUserId($user->id);
+        $prodi = $this->getProdiById($mhs->prodi_id);
+        $jurusan = $this->getJurusanById($prodi->jurusan_id);
+        $dokumen = $this->getDokumenByBeasiswaId($id);
 
-        $dokumen = DB::select('
-        SELECT syarat_dokumen.dokumen
-        FROM beasiswa_syarat_dokumen
-        JOIN syarat_dokumen
-        ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
-        WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$id]);
-
-        $pengajuan = null;
-        $dokumenPengajuan = null;
-        return view('pages.Beasiswa.pengajuan-beasiswa', compact('user', 'pengajuan', 'dokumenPengajuan', 'mhs', 'jurusan', 'prodi', 'dokumen'));
+        return view('pages.Beasiswa.pengajuan-beasiswa', [
+            'user' => $user,
+            'pengajuan' => null,
+            'dokumenPengajuan' => null,
+            'mhs' => $mhs,
+            'jurusan' => $jurusan,
+            'prodi' => $prodi,
+            'dokumen' => $dokumen,
+        ]);
     }
-
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Pengajuan Beasiswa.
      */
     public function store(Request $request, string $id)
     {
-        $dokumen = DB::select('
-        SELECT syarat_dokumen.dokumen
-        FROM beasiswa_syarat_dokumen
-        JOIN syarat_dokumen
-        ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
-        WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$id]);
+        $dokumen = $this->getBeasiswaDocuments($id);
 
-        // Initialize an empty array for validation rules
-        $rules = [];
-
-        // Dynamically add validation rules based on the number of documents
-        foreach ($dokumen as $index => $item) {
-            $rules['file_' . ($index + 1)] = 'required|file';
-        }
-
-        // Validate the request with the dynamically built rules
+        $rules = $this->buildValidationRules($dokumen);
         $request->validate($rules);
 
-        $user = Auth::user();
-        $mhs = Mahasiswa::where('user_id', '=', $user->id)->first();
+        $mhs = $this->getAuthenticatedMahasiswa();
 
-        $check = PengajuanBeasiswa::where('nim', '=', $mhs->nim)->exists();
-
-        if ($check) {
+        if ($this->hasExistingSubmission($mhs->nim)) {
             return redirect()->route('pengajuan.create', ['id' => $id])
                 ->with('failed', 'Tidak Bisa Mengajukan Beasiswa Lagi.');
         }
 
-        // Start a database transaction
         DB::beginTransaction();
 
         try {
-            // Create the PengajuanBeasiswa record
-            $pengajuanBeasiswa = PengajuanBeasiswa::create([
-                'nim' => $mhs->nim,
-                'beasiswa_id' => $id,
-                'tanggal_pengajuan' => now(),
-                'status' => 1
-            ]);
+            $pengajuanBeasiswa = $this->createPengajuanBeasiswa($mhs->nim, $id);
+            $this->processDokumenUpload($request, $dokumen, $pengajuanBeasiswa->id);
 
-            // Process each file dynamically based on the number of documents
-            foreach ($dokumen as $index => $item) {
-                $fileKey = 'file_' . ($index + 1);
-                $file = $request->file($fileKey);
-
-                // Extract file name
-                $fileName = $file->getClientOriginalName();
-
-                // Create a new request for the file upload
-                $newRequest = new Request();
-                $newRequest->files->set('file', $file);
-                $newRequest->merge(['path' => 'dokumen']);
-
-                // Upload the file
-                $fileController = new FileController();
-                $fileUrl = $fileController->uploadFileLocal($newRequest);
-                // Get the last ID for `dokumen`
-                $lastId = DB::table('dokumen')->max('id');
-
-                // Create PengajuanDokumen record
-                PengajuanDokumen::create([
-                    'kode_dokumen' => hash('sha256', $fileName . rand(0, 99999)),
-                    'nama_dokumen' => $fileName,
-                    'link_dokumen' => $fileUrl->getData()->url,
-                    'id_pengajuan_beasiswa' => $pengajuanBeasiswa->id,
-                    'id' => $lastId ? $lastId + 1 : 1, // If no last ID, default to 1
-                ]);
-            }
+            $this->sendSubmissionEmails($mhs->nim, $id);
 
             DB::commit();
 
-            $email = new MailController();
-            $request = new Request($email->mahasiswaPengajuanMessage($mhs->nim, $id));
-            $email->sendMail($request, false);
-            $request = new Request($email->reviewerPengajuanMessage($mhs->nim, $id));
-            $email->sendMail($request, true);
-
-            return redirect()->route('pengajuan.create', ['id' => $id])->with('success', 'Pengajuan Beasiswa created successfully.');
+            return redirect()->route('pengajuan.create', ['id' => $id])
+                ->with('success', 'Pengajuan Beasiswa created successfully.');
         } catch (\Exception $e) {
-            // Rollback the transaction if any error occurs
             DB::rollBack();
-
-            // Optionally log the exception for debugging purposes
             Log::error("Error creating Pengajuan Beasiswa: {$e->getMessage()}", ['exception' => $e]);
 
-            return redirect()->route('pengajuan.create', ['id' => $id])->with('failed', 'Failed to create Beasiswa. Please try again.');
+            return redirect()->route('pengajuan.create', ['id' => $id])
+                ->with('error', 'Failed to create Beasiswa. Please try again.');
         }
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified Pengajuan Beasiswa.
      */
     public function show(string $id)
     {
-        $pengajuan_beasiswa = PengajuanBeasiswa::findOrFail($id);
-        $query = PengajuanDokumen::query();
-        $query->where('id_pengajuan_beasiswa', $id);
-        $query->orderBy('id', 'asc');
-        $dokumenPengajuan = $query->get();
+        $pengajuanBeasiswa = PengajuanBeasiswa::findOrFail($id);
+        $dokumenPengajuan = $this->getPengajuanDokumen($id);
 
         $user = Auth::user();
-        $mhs = Mahasiswa::where('user_id', '=', $user->id)->first();
-        $prodi = Prodi::where('id', $mhs->prodi_id)->first();
-        $jurusan = Jurusan::where('id', $prodi->jurusan_id)->first();
+        $mhs = $this->getAuthenticatedMahasiswa();
+        $prodi = $this->getProdi($mhs->prodi_id);
+        $jurusan = $this->getJurusan($prodi->jurusan_id);
 
-        $beasiswaID = $pengajuan_beasiswa->beasiswa_id;
+        $dokumen = $this->getBeasiswaDocuments($pengajuanBeasiswa->beasiswa_id);
 
-        $dokumen = DB::select('
-        SELECT syarat_dokumen.dokumen
-        FROM beasiswa_syarat_dokumen
-        JOIN syarat_dokumen
-        ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
-        WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$beasiswaID]);
-
-        return view('pages.Beasiswa.pengajuan-beasiswa', ['pengajuan' => $pengajuan_beasiswa, 'dokumen_pengajauan' => $dokumenPengajuan, 'prodi' => $prodi, 'jurusan' => $jurusan, 'user' => $user, 'mhs' => $mhs, 'dokumen' => $dokumen]);
+        return view('pages.Beasiswa.pengajuan-beasiswa', [
+            'pengajuan' => $pengajuanBeasiswa,
+            'dokumen_pengajuan' => $dokumenPengajuan,
+            'prodi' => $prodi,
+            'jurusan' => $jurusan,
+            'user' => $user,
+            'mhs' => $mhs,
+            'dokumen' => $dokumen
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified Pengajuan Beasiswa.
      */
     public function edit(Request $request, string $id)
     {
-        $beasiswaID = PengajuanBeasiswa::find($id);
-
-        $dokumen = DB::select('
-            SELECT syarat_dokumen.dokumen
-            FROM beasiswa_syarat_dokumen
-            JOIN syarat_dokumen
-            ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
-            WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$beasiswaID->beasiswa_id]);
-
-        // Initialize an empty array for validation rules
-        $rules = [];
-
-        // Dynamically add validation rules based on the number of documents
-        foreach ($dokumen as $index => $item) {
-            $rules['file_' . ($index + 1)] = 'required|file';
-        }
-
-        // Validate the request with the dynamically built rules
+        $dokumen = $this->getBeasiswaDocuments($this->getBeasiswaIdByPengajuan($id));
+        $rules = $this->buildValidationRules($dokumen);
         $request->validate($rules);
 
         DB::beginTransaction();
+
         try {
-            // Retrieve all documents associated with the given pengajuan_beasiswa_id
-            $dokumenPengajuan = PengajuanDokumen::where('id_pengajuan_beasiswa', '=', $id)
-                ->orderBy('id', 'asc')
-                ->get();
-
-            if ($dokumenPengajuan->isEmpty()) {
-                return redirect()->route('pengajuan.show', ['id' => $id])
-                    ->with('failed', 'No documents found for pengajuan id: ' . $id);
-            }
-
-            // Dynamically create file keys based on the number of documents
-            $fileKeys = [];
-            foreach ($dokumen as $index => $item) {
-                $fileKeys[$index] = 'file_' . ($index + 1);
-            }
-
-            $fileController = new FileController();
-
-            foreach ($dokumenPengajuan as $index => $dokumen) {
-                $fileKey = $fileKeys[$index] ?? null;
-
-                if ($fileKey && $request->hasFile($fileKey)) {
-                    $deleteRequest = new Request();
-                    $deleteRequest->merge([
-                        'file_name' => $dokumen->nama_dokumen,
-                        'path' => 'dokumen'
-                    ]);
-
-                    // Delete the old file
-                    $fileController->deleteFile($deleteRequest);
-
-                    $file = $request->file($fileKey);
-                    $newRequest = new Request();
-                    $newRequest->files->set('file', $file);
-                    $newRequest->merge(['path' => 'dokumen']);
-
-                    // Upload the new file
-                    $fileUrl = $fileController->uploadFileLocal($newRequest);
-
-                    // Update the document record
-                    $dokumen->nama_dokumen = $file->getClientOriginalName();
-                    $dokumen->link_dokumen = $fileUrl->getData()->url;
-                    $dokumen->save();
-                }
-            }
+            $dokumenPengajuan = $this->getPengajuanDokumen($id);
+            $this->updateDokumen($request, $dokumen, $dokumenPengajuan);
 
             DB::commit();
+
             return redirect()->route('pengajuan.show', ['id' => $id])
                 ->with('success', 'Documents updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error updating documents for Pengajuan ID: {$id}", ['exception' => $e]);
-            return redirect()->route('pengajuan.show', ['id' => $id])
-                ->with('failed', 'Failed to update documents. Please try again later.');
-        }
 
+            return redirect()->route('pengajuan.show', ['id' => $id])
+                ->with('error', 'Failed to update documents. Please try again later.');
+        }
     }
+
+
 
 
     public function showTracking(string $id)
@@ -535,4 +340,217 @@ class PengajuanBeasiswaController extends Controller
 
         return redirect()->route('pengajuan.list-pengajuan')->with('msg', 'Pengajuan mu telah di batalkan');
     }
+
+    private function getListPengajuan($user)
+    {
+        $mhs = Mahasiswa::where('user_id', $user->id)->first();
+
+        if ($mhs) {
+            return $this->getMahasiswaPengajuan($mhs->nim);
+        }
+
+        $reviewer = Reviewer::where('user_id', $user->id)->first();
+        if ($reviewer->role_id === 2) {
+            return $this->getKajurPengajuan($user->id);
+        }
+
+        return $this->getStaffPengajuan($reviewer->role_id);
+    }
+
+    private function getMahasiswaPengajuan($nim)
+    {
+        return PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+            ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+            ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+            ->join('kode_status', 'kode_status.id', '=', 'pengajuan_beasiswa.status')
+            ->select(
+                'beasiswa.nama_beasiswa',
+                'beasiswa.sumber',
+                'users.nama_depan',
+                'pengajuan_beasiswa.status',
+                'pengajuan_beasiswa.tanggal_pengajuan',
+                'kode_status.isi_status',
+                'pengajuan_beasiswa.id as id_pengajuan'
+            )
+            ->where('mahasiswa.nim', $nim)
+            ->get();
+    }
+
+    private function getKajurPengajuan($userId)
+    {
+        return PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+            ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+            ->join('prodi', 'prodi.id', '=', 'mahasiswa.prodi_id')
+            ->join('jurusan', 'jurusan.id', '=', 'prodi.jurusan_id')
+            ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+            ->select(
+                'beasiswa.nama_beasiswa',
+                'beasiswa.sumber',
+                'users.nama_depan',
+                'pengajuan_beasiswa.status',
+                'pengajuan_beasiswa.tanggal_pengajuan',
+                'pengajuan_beasiswa.id as id_pengajuan'
+            )
+            ->where('jurusan.kajur_id', $userId)
+            ->whereIn('pengajuan_beasiswa.status', [4, 5])
+            ->get();
+    }
+
+    private function getStaffPengajuan($roleId)
+    {
+        $statusCode = match ($roleId) {
+            1 => [1, 2, 3],
+            3 => [6, 7],
+            default => [8, 9],
+        };
+
+        return PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+            ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
+            ->join('users', 'mahasiswa.user_id', '=', 'users.id')
+            ->select(
+                'beasiswa.*',
+                'users.nama_depan',
+                'pengajuan_beasiswa.status',
+                'pengajuan_beasiswa.tanggal_pengajuan',
+                'pengajuan_beasiswa.id as id_pengajuan'
+            )
+            ->whereIn('pengajuan_beasiswa.status', $statusCode)
+            ->get();
+    }
+
+    private function getMahasiswaByUserId(int $userId)
+    {
+        return Mahasiswa::where('user_id', $userId)->first();
+    }
+
+    private function getProdiById(int $prodiId)
+    {
+        return Prodi::find($prodiId);
+    }
+
+    private function getJurusanById(int $jurusanId)
+    {
+        return Jurusan::find($jurusanId);
+    }
+
+    private function getDokumenByBeasiswaId(string $beasiswaId)
+    {
+        return DB::table('beasiswa_syarat_dokumen')
+            ->join('syarat_dokumen', 'beasiswa_syarat_dokumen.syarat_dokumen_id', '=', 'syarat_dokumen.id')
+            ->where('beasiswa_syarat_dokumen.beasiswa_id', $beasiswaId)
+            ->select('syarat_dokumen.*') // Select all columns from the 'syarat_dokumen' table
+            ->get(); // Use get() to return a collection of objects
+    }
+
+    private function getBeasiswaDocuments(string $beasiswaId)
+    {
+        return DB::select('SELECT syarat_dokumen.dokumen, syarat_dokumen.link_dokumen FROM beasiswa_syarat_dokumen
+            JOIN syarat_dokumen ON beasiswa_syarat_dokumen.syarat_dokumen_id = syarat_dokumen.id
+            WHERE beasiswa_syarat_dokumen.beasiswa_id = ?', [$beasiswaId]);
+    }
+
+    private function buildValidationRules(array $dokumen): array
+    {
+        $rules = [];
+        foreach ($dokumen as $index => $item) {
+            $rules['file_' . ($index + 1)] = 'required|file';
+        }
+        return $rules;
+    }
+
+    private function getAuthenticatedMahasiswa()
+    {
+        return Mahasiswa::where('user_id', Auth::id())->first();
+    }
+
+    private function hasExistingSubmission(string $nim): bool
+    {
+        return PengajuanBeasiswa::where('nim', $nim)->exists();
+    }
+
+    private function createPengajuanBeasiswa(string $nim, string $beasiswaId)
+    {
+        return PengajuanBeasiswa::create([
+            'nim' => $nim,
+            'beasiswa_id' => $beasiswaId,
+            'tanggal_pengajuan' => now(),
+            'status' => 1
+        ]);
+    }
+
+    private function processDokumenUpload(Request $request, array $dokumen, int $pengajuanId)
+    {
+
+        $fileController = new FileController();
+
+        foreach ($dokumen as $index => $item) {
+            $fileKey = 'file_' . ($index + 1);
+            $file = $request->file($fileKey);
+
+            $newRequest = new Request();
+            $newRequest->files->set('file', $file);
+            $newRequest->merge(['path' => 'dokumen-pengajuan']);
+            $fileUrl = $fileController->uploadFileLocal($newRequest);
+
+            PengajuanDokumen::create([
+                'kode_dokumen' => hash('sha256', $file->getClientOriginalName() . rand(0, 99999)),
+                'nama_dokumen' => $file->getClientOriginalName(),
+                'link_dokumen' => $fileUrl->getData()->url,
+                'id_pengajuan_beasiswa' => $pengajuanId,
+            ]);
+        }
+    }
+
+    private function sendSubmissionEmails(string $nim, string $beasiswaId)
+    {
+        $emailController = new MailController();
+
+        $emailController->sendMail(new Request($emailController->mahasiswaPengajuanMessage($nim, $beasiswaId)), false,false);
+        $emailController->sendMail(new Request($emailController->reviewerPengajuanMessage($nim, $beasiswaId)), true,false);
+    }
+
+    private function getPengajuanDokumen(string $pengajuanId)
+    {
+        return PengajuanDokumen::where('id_pengajuan_beasiswa', $pengajuanId)->orderBy('id', 'asc')->get();
+    }
+
+    private function updateDokumen(Request $request, array $dokumen, $dokumenPengajuan)
+    {
+        $fileController = new FileController();
+
+        foreach ($dokumenPengajuan as $index => $dokumenItem) {
+            $fileKey = 'file_' . ($index + 1);
+
+            if ($request->hasFile($fileKey)) {
+                $fileController->deleteFile(new Request(['file_name' => $dokumenItem->nama_dokumen, 'path' => 'dokumen']));
+
+                $file = $request->file($fileKey);
+                $newRequest = new Request();
+                $newRequest->files->set('file', $file);
+                $newRequest->merge(['path' => 'dokumen-pengajuan']);
+                $fileUrl = $fileController->uploadFileLocal($newRequest);
+
+                $dokumenItem->update([
+                    'nama_dokumen' => $file->getClientOriginalName(),
+                    'link_dokumen' => $fileUrl->getData()->url
+                ]);
+            }
+        }
+    }
+
+    private function getProdi(string $prodiId)
+    {
+        return Prodi::findOrFail($prodiId);
+    }
+
+    private function getJurusan(string $jurusanId)
+    {
+        return Jurusan::findOrFail($jurusanId);
+    }
+
+    private function getBeasiswaIdByPengajuan(string $pengajuanId)
+    {
+        return PengajuanBeasiswa::findOrFail($pengajuanId)->beasiswa_id;
+    }
+
 }

@@ -380,39 +380,96 @@
             }
         });
 
-        function markAsRead(element) {
-            const notificationId = element.closest('li').getAttribute('data-id');
-
-            fetch(`/notifications/mark-as-read/${notificationId}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Hapus titik merah (span) setelah notifikasi dibaca
-                    const notificationElement = element.closest('li');
-                    const redDot = notificationElement.querySelector('span.bg-red-500');
-                    if (redDot) {
-                        redDot.remove();
+        // Improved dropdown handling for notifications
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownTrigger = document.querySelector('[dropdown-trigger]');
+            const dropdownMenu = document.querySelector('[dropdown-menu]');
+            
+            if (dropdownTrigger && dropdownMenu) {
+                // Function to handle dropdown visibility
+                function toggleDropdown(event) {
+                    event.stopPropagation();
+                    
+                    const isExpanded = dropdownTrigger.getAttribute('aria-expanded') === 'true';
+                    
+                    // Toggle dropdown state
+                    dropdownTrigger.setAttribute('aria-expanded', !isExpanded);
+                    dropdownMenu.style.opacity = isExpanded ? '0' : '1';
+                    dropdownMenu.style.pointerEvents = isExpanded ? 'none' : 'auto';
+                    
+                    // Position the dropdown properly
+                    if (!isExpanded) {
+                        const triggerRect = dropdownTrigger.getBoundingClientRect();
+                        dropdownMenu.style.right = '0';
                     }
-
-                    // Jika tidak ada lagi titik merah, hilangkan titik merah di bell icon
-                    const unreadDots = document.querySelectorAll('li span.bg-red-500');
-                    if (unreadDots.length === 0) {
-                        document.querySelector('i.fa-bell').nextElementSibling?.remove();
-                    }
-                } else {
-                    console.error('Gagal memperbarui notifikasi:', data.error);
                 }
-            })
-            .catch(error => {
-                console.error('Terjadi kesalahan:', error);
-            });
-        }
+                
+                // Add click event listener to the trigger
+                dropdownTrigger.addEventListener('click', toggleDropdown);
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!dropdownTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                        dropdownTrigger.setAttribute('aria-expanded', 'false');
+                        dropdownMenu.style.opacity = '0';
+                        dropdownMenu.style.pointerEvents = 'none';
+                    }
+                });
+            }
+            
+            // Improved markAsRead function
+            window.markAsRead = function(element) {
+                const notificationId = element.closest('li').getAttribute('data-id');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                
+                // Normalize the URL path to handle multiple slashes
+                const baseUrl = window.location.origin;
+                const normalizedPath = '/notifications/mark-as-read/' + notificationId;
+                const fullUrl = baseUrl + normalizedPath;
+                
+                fetch(fullUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove red dot from notification
+                        const notificationElement = element.closest('li');
+                        const redDot = notificationElement.querySelector('span.bg-red-500');
+                        if (redDot) {
+                            redDot.remove();
+                        }
+                        
+                        // Check and remove bell icon dot if no unread notifications
+                        const unreadDots = document.querySelectorAll('li span.bg-red-500');
+                        const bellIconDot = document.querySelector('a[dropdown-trigger] > span.bg-red-500');
+                        if (unreadDots.length === 0 && bellIconDot) {
+                            bellIconDot.remove();
+                        }
+                        
+                        // Refresh notification list
+                        updateNotificationContent();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating notification:', error);
+                });
+            };
+            
+            // Function to update notification content
+            function updateNotificationContent() {
+                const notificationContents = document.querySelectorAll('.notification-content');
+                notificationContents.forEach(content => {
+                    content.addEventListener('click', () => {
+                        location.reload();
+                    });
+                });
+            }
+        });
 
         // Seleksi elemen
         document.querySelectorAll('.notification-content').forEach(item => {

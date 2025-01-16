@@ -23,7 +23,10 @@ class User extends Authenticatable
         'jenis_kelamin',  // Changed from jenis_kelamin
         'nim',
         'no_hp',
-        'user_img'  // Add this for image uploads
+        'user_img',  // Add this for image uploads
+        'password',
+        'emailVerif',
+        'id'
     ];
 
     /**
