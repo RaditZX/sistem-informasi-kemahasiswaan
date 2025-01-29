@@ -70,14 +70,14 @@
                                                             alt="user1" />
                                                     </div>
                                                     <div class="flex flex-col justify-center">
-                                                        <h5 class="mb-0 text-sm leading-normal"> {{ $pb->nama_depan }}
-                                                            {{ $pb->nama_belakang }}</h5>
+                                                        <h5 class="mb-0 text-sm leading-normal"> {{ isset($pb->nama_depan) ? $pb->nama_depan :  $pb->nama_mahasiswa }}
+                                                            {{ isset($pb->nama_belakang) ? $pb->nama_belakang : null }}</h5>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td
                                                 class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                                <p class="mb-0 text-xs font-semibold leading-tight"> {{ $pb->nama_jurusan }}
+                                                <p class="mb-0 text-xs font-semibold leading-tight"> {{ isset($pb->nama_jurusan) ? $pb->nama_jurusan : "-" }}
                                                 </p>
                                             </td>
                                             <td
@@ -87,7 +87,7 @@
                                             </td>
                                             <td
                                                 class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                                <p class="mb-0 text-xs font-semibold leading-tight"> {{ $pb->angkatan }}</p>
+                                                <p class="mb-0 text-xs font-semibold leading-tight"> {{ isset($pb->angkatan) ? $pb->angkatan : "-" }}</p>
                                             </td>
 
                                         </tr>

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Carbon\Carbon;
 
 class PenerimaBeasiswaController extends Controller
 {
@@ -27,7 +28,7 @@ class PenerimaBeasiswaController extends Controller
         $query = $beasiswaController->buildBeasiswaQuery($request);
 
         // Jalankan query dan paginasi hasilnya
-        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
+        $beasiswa = $query->leftjoin('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')
             ->paginate(8);
 
         // Data pengguna untuk view
@@ -43,7 +44,8 @@ class PenerimaBeasiswaController extends Controller
      */
     public function create()
     {
-        return view('pages.Beasiswa.import-data-beasiswa');
+        $jurusan = Jurusan::all();
+        return view('pages.Beasiswa.import-data-beasiswa', compact('jurusan'));
     }
 
     /**
@@ -51,72 +53,13 @@ class PenerimaBeasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi file input
-        $validator = Validator::make($request->all(), [
-            'excelFile' => 'required|file|mimes:xlsx,csv,xls|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        // Validate the file input
+        $this->validateRequest($request);
 
         try {
             $file = $request->file('excelFile');
             DB::transaction(function () use ($file) {
-                (new FastExcel)->import($file, function ($line) {
-                    // Validate each row of data
-                    $data = Validator::make($line, [
-                        'nim' => 'required|integer',
-                        'beasiswa' => 'required|string|exists:beasiswa,nama_beasiswa',
-                    ])->validate();
-
-                    $beasiswa = Beasiswa::where('nama_beasiswa', $data['beasiswa'])->first();
-
-                    if (!$beasiswa) {
-                        throw new \Exception("Beasiswa with name {$data['beasiswa']} not found.");
-                    }
-
-                    $beasiswaID = $beasiswa->id;
-
-                    $penerimaBeasiswa = PenerimaBeasiswa::where('nim', $data['nim'])->first();
-
-                    if (!$penerimaBeasiswa) {
-                        // Handle external or KIPK type beasiswa
-                        if (!in_array($beasiswa->tipe_beasiswa, ['eksternal', 'kipk'])) {
-                            $checkPengajuan = PengajuanBeasiswa::where('nim', $data['nim'])
-                                ->where('beasiswa_id', $beasiswaID)
-                                ->exists();
-
-                            if ($checkPengajuan) {
-                                PenerimaBeasiswa::create([
-                                    'nim' => $data['nim'],
-                                    'beasiswa_id' => $beasiswaID,
-                                ]);
-                            }
-                        } else {
-                            PenerimaBeasiswa::create([
-                                'nim' => $data['nim'],
-                                'beasiswa_id' => $beasiswaID,
-                            ]);
-                        }
-                    } else {
-                        // Handle half-type beasiswa
-                        if ($beasiswa->jenis_beasiswa === 'half') {
-                            $oneYearAgo = now()->subYear();
-
-                            if ($penerimaBeasiswa->created_at <= $oneYearAgo) {
-                                PenerimaBeasiswa::create([
-                                    'nim' => $data['nim'],
-                                    'beasiswa_id' => $beasiswaID,
-                                ]);
-                            }
-                        }
-                    }
-                });
+                $this->importBeasiswaData($file);
             });
 
             return redirect()->route('beasiswa.import-data-beasiswa')
@@ -125,9 +68,10 @@ class PenerimaBeasiswaController extends Controller
             Log::error('Beasiswa Import Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->route('beasiswa.import-data-beasiswa')
-                ->with('error', 'Failed to import beasiswa data.');
+                ->with('error', 'Failed to import beasiswa data.' . $e->getMessage());
         }
     }
+
 
 
     /**
@@ -141,11 +85,22 @@ class PenerimaBeasiswaController extends Controller
             ->join('jurusan', 'prodi.jurusan_id', '=', 'jurusan.id')
             ->where('beasiswa_id', '=', $id)
             ->get();
+
+        if ($penerima_beasiswa->isEmpty()) {
+            // Fetch the beasiswa record
+            $beasiswa = Beasiswa::where('id', '=', $id)->first();
+            if ($beasiswa) {
+                $penerima_beasiswa = DB::table('history_mahasiswa_penerima')
+                    ->where('nama_beasiswa', '=', $beasiswa->nama_beasiswa)
+                    ->get();
+            }
+        }
+
         $user = Auth::user();
         $reviewer = Reviewer::where('user_id', $user->id)->first();
         $beasiswa = Beasiswa::findOrFail($id);
 
-        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'beasiswa','reviewer'));
+        return view('pages.Beasiswa.pengumuman-beasiswa', compact('penerima_beasiswa', 'beasiswa', 'reviewer'));
     }
 
 
@@ -169,6 +124,16 @@ class PenerimaBeasiswaController extends Controller
             )
             ->get();
 
+        if ($penerima_beasiswa->isEmpty()) {
+            // Fetch the beasiswa record
+            $beasiswa = Beasiswa::where('id', '=', $id)->first();
+            if ($beasiswa) {
+                $penerima_beasiswa = DB::table('history_mahasiswa_penerima')
+                    ->where('nama_beasiswa', '=', $beasiswa->nama_beasiswa)
+                    ->get();
+            }
+        }
+
         // Check if there's data to export
         if ($penerima_beasiswa->isEmpty()) {
             return back()->with('error', 'No data found to export.');
@@ -176,13 +141,16 @@ class PenerimaBeasiswaController extends Controller
 
         // Map data to a suitable format for FastExcel
         $list = $penerima_beasiswa->map(function ($item) {
+            $createdAt = Carbon::parse($item->created_at);
             return [
                 'NIM' => $item->nim,
-                'Nama' => $item->nama_depan . ' ' . $item->nama_belakang,
-                'Jurusan' => $item->nama_jurusan,
+                'Nama' => isset($item->nama_depan)
+                            ? $item->nama_depan
+                            : ($item->nama_mahasiswa . ' ' . (isset($item->nama_belakang) ? $item->nama_belakang : '')),
+                'Jurusan' => isset($item->nama_jurusan),
                 'Prodi' => $item->nama_prodi,
                 'Beasiswa' => $item->nama_beasiswa,
-                'Tanggal Diterima' => $item->created_at->format('Y-m-d')
+                'Tanggal Diterima' => $createdAt->format('Y-m-d')
             ];
         });
 
@@ -192,5 +160,133 @@ class PenerimaBeasiswaController extends Controller
 
         // Export data using FastExcel
         return (new FastExcel($list))->download($fileName);
+    }
+
+    /**
+     * Validate the incoming request for file upload.
+     */
+    private function validateRequest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'excelFile' => 'required|file|mimes:xlsx,csv,xls|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Illuminate\Validation\ValidationException($validator);
+        }
+    }
+
+    /**
+     * Import beasiswa data from the uploaded file.
+     */
+    private function importBeasiswaData($file)
+    {
+        (new FastExcel)->import($file, function ($line) {
+            $data = $this->validateRow($line);
+            $beasiswa = $this->getBeasiswa($data['Nama Beasiswa']);
+            $this->handlePenerimaBeasiswa($data, $beasiswa);
+            $this->storeToViewIfValid($data);
+        });
+    }
+
+    /**
+     * Validate each row of the uploaded file.
+     */
+    private function validateRow(array $line): array
+    {
+        return Validator::make($line, [
+            'NIM' => 'required|integer',
+            'Nama Beasiswa' => 'required|string|exists:beasiswa,nama_beasiswa',
+            'Tanggal Diterima' => 'required|date',
+            'Nama Mahasiswa' => 'required|string', // Validation for Nama Mahasiswa (must be a string)
+            'Nama Prodi' => 'required|string', // Validation for Nama Prodi (must be a string)
+        ])->validate();
+    }
+    /**
+     * Retrieve the beasiswa record based on the name.
+     */
+    private function getBeasiswa(string $beasiswaName)
+    {
+        $beasiswa = Beasiswa::where('nama_beasiswa', $beasiswaName)->first();
+
+        if (!$beasiswa) {
+            throw new \Exception("Beasiswa with name {$beasiswaName} not found.");
+        }
+
+        return $beasiswa;
+    }
+
+    /**
+     * Handle logic for storing or updating the penerima beasiswa data.
+     */
+    private function handlePenerimaBeasiswa(array $data, $beasiswa)
+    {
+        $penerimaBeasiswa = PenerimaBeasiswa::where('nim', $data['NIM'])->first();
+
+        if (!$penerimaBeasiswa) {
+            $this->storeNewPenerimaBeasiswa($data, $beasiswa);
+        } else {
+            $this->handleExistingPenerimaBeasiswa($penerimaBeasiswa, $beasiswa, $data);
+        }
+    }
+
+    /**
+     * Store new penerima beasiswa record.
+     */
+    private function storeNewPenerimaBeasiswa(array $data, $beasiswa)
+    {
+        if (!in_array($beasiswa->tipe_beasiswa, ['eksternal', 'kipk'])) {
+            $isPengajuanExists = PengajuanBeasiswa::where('nim', $data['NIM'])
+                ->where('beasiswa_id', $beasiswa->id)
+                ->exists();
+
+            if ($isPengajuanExists) {
+                PenerimaBeasiswa::create([
+                    'nim' => $data['NIM'],
+                    'beasiswa_id' => $beasiswa->id,
+                ]);
+            }
+        } else {
+            PenerimaBeasiswa::create([
+                'nim' => $data['NIM'],
+                'beasiswa_id' => $beasiswa->id,
+            ]);
+        }
+    }
+
+    /**
+     * Handle existing penerima beasiswa logic.
+     */
+    private function handleExistingPenerimaBeasiswa($penerimaBeasiswa, $beasiswa, array $data)
+    {
+        if ($beasiswa->jenis_beasiswa === 'half') {
+            $oneYearAgo = now()->subYear();
+
+            if ($penerimaBeasiswa->created_at <= $oneYearAgo) {
+                PenerimaBeasiswa::create([
+                    'nim' => $data['NIM'],
+                    'beasiswa_id' => $beasiswa->id,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Store data to the view if tanggal_diterima is before 2025.
+     */
+    private function storeToViewIfValid(array $data)
+    {
+        $tanggalDiterima = \Carbon\Carbon::parse($data['Tanggal Diterima']);
+
+        if ($tanggalDiterima->year < 2025) {
+            DB::table('history_mahasiswa_penerima')->insert([
+                'nim' => $data['NIM'],
+                'nama_mahasiswa' => $data['Nama Mahasiswa'], // Optional if 'nama_mahasiswa' exists
+                'nama_prodi' => $data['Nama Prodi'],         // Optional if 'nama_prodi' exists
+                'nama_beasiswa' => $data['Nama Beasiswa'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

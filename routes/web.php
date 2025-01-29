@@ -55,8 +55,8 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/beasiswa/create', [BeasiswaController::class, 'create'])->name('beasiswa.create');
     Route::post('/beasiswa/store', [BeasiswaController::class, 'store'])->name('beasiswa.store');
     Route::delete('/beasiswa/destory', [BeasiswaController::class, 'destroy'])->name('beasiswa.destroy');
-    Route::get('/beasiswa/edit/{id}', [BeasiswaController::class, 'update'])->name('beasiswa.update');
-    Route::post('/beasiswa/edit/{id}', [BeasiswaController::class, 'edit'])->name('beasiswa.edit');
+    Route::patch('/beasiswa/update/{id}', [BeasiswaController::class, 'update'])->name('beasiswa.update');
+    Route::get('/beasiswa/edit/{id}', [BeasiswaController::class, 'edit'])->name('beasiswa.edit');
     Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');
     Route::get('/import-data-penerima', [PenerimaBeasiswaController::class, 'create'])->name('beasiswa.import-data-beasiswa');
     Route::post('/import-data-penerima', [PenerimaBeasiswaController::class, 'store'])->name('penerimabeasiswa.import-data-beasiswa');
@@ -96,8 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');
     Route::get('/pengajuan/list-pengajuan',[PengajuanBeasiswaController::class, 'listPengajuanStaff'])->name('pengajuan.list-pengajuan');
     Route::post('/notify-reviewer', [MailController::class, 'notifyReviewer']);
-    Route::get('/dokumen/{url}', [FileController::class, 'viewFile'])->name('viewfile');
-
+    Route::get('/file/{path}', [FileController::class, 'getFile'])->name('getFile');
     Route::controller(MaddingController::class)->group(function () {
         Route::get('/madding', [MaddingController::class, 'index'])->name('madding.index');
     });
