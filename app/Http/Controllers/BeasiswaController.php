@@ -30,16 +30,28 @@ class BeasiswaController extends Controller
 
     public function index(Request $request)
     {
-        $user = Auth::user();
+        $beasiswaUserTipe = []; // Set default value for $beasiswaUserTipe
+        $penerimaBeasiswa = []; // Set default value for $penerimaBeasiswa
 
+        if (Auth::check()) {
+            // Jika pengguna sudah login
+            $user = Auth::user();
+
+            // Ambil data mahasiswa berdasarkan user_id
+            $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
+
+            // Jika ada data mahasiswa, ambil data penerima beasiswa
+            $penerimaBeasiswa = $mahasiswa ? $mahasiswa->penerimaBeasiswa()->with('beasiswa')->get() : [];
+
+            // Menentukan tipe beasiswa pengguna
+            $beasiswaUserTipe = $this->mapBeasiswaUserTipe($penerimaBeasiswa);
+        }
+
+        // Query untuk mengambil data beasiswa
         $query = $this->buildBeasiswaQuery($request);
-        $beasiswa = $query->leftjoin('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
+        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
 
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
-        $penerimaBeasiswa = $mahasiswa ? $mahasiswa->penerimaBeasiswa()->with('beasiswa')->get() : [];
-
-        $beasiswaUserTipe = $this->mapBeasiswaUserTipe($penerimaBeasiswa);
-
+        // Ambil data jurusan
         $jurusan = Jurusan::all();
 
         return view('pages.Beasiswa.list-beasiswa', compact(
@@ -49,6 +61,7 @@ class BeasiswaController extends Controller
             'jurusan'
         ));
     }
+
 
     public function getListBeasiswaForStaff(Request $request)
     {
@@ -287,21 +300,34 @@ class BeasiswaController extends Controller
      */
     public function show(string $id)
     {
-
+        // Ambil data beasiswa bersama relasi yang dibutuhkan
         $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])
-        ->findOrFail($id);
+            ->findOrFail($id);
 
+        // Ambil data syarat, jenjang, benefit, dokumen, dan poster
         $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
         $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
         $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
         $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
         $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
 
-        $user = Auth::user();
-        $mhsNIM = Mahasiswa::where('user_id', $user->id)->first();
-        $checkPengajuan = $mhsNIM ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)->exists() : false;
+        // Default value untuk status pengajuan dan mahasiswa
+        $checkPengajuan = false;
+        $mhsNIM = null;
 
+        // Cek apakah pengguna sudah login
+        if (Auth::check()) {
+            // Jika sudah login, ambil data user
+            $user = Auth::user();
 
+            // Ambil data mahasiswa berdasarkan user_id
+            $mhsNIM = Mahasiswa::where('user_id', $user->id)->first();
+
+            // Cek apakah mahasiswa sudah mengajukan beasiswa
+            $checkPengajuan = $mhsNIM ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)->exists() : false;
+        }
+
+        // Return view dengan data yang sudah dipersiapkan
         return view('pages.Beasiswa.detail-beasiswa', [
             'beasiswa' => $beasiswa,
             'id' => $id,
@@ -313,8 +339,8 @@ class BeasiswaController extends Controller
             'isMengajukan' => $checkPengajuan,
             'isMhs' => $mhsNIM
         ]);
-
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -561,7 +587,7 @@ class BeasiswaController extends Controller
         return response()->json($tags);
     }
 
-    public function getBeasiswaTemplate(Request $request)
+     public function getBeasiswaTemplate(Request $request)
     {
         $templates = beasiswa::select('id', 'nama_beasiswa', 'deskripsi')
             ->orderBy('updated_at', 'desc')
@@ -579,6 +605,7 @@ class BeasiswaController extends Controller
             'last_page' => $templates->lastPage(),
         ]);
     }
+
 
     public function getBeasiswa($id)
     {
