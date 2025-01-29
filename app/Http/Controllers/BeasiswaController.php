@@ -33,7 +33,7 @@ class BeasiswaController extends Controller
         $user = Auth::user();
 
         $query = $this->buildBeasiswaQuery($request);
-        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
+        $beasiswa = $query->leftjoin('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
 
         $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
         $penerimaBeasiswa = $mahasiswa ? $mahasiswa->penerimaBeasiswa()->with('beasiswa')->get() : [];
@@ -53,7 +53,7 @@ class BeasiswaController extends Controller
     public function getListBeasiswaForStaff(Request $request)
     {
         $query = $this->buildBeasiswaQuery($request);
-        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(10);
+        $beasiswa = $query->leftJoin('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(10);
 
         $jurusan = Jurusan::all();
 
@@ -509,7 +509,7 @@ class BeasiswaController extends Controller
         } catch (\Exception $e) {
             Log::error('Error updating scholarship: ', ['error' => $e->getMessage()]);
 
-            return redirect('/beasiswa')->with('error', 'Terjadi kesalahan saat memperbarui data beasiswa');
+            return redirect()->route('beasiswa.list-beasiswa-staff')->with('error', 'Terjadi kesalahan saat memperbarui data beasiswa');
         }
     }
 

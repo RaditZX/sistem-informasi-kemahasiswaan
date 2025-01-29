@@ -7,7 +7,8 @@ use Kreait\Firebase\Factory;
 use Kreait\Firebase\Facades\Firebase;
 use Kreait\Firebase\Storage;
 use Illuminate\Support\Facades\Storage as LaravelStorage;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
+
 
 class FileController extends Controller
 {
@@ -42,47 +43,41 @@ class FileController extends Controller
             'path' => 'required|string',
         ]);
 
-
         $file = $request->file('file');
-        $path = $request->path;
+        $path = rtrim($request->path, '/');
 
-        // Simpan file menggunakan Laravel Storage
-        $filePath = rtrim($path, '/') . '/' . $file->getClientOriginalName();
-        $storedPath = $file->storeAs($path, $file->getClientOriginalName(), 'public');
+        // Simpan file ke lokasi private (tidak bisa diakses langsung)
+        $storedPath = $file->storeAs('private/' . $path, $file->getClientOriginalName());
 
-        // Set Content-Disposition: inline (untuk menampilkan di browser)
-        $storage = LaravelStorage::disk('public');
-        $storage->setVisibility($storedPath, 'public');
+        // Enkripsi path untuk keamanan
+        $encryptedPath = encrypt($storedPath);
 
-        $url = asset('storage/' . $storedPath);
+        // Buat URL untuk mengakses file melalui route getFile
+        $url = route('getFile', ['path' => $encryptedPath]);
 
-        return response()->json(['url' => $url]);
+        return response()->json([
+            'message' => 'File uploaded successfully',
+            'url' => $url,
+        ]);
     }
 
-    public function viewFile($url)
-    {
-        // Path to the file in storage
-        $filePath = storage_path(path: 'app/public/dokumen/' . $url);
 
-        // Check if the file exists
-        if (!file_exists($filePath)) {
+    public function getFile(Request $request, $path)
+    {
+        // Validasi autentikasi menggunakan middleware
+        if (!Auth::check()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $decodedPath = decrypt($path);
+
+        if (!LaravelStorage::exists($decodedPath)) {
             abort(404, 'File not found');
         }
 
-        // Get the MIME type of the file
-        $mimeType = mime_content_type($filePath);
-
-        // If it's a PDF, force set the MIME type to application/pdf
-        if ($mimeType === 'application/octet-stream' || $mimeType === 'application/pdf') {
-            $mimeType = 'application/pdf';
-        }
-
-        // Return the file with 'Content-Disposition' header set to 'inline'
-        return Response::make(file_get_contents($filePath), 200, [
-            'Content-Type' => $mimeType,  // Set the correct MIME type for the file
-            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',  // Display inline
-        ]);
+        return response()->file(storage_path('app/' .  $decodedPath));
     }
+
 
     public function uploadFile(Request $request)
     {

@@ -11,7 +11,13 @@
         <!-- Profile Card -->
         <div class="bg-white p-6 rounded-lg border border-gray-300 mb-6">
             <div class="flex items-center">
+                @if ($user->foto)
+                <div class="w-20 h-20 rounded-full bg-gray-300 mr-6 overflow-hidden">
+                    <img src="{{ $user->foto }}" alt="" class="w-full h-full object-cover">
+                </div>
+                @else
                 <div class="w-20 h-20 rounded-full bg-gray-300 mr-6"></div>
+                @endif
                 <div>
                     <h3 class="text-xl font-bold">{{ $user->nama_depan }} {{ $user->nama_belakang }}</h3>
                     <p class="text-lg text-gray-700">{{ $prodi->nama_prodi }}</p>
