@@ -49,7 +49,7 @@ class BeasiswaController extends Controller
 
         // Query untuk mengambil data beasiswa
         $query = $this->buildBeasiswaQuery($request);
-        $beasiswa = $query->join('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
+        $beasiswa = $query->leftjoin('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
 
         // Ambil data jurusan
         $jurusan = Jurusan::all();
