@@ -37,8 +37,8 @@
         $status = ($ba->tanggal_mulai <= $currentDate && $ba->tanggal_berakhir >= $currentDate)
             ? "Berlangsung"
             : ($ba->tanggal_mulai > $currentDate
-                ? "Upcoming"
-                : "Past");
+                ? "Segera"
+                : "Berakhir");
         $isReceived = collect($beasiswaUserTipe)->firstWhere('id', $ba->id);
         if ($isReceived) {
             $status = $isReceived['status'];

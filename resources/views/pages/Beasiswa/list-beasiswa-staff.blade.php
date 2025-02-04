@@ -53,7 +53,7 @@
                             <td class="text-center py-5">{{ $b->tanggal_berakhir }}</td>
                             <td class="text-center py-5 flex">
                                 <div class="flex flex-row gap-2 justify-center items-center">
-                                    <a href="/beasiswa/{{ $b->id }}/edit">
+                                    <a href="{{ route('beasiswa.edit',['id' => $b->id]) }}">
                                         <div class="rounded-lg p-3 bg-orange-500 min-w-24">
                                             <div class="flex justify-center">
                                                 <h4 class="font-medium text-base text-center text-white">Edit</h4>
@@ -90,7 +90,7 @@
                                         ? 'Berlangsung'
                                         : ($b->tanggal_mulai > now()
                                             ? 'Upcoming'
-                                            : 'Past');
+                                            : 'Berakhir');
                             @endphp
                             <td class="text-center">
                                 <div class="border border-gray-300 rounded-lg shadow-lg p-3 ml-10 mr-10 ">

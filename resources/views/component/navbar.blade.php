@@ -30,7 +30,7 @@
     </div>
 
     <ul class="flex flex-col pl-0 mb-0">
-        @if (session('auth')['role'] === 'reviewer')
+    @if (session()->has('auth') && session('auth')['role'] === 'reviewer')
         <li class="mt-0.5 w-full">
             <a id="dashboard-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
             href="/dashboard">
@@ -59,7 +59,7 @@
         @endif
 
         <li class="mt-0.5 w-full">
-            @if (session('auth')['role'] === 'reviewer')
+        @if (session()->has('auth') && session('auth')['role'] === 'reviewer')
             <a id="beasiswa-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
             href="/list-beasiswa-staff">
             @else
@@ -84,7 +84,8 @@
                 <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Beasiswa</span>
             </a>
         </li>
-
+<!-- hide this -->
+@if (session()->has('auth'))
         <li class="mt-0.5 w-full">
             <a id="beasiswa-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
             href="/pengajuan/list-pengajuan">
@@ -135,7 +136,7 @@
                 <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Pengumuman</span>
             </a>
         </li>
-
+@endif
         <li class="mt-0.5 w-full">
             <a id="billing-link" class="sidebar-link py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 rounded-lg transition duration-300 hover:border hover:bg-white hover:shadow-xl"
                 href="/madding">
@@ -163,7 +164,7 @@
                 <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Madding</span>
             </a>
         </li>
-
+@if (session()->has('auth'))
         <li class="w-full mt-4">
             <h6 class="pl-6 ml-2 text-xs font-bold leading-tight uppercase opacity-60">Account pages</h6>
         </li>
@@ -215,8 +216,23 @@
                 </button>
             </form>
         </li>
-
+        
+        @else
+        <!-- Login Button -->
+        <li class="mt-0.5 w-full">
+            <a href="{{ route('login') }}"
+                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors hover:bg-gray-200 rounded-lg">
+                <div
+                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-orange-600 text-white bg-center stroke-0 text-center xl:p-2.5">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">
+                    Login
+                </span>
+            </a>
+        </li>
     </ul>
+    @endif
     </div>
 </aside>
 
@@ -259,13 +275,14 @@
                             </div>
                         </a>
                     </li>
+                    @if (session()->has('auth'))
                     <li class="flex items-center px-4">
                         <a href="javascript:;" class="p-0 text-sm transition-all ease-nav-brand text-slate-500">
                             <i fixed-plugin-button-nav class="cursor-pointer fa fa-cog"></i>
                             <!-- fixed-plugin-button-nav  -->
                         </a>
                     </li>
-
+                    
                     <!-- notifications -->
                     <li class="relative flex items-center pr-2">
                         <p class="hidden transform-dropdown-show"></p>
@@ -321,6 +338,7 @@
                                 </li>
                             @endif
                         </ul>
+                        @endif
                     </li>
                 </ul>
             </div>

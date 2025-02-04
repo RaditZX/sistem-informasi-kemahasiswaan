@@ -37,9 +37,9 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-5">
 
         @foreach ($beasiswa as $ba)
-        <a href="{{ route('beasiswa.pengumuman-beasiswa',['id'=>$ba->id]) }}}}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
+        <a href="{{ route('beasiswa.pengumuman-beasiswa',['id'=>$ba->id])}}" data-nama-beasiswa="{{ $ba->nama_beasiswa }}" class="beasiswa-card">
             <div class="p-2">
-                <img src={{ $ba->link_poster ? $ba->link_poster :"https://th.bing.com/th?id=OIP.ZZHzMoUorhjfqzXJHS80XQHaJQ&w=223&h=279&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2" }}
+                <img src={{ $ba->link_poster ? $ba->link_poster:"https://th.bing.com/th?id=OIP.ZZHzMoUorhjfqzXJHS80XQHaJQ&w=223&h=279&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2" }}
                     style="border-radius: 15px;" class="mb-3 max-h-96" width="100%" alt="beasiswa">
                 <div class="flex justify-center gap-2 mb-1" style="max-height: 35px">
                     <div class="basis-1/3 bg-orange-500 text-xxs text-white rounded shadow-lg p-2 flex justify-center" style="border-radius: 10px;">{{ $ba->jenis_beasiswa }}</div>
