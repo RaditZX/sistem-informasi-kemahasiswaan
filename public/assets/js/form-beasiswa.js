@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    const form = document.getElementById('beasiswa-form-internal');
+    const form = document.getElementById('beasiswa-form');
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         createHiddenInput();
@@ -55,6 +55,11 @@ document.addEventListener('DOMContentLoaded', function () {
             hidePopup();
         }
     });
+
+    let selectedRadio = document.querySelector('input[name="tipe_beasiswa"]:checked');
+    if (selectedRadio) {
+        showForm(selectedRadio.value);
+    }
 });
 
 function fetchJenjangTags() {
@@ -696,6 +701,7 @@ function changePage(page) {
 
 function hidePopup() {
     document.getElementById('popup').classList.add('hidden');
+    document.getElementById('popup-tipe').classList.add('hidden');
 }
 
 
@@ -838,6 +844,7 @@ function createHiddenInput() {
         } else {
             console.warn(`Invalid URL skipped: ${file}`);
         }
+
     });
 
     // dd(selectedFiles);
@@ -862,4 +869,23 @@ function loadBeasiswaData(){
     });
     jenjang.forEach(item => addJenjangTag(item));
     benefit.forEach(item => addBenefitTag(item));
+}
+
+function showForm(tipe_beasiswa) {
+    // Deselect all radio buttons
+    document.querySelectorAll('input[name="tipe_beasiswa"]').forEach((elem) => {
+        elem.checked = false;
+    });
+
+    // Check the corresponding radio button
+    document.getElementById(tipe_beasiswa).checked = true;
+
+    // Show and hide sections based on tipe_beasiswa
+    if (tipe_beasiswa === 'internal') {
+        document.getElementById("beasiswa-internal").classList.remove("hidden");
+        document.getElementById("beasiswa-eksternal").classList.add("hidden");
+    } else if (tipe_beasiswa === 'eksternal' || tipe_beasiswa === 'kipk') {
+        document.getElementById("beasiswa-eksternal").classList.remove("hidden");
+        document.getElementById("beasiswa-internal").classList.add("hidden");
+    }
 }

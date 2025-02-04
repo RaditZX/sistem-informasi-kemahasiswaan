@@ -201,7 +201,8 @@ class BeasiswaController extends Controller
             'kuota' => $data['kuota_beasiswa'],
             'sumber' => $data['sumber_beasiswa'],
             'tanggal_mulai' => $data['tanggal_mulai'],
-            'tanggal_berakhir' => $data['tanggal_berakhir']
+            'tanggal_berakhir' => $data['tanggal_berakhir'],
+            'publish' => $data['publish_beasiswa']
         ]);
         return $beasiswa;
     }

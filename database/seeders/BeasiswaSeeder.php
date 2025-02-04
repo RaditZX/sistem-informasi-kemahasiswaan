@@ -26,6 +26,7 @@ class BeasiswaSeeder extends Seeder
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-01-01',
             'tanggal_berakhir' => '2024-04-30',
+            'publish' => true,
         ]);
 
         $syarat1 = SyaratBeasiswa::create(['syarat' => 'Memiliki ijazah S1 yang diakui.']);
@@ -63,6 +64,7 @@ class BeasiswaSeeder extends Seeder
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-02-01',
             'tanggal_berakhir' => '2024-05-31',
+            'publish' => true,
         ]);
 
         $syarat3 = SyaratBeasiswa::create(['syarat' => 'Mahasiswa aktif di perguruan tinggi negeri.']);
@@ -101,6 +103,7 @@ class BeasiswaSeeder extends Seeder
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-03-01',
             'tanggal_berakhir' => '2024-06-30',
+            'publish' => false,
         ]);
 
         $syarat5 = SyaratBeasiswa::create(['syarat' => 'IPK minimal 3.75.']);

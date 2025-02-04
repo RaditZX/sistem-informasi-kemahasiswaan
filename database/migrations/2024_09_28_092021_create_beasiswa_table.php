@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('sumber');
             $table->date('tanggal_mulai');
             $table->date('tanggal_berakhir');
+            $table->boolean('publish');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
@@ -102,6 +103,17 @@ return new class extends Migration
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
             $table->foreign('syarat_beasiswa_id')->references('id')->on('syarat_beasiswa')->onDelete('cascade');
+        });
+
+        // Weak Table untuk link beasiswwa
+        Schema::create('link_beasiswa', function (Blueprint $table){
+            $table->id();
+            $table->unsignedBigInteger('beasiswa_id');
+            $table->string('link_beasiswa');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+
+            $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');
         });
 
     }
