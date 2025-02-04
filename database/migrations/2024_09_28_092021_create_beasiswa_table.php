@@ -47,7 +47,7 @@ return new class extends Migration
         Schema::create('syarat_dokumen', function (Blueprint $table) {
             $table->id();
             $table->string('dokumen');
-            $table->string('link_dokumen');
+            $table->text('link_dokumen');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
@@ -108,7 +108,7 @@ return new class extends Migration
         // Weak Table untuk link beasiswwa
         Schema::create('link_beasiswa', function (Blueprint $table){
             $table->id();
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->unsignedBigInteger('beasiswa_id')->unique();
             $table->string('link_beasiswa');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));

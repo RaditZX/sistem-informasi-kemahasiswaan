@@ -50,11 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
         form.submit();
     })
 
-    $(document).mouseup(function (e) {
-        if ($(e.target).closest("#popup > div").length === 0) {
-            hidePopup();
-        }
-    });
+    // $(document).mouseup(function (e) {
+    //     if ($(e.target).closest("#popup > div").length === 0) {
+    //         hidePopup();
+    //     }
+    // });
 
     let selectedRadio = document.querySelector('input[name="tipe_beasiswa"]:checked');
     if (selectedRadio) {
@@ -594,9 +594,29 @@ function removeFormRow(rowId) {
         
         const dokumenInput = row.querySelector('[id^="dokumen-"]');
         if (dokumenInput) dokumenInput.id = `dokumen-${newRowId}`;
+        dokumenInput.addEventListener('input', function(){
+            fetchDokumenTags(newRowId);
+        })
+        dokumenInput.addEventListener('keydown', function(){
+            handleDokumenKeydown(event, newRowId);
+        })
+
+        const syaratSuggestion = row.querySelector('[id^="syarat-suggestions-dokumen-"]');
+        if (syaratSuggestion) syaratSuggestion.id = `syarat-suggestions-dokumen-${newRowId}`;
 
         const dokumenName = row.querySelector('[id^="dokumen-name-"]');
         if (dokumenName) dokumenName.id = `dokumen-name-${newRowId}`;
+
+        const unggah = row.querySelector('[id^="unggah-"]');
+        if (unggah) unggah.id = `unggah-${newRowId}`;
+        unggah.addEventListener('change', function(){
+            addDokumenFile(this.files[0], newRowId);
+        })
+
+        const button = row.querySelector('button[type="button"]');
+        button.addEventListener('click', function(){
+            removeFormRow(newRowId);
+        })
     });
 }
 
@@ -701,7 +721,7 @@ function changePage(page) {
 
 function hidePopup() {
     document.getElementById('popup').classList.add('hidden');
-    document.getElementById('popup-tipe').classList.add('hidden');
+    // document.getElementById('popup-tipe').classList.add('hidden');
 }
 
 
@@ -759,19 +779,27 @@ function selectTemplate(templateID) {
                     radio.checked = true;
                 }
             });
-
+            document.getElementsByName('publish_beasiswa').forEach(radio => {
+                if (radio.value == template.publish) {
+                    radio.checked = true;
+                }
+            });
+            console.log(template.publish);
+            
             // Set radio buttons for tipe_beasiswa
             document.getElementsByName('tipe_beasiswa').forEach(radio => {
                 if (radio.value === template.tipe_beasiswa) {
                     radio.checked = true;
                 }
+                showForm(template.tipe_beasiswa);
             });
 
             // Set dates
             document.getElementById('tanggal_mulai').value = template.tanggal_mulai;
             document.getElementById('tanggal_berakhir').value = template.tanggal_berakhir;
             document.getElementById('kuota_beasiswa').value = template.kuota;
-
+            document.getElementById('link_beasiswa').value = template.link_beasiswa.link_beasiswa;
+            console.log(template.link_beasiswa);
             // Process arrays (poster, syarat, dokumen, etc.)
             data.poster.forEach(poster => {
                 selectedFiles.push(poster);

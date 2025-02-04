@@ -26,7 +26,7 @@ class BeasiswaSeeder extends Seeder
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-01-01',
             'tanggal_berakhir' => '2024-04-30',
-            'publish' => true,
+            'publish' => 1,
         ]);
 
         $syarat1 = SyaratBeasiswa::create(['syarat' => 'Memiliki ijazah S1 yang diakui.']);
@@ -52,6 +52,7 @@ class BeasiswaSeeder extends Seeder
 
         $beasiswa1->jenjangPendidikan()->create(['beasiswa_id' => $beasiswa1->id, 'jenjang' => 'D-3 Teknik Informatika']);
         $beasiswa1->posterBeasiswa()->create(['beasiswa_id' => $beasiswa1->id, 'link_poster' => 'example.jpg']);
+        $beasiswa1->linkBeasiswa()->create(['beasiswa_id' => $beasiswa1->id, 'link_beasiswa' => 'https://www.beasiswalpdp.com']);
 
         // Beasiswa Bidikmisi
         $beasiswa2 = Beasiswa::create([
@@ -64,7 +65,7 @@ class BeasiswaSeeder extends Seeder
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-02-01',
             'tanggal_berakhir' => '2024-05-31',
-            'publish' => true,
+            'publish' => 1,
         ]);
 
         $syarat3 = SyaratBeasiswa::create(['syarat' => 'Mahasiswa aktif di perguruan tinggi negeri.']);
@@ -88,8 +89,9 @@ class BeasiswaSeeder extends Seeder
             $dokumen4->id => ['created_at' => $currentTime, 'updated_at' => $currentTime],
         ]);
 
-        $beasiswa2->jenjangPendidikan()->create(['beasiswa_id' => $beasiswa2->id, 'jenjang' => 'S-1 Semua Jurusan']);
+        $beasiswa2->jenjangPendidikan()->create(['beasiswa_id' => $beasiswa2->id, 'jenjang' => 'Semua Jenjang']);
         $beasiswa2->posterBeasiswa()->create(['beasiswa_id' => $beasiswa2->id, 'link_poster' => 'bidikmisi.jpg']);
+        $beasiswa2->linkBeasiswa()->create(['beasiswa_id' => $beasiswa2->id, 'link_beasiswa' => 'https://www.beasiswabidikmisi.com']);
 
         // Beasiswa Prestasi Nasional
         $beasiswa3 = Beasiswa::create([
@@ -103,7 +105,7 @@ class BeasiswaSeeder extends Seeder
             'sumber' => 'KEMENDIKBUD',
             'tanggal_mulai' => '2024-03-01',
             'tanggal_berakhir' => '2024-06-30',
-            'publish' => false,
+            'publish' => 0,
         ]);
 
         $syarat5 = SyaratBeasiswa::create(['syarat' => 'IPK minimal 3.75.']);
@@ -127,5 +129,6 @@ class BeasiswaSeeder extends Seeder
 
         $beasiswa3->jenjangPendidikan()->create(['beasiswa_id' => $beasiswa3->id, 'jenjang' => 'S-2 Teknik Elektro']);
         $beasiswa3->posterBeasiswa()->create(['beasiswa_id' => $beasiswa3->id, 'link_poster' => 'prestasi.jpg']);
+        $beasiswa3->linkBeasiswa()->create(['beasiswa_id' => $beasiswa3->id, 'link_beasiswa' => 'https://www.beasiswaprestasinasional.com']);
     }
 }
