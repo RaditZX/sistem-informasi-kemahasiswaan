@@ -41,6 +41,32 @@
                         @enderror
                     </div>
 
+                    <!-- Publish Penerima Beasiswa -->
+                    <div>
+                        <p class="block text-sm font-medium text-gray-700">Terbitkan Penerima Beasiswa?</p>
+                        @error('publish_beasiswa')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="mb-4">
+                                <label for="publish" class="flex items-center space-x-3">
+                                    <input type="radio" id="publish" name="publish_beasiswa" value="1"
+                                        class="form-radio h-5 w-5 text-blue-500 rounded-publish @error('publish_beasiswa') border-red-500 @enderror focus:ring-blue-500"
+                                        {{ old('publish_beasiswa', $beasiswa->publish) == 'publish' ? 'checked' : '' }}>
+                                    <span class="text-gray-600">Ya</span>
+                                </label>
+                            </div>
+                            <div class="mb-4">
+                                <label for="unpublish" class="flex items-center space-x-3">
+                                    <input type="radio" id="unpublish" name="publish_beasiswa" value="0"
+                                        class="form-radio h-5 w-5 text-blue-500 rounded-full @error('publish_beasiswa') border-red-500 @enderror focus:ring-blue-500"
+                                        {{ old('publish_beasiswa', $beasiswa->publish) == '0' ? 'checked' : '' }}>
+                                    <span class="text-gray-600">Tidak</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Jenis Beasiswa -->
                     <div>
                         <p class="block text-sm font-medium text-gray-700">Jenis Beasiswa</p>
@@ -72,7 +98,7 @@
                             <label for="internal" class="flex items-center space-x-3">
                                 <input type="radio" id="internal" name="tipe_beasiswa" value="internal"
                                     class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
-                                    {{ old('tipe_beasiswa', $beasiswa->tipe_beasiswa) == 'internal' ? 'checked' : '' }}>
+                                    {{ old('tipe_beasiswa', $beasiswa->tipe_beasiswa) == 'internal' ? 'checked' : '' }} disabled>
                                 <span class="text-gray-600">Internal</span>
                             </label>
                         </div>
@@ -80,7 +106,7 @@
                             <label for="kipk" class="flex items-center space-x-3">
                                 <input type="radio" id="kipk" name="tipe_beasiswa" value="kipk"
                                     class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
-                                    {{ old('tipe_beasiswa', $beasiswa->tipe_beasiswa) == 'kipk' ? 'checked' : '' }}>
+                                    {{ old('tipe_beasiswa', $beasiswa->tipe_beasiswa) == 'kipk' ? 'checked' : '' }} disabled>
                                 <span class="text-gray-600">KIPK</span>
                             </label>
                         </div>
@@ -88,7 +114,7 @@
                             <label for="eksternal" class="flex items-center space-x-3">
                                 <input type="radio" id="eksternal" name="tipe_beasiswa" value="eksternal"
                                     class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
-                                    {{ old('tipe_beasiswa', $beasiswa->tipe_beasiswa) == 'eksternal' ? 'checked' : '' }}>
+                                    {{ old('tipe_beasiswa', $beasiswa->tipe_beasiswa) == 'eksternal' ? 'checked' : '' }} disabled>
                                 <span class="text-gray-600">Eksternal</span>
                             </label>
                         </div>
@@ -120,110 +146,121 @@
 
                     </div>
 
-                    <!-- Kuota Beasiswa -->
-                    <div>
-                        <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
-                        <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" placeholder="Kuota Beasiswa" value="{{old('kuota_beasiswa',$beasiswa->kuota)}}"
-                            class="block w-full border @error('kuota_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
-                        @error('kuota_beasiswa')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <br>
+                    <div id="beasiswa-internal" class="hidden">
+                        <!-- Kuota Beasiswa -->
+                        <div>
+                            <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
+                            <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" placeholder="Kuota Beasiswa" value="{{old('kuota_beasiswa',$beasiswa->kuota)}}"
+                                class="block w-full border @error('kuota_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
+                            @error('kuota_beasiswa')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <br>
 
-                    <!-- Jenjang Pendidikan -->
-                    <div class="relative">
-                        <label for="jenjang_pendidikan" class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
-                        <div id="selected-tags-jenjang" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="jenjang_pendidikan" name="input_jenjang_pendidikan" placeholder="Jenjang Pendidikan"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchJenjangTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); }">
-                        <div id="jenjang-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto "></div>
-                        <div id="tag-counter-jenjang" class="mb-2 text-sm text-gray-600">Jumlah jenjang yang dipilih: 0</div>
-                    </div>
+                        <!-- Jenjang Pendidikan -->
+                        <div class="relative">
+                            <label for="jenjang_pendidikan" class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
+                            <div id="selected-tags-jenjang" class="flex flex-wrap gap-2 mb-2"></div>
+                            <input type="search" id="jenjang_pendidikan" name="input_jenjang_pendidikan" placeholder="Jenjang Pendidikan"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchJenjangTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); }">
+                            <div id="jenjang-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto "></div>
+                            <div id="tag-counter-jenjang" class="mb-2 text-sm text-gray-600">Jumlah jenjang yang dipilih: 0</div>
+                        </div>
 
-                    <!-- Syarat Beasiswa -->
-                    <div class="relative">
-                        <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
-                        <div id="selected-tags-syarat" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchBeasiswaTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBeasiswaTag(this.value); this.nextElementSibling.classList.add('hidden');}">
-                        <div id="syarat-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                        <div id="tag-counter-beasiswa" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
-                    </div>
+                        <!-- Syarat Beasiswa -->
+                        <div class="relative">
+                            <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
+                            <div id="selected-tags-syarat" class="flex flex-wrap gap-2 mb-2"></div>
+                            <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchBeasiswaTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBeasiswaTag(this.value); this.nextElementSibling.classList.add('hidden');}">
+                            <div id="syarat-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                            <div id="tag-counter-beasiswa" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
+                        </div>
 
-                    <!-- Benefit Beasiswa -->
-                    <div class="relative">
-                        <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
-                        <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2"></div>
-                        <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
-                        <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                        <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
-                    </div>
+                        <!-- Benefit Beasiswa -->
+                        <div class="relative">
+                            <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
+                            <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2"></div>
+                            <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
+                            <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                            <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
+                        </div>
 
-                    <!-- Syarat Dokumen Beasiswa -->
-                    <div id="form-container">
-                        <div class="grid grid-cols-12 gap-4 items-center" id="form-row-1">
-                            <!-- Input Syarat Dokumen -->
-                            <div class="col-span-6 relative">
-                                <label for="dokumen-1" class="block text-sm font-medium text-gray-700 mb-1">Syarat Dokumen</label>
-                                <input
-                                    type="text"
-                                    id="dokumen-1"
-                                    name="nama_dokumen[]"
+                        <!-- Syarat Dokumen Beasiswa -->
+                        <div id="form-container">
+                            <div class="grid grid-cols-12 gap-4 items-center" id="form-row-1">
+                                <!-- Input Syarat Dokumen -->
+                                <div class="col-span-6 relative">
+                                    <label for="dokumen-1" class="block text-sm font-medium text-gray-700 mb-1">Syarat Dokumen</label>
+                                    <input
+                                        type="text"
+                                        id="dokumen-1"
+                                        name="nama_dokumen[]"
 
-                                    placeholder="Masukkan dokumen"
-                                    class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    oninput="fetchDokumenTags(1)"
-                                    onkeydown="handleDokumenKeydown(event, 1)"
-                                />
+                                        placeholder="Masukkan dokumen"
+                                        class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        oninput="fetchDokumenTags(1)"
+                                        onkeydown="handleDokumenKeydown(event, 1)"
+                                    />
 
-                                <div id="syarat-suggestions-dokumen-1"
-                                     class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                            </div>
+                                    <div id="syarat-suggestions-dokumen-1"
+                                        class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                                </div>
 
-                            <!-- Input Unggah Format Dokumen -->
-                            <div class="col-span-5">
-                                <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
-                                <input
-                                    type="file"
-                                    id="unggah-1"
-                                    class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:bg-orange-400 hover:file:bg-blue-100"
-                                    name="dokumen_file[]"
-                                    onchange="addDokumenFile(this.files[0], 1)"
-                                />
-                                <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
-                            </div>
+                                <!-- Input Unggah Format Dokumen -->
+                                <div class="col-span-5">
+                                    <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
+                                    <input
+                                        type="file"
+                                        id="unggah-1"
+                                        class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:bg-orange-400 hover:file:bg-blue-100"
+                                        name="dokumen_file[]"
+                                        onchange="addDokumenFile(this.files[0], 1)"
+                                    />
+                                    <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
+                                </div>
 
-                            <div class="col-span-1 justify-center flex items-center mt-7">
-                                <div class="bg-red-400 hover:bg-red-600 rounded">
-                                    <button
-                                        type="button"
-                                        class="px-3 text-sm font-medium"
-                                        onclick="removeFormRow(1)"
-                                    >
-                                        X
-                                    </button>
+                                <div class="col-span-1 justify-center flex items-center mt-7">
+                                    <div class="bg-red-400 hover:bg-red-600 rounded">
+                                        <button
+                                            type="button"
+                                            class="px-3 text-sm font-medium"
+                                            onclick="removeFormRow(1)"
+                                        >
+                                            X
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Tombol Tambah Syarat Dokumen -->
+                        <div class="mt-4">
+                            <button
+                                type="button"
+                                id="add-button"
+                                class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                onclick="createFormRow()"
+                                >
+                                <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
+                            </button>
+                        </div>
                     </div>
-                    
-                    <!-- Tombol Tambah Syarat Dokumen -->
-                    <div class="mt-4">
-                        <button
-                            type="button"
-                            id="add-button"
-                            class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
-                            onclick="createFormRow()"
-                            >
-                            <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
-                        </button>
+                    <div id="beasiswa-eksternal">
+                        <div>
+                            <label for="link_beasiswa" class="block text-sm font-medium text-gray-700">Link Beasiswa</label>
+                            <input type="text" id="link_beasiswa" name="link_beasiswa" placeholder="link Beasiswa" value="{{old('link_beasiswa', $link_beasiswa)}}"
+                                class="block w-full border @error('link_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
+                            @error('link_beasiswa')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
-
                     <br>
                     <p class="@error('poster') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
                         <div class="mb-4">
@@ -258,6 +295,8 @@
     </div>
 
 @else
+    
+
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px4 py-6 sm:px-0">
             <div class="bg-white rounded-lg p-6">
@@ -268,6 +307,7 @@
 
                 <form id="beasiswa-form" action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <!-- Nama Beasiswa -->
                         <div class="mb-4">
@@ -301,10 +341,36 @@
                     <div class="mb-4">
                         <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi Beasiswa</label>
                         <textarea id="deskripsi" name="deskripsi" rows="4"
-                                  class="mt-1 block w-full px-3 py-2 border @error('deskripsi') border-red-500 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" autocomplete="on">{{ old('deskripsi') }}</textarea>
+                                    class="mt-1 block w-full px-3 py-2 border @error('deskripsi') border-red-500 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" autocomplete="on">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <!-- Publish Penerima Beasiswa -->
+                    <div>
+                        <p class="block text-sm font-medium text-gray-700">Terbitkan Penerima Beasiswa?</p>
+                        @error('publish_beasiswa')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="mb-4">
+                                <label for="publish" class="flex items-center space-x-3">
+                                    <input type="radio" id="publish" name="publish_beasiswa" value="1"
+                                        class="form-radio h-5 w-5 text-blue-500 rounded-publish @error('publish_beasiswa') border-red-500 @enderror focus:ring-blue-500"
+                                        {{ old('publish_beasiswa') == '1' ? 'checked' : '' }}>
+                                    <span class="text-gray-600">Ya</span>
+                                </label>
+                            </div>
+                            <div class="mb-4">
+                                <label for="unpublish" class="flex items-center space-x-3">
+                                    <input type="radio" id="unpublish" name="publish_beasiswa" value="0"
+                                        class="form-radio h-5 w-5 text-blue-500 rounded-full @error('publish_beasiswa') border-red-500 @enderror focus:ring-blue-500"
+                                        {{ old('publish_beasiswa') == '0' ? 'checked' : '' }}>
+                                    <span class="text-gray-600">Tidak</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Jenis Beasiswa -->
@@ -342,7 +408,7 @@
                             <label for="internal" class="flex items-center space-x-3">
                                 <input type="radio" id="internal" name="tipe_beasiswa" value="internal"
                                     class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
-                                    {{ old('tipe_beasiswa') == 'internal' ? 'checked' : '' }}>
+                                    {{ old('tipe_beasiswa') == 'internal' ? 'checked' : '' }} onclick="showForm(this.value)">
                                 <span class="text-gray-600">Internal</span>
                             </label>
                         </div>
@@ -350,7 +416,7 @@
                             <label for="kipk" class="flex items-center space-x-3">
                                 <input type="radio" id="kipk" name="tipe_beasiswa" value="kipk"
                                     class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
-                                    {{ old('tipe_beasiswa') == 'kipk' ? 'checked' : '' }}>
+                                    {{ old('tipe_beasiswa') == 'kipk' ? 'checked' : '' }} onclick="showForm(this.value)">
                                 <span class="text-gray-600">KIPK</span>
                             </label>
                         </div>
@@ -358,7 +424,7 @@
                             <label for="eksternal" class="flex items-center space-x-3">
                                 <input type="radio" id="eksternal" name="tipe_beasiswa" value="eksternal"
                                     class="form-radio h-5 w-5 text-blue-500 rounded-full @error('tipe_beasiswa') border-red-500 @enderror focus:ring-blue-500"
-                                    {{ old('tipe_beasiswa') == 'eksternal' ? 'checked' : '' }}>
+                                    {{ old('tipe_beasiswa') == 'eksternal' ? 'checked' : '' }} onclick="showForm(this.value)">
                                 <span class="text-gray-600">Eksternal</span>
                             </label>
                         </div>
@@ -371,9 +437,9 @@
                             <div class="relative mt-1">
                                 <input type="date" id="tanggal_mulai" name="tanggal_mulai"
                                     class="block w-full border @error('tanggal_mulai')
-                     border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                                     value="{{old('tanggal_mulai')}}"
-                                     autocomplete="on">
+                        border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                                        value="{{old('tanggal_mulai')}}"
+                                        autocomplete="on">
                             </div>
                             @error('tanggal_mulai')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -386,7 +452,7 @@
                             <div class="relative mt-1">
                                 <input type="date" id="tanggal_berakhir" name="tanggal_berakhir"
                                 class="block w-full border @error('tanggal_berakhir')
-             border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                                 value="{{old('tanggal_berakhir')}}"
                                 autocomplete="on">
                             </div>
@@ -396,109 +462,121 @@
                         </div>
                     </div>
 
-                    <!-- Kuota Beasiswa -->
-                    <div>
-                        <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
-                        <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" value="{{old('kuota_beasiswa')}}" placeholder="Kuota Beasiswa"
-                            class="block w-full border @error('kuota_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
-                    </div>
-                    @error('kuota_beasiswa')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                    <br>
-
-
-                    <!-- Jenjang Pendidikan -->
-                    <div class="relative">
-                        <label for="jenjang_pendidikan" class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
-                        <div id="selected-tags-jenjang" class="flex flex-wrap gap-2 mb-2">
+                    <div id="beasiswa-internal" class="hidden">
+                        <!-- Kuota Beasiswa -->
+                        <div>
+                            <label for="kuota_beasiswa" class="block text-sm font-medium text-gray-700">Kuota Beasiswa</label>
+                            <input type="number" id="kuota_beasiswa" name="kuota_beasiswa" value="{{old('kuota_beasiswa')}}" placeholder="Kuota Beasiswa"
+                                class="block w-full border @error('kuota_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
                         </div>
-                        <input type="search" id="jenjang_pendidikan" name="input_jenjang_pendidikan" placeholder="Jenjang Pendidikan"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchJenjangTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); }">
-                        <div id="jenjang-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto "></div>
-                        <div id="tag-counter-jenjang" class="mb-2 text-sm text-gray-600">Jumlah jenjang yang dipilih: 0</div>
-                    </div>
-
-
-                    <!-- Syarat Beasiswa -->
-                    <div class="relative">
-                        <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
-                        <div id="selected-tags-syarat" class="flex flex-wrap gap-2 mb-2">
-                        </div>
-
-                        <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchBeasiswaTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBeasiswaTag(this.value); this.nextElementSibling.classList.add('hidden');}">
-                        <div id="syarat-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                        <div id="tag-counter-beasiswa" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
-                    </div>
-
-                    <!-- Benefit Beasiswa -->
-                    <div class="relative">
-                        <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
-                        <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2">
-                        </div>
-
-                        <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
-                        class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
-                        oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
-                        <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                        <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
-                    </div>
-
-                    <div id="form-container">
-                        <div class="grid grid-cols-12 gap-4 items-center" id="form-row-1">
-                            <!-- Input Syarat Dokumen -->
-                            <div class="col-span-6 relative">
-                                <label for="dokumen-1" class="block text-sm font-medium text-gray-700 mb-1">Syarat Dokumen</label>
-                                <input
-                                    type="text"
-                                    id="dokumen-1"
-                                    name="nama_dokumen[]"
-                                    placeholder="Masukkan dokumen"
-                                    class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    oninput="fetchDokumenTags(1)"
-                                    onkeydown="handleDokumenKeydown(event, 1)"
-                                />
-                                <div id="syarat-suggestions-dokumen-1"
-                                     class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                        @error('kuota_beasiswa')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <br>
+    
+    
+                        <!-- Jenjang Pendidikan -->
+                        <div class="relative">
+                            <label for="jenjang_pendidikan" class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
+                            <div id="selected-tags-jenjang" class="flex flex-wrap gap-2 mb-2">
                             </div>
-                            <!-- Input Unggah Format Dokumen -->
-                            <div class="col-span-5">
-                                <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
-                                <input
-                                    type="file"
-                                    id="unggah-1"
-                                    class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                    name="dokumen_file[]"
-                                    onchange="addDokumenFile(this.files[0], 1)"
-                                />
-                                <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
+                            <input type="search" id="jenjang_pendidikan" name="input_jenjang_pendidikan" placeholder="Jenjang Pendidikan"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchJenjangTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); }">
+                            <div id="jenjang-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto "></div>
+                            <div id="tag-counter-jenjang" class="mb-2 text-sm text-gray-600">Jumlah jenjang yang dipilih: 0</div>
+                        </div>
+    
+    
+                        <!-- Syarat Beasiswa -->
+                        <div class="relative">
+                            <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
+                            <div id="selected-tags-syarat" class="flex flex-wrap gap-2 mb-2">
                             </div>
-                            <div class="col-span-1 justify-center flex items-center mt-7">
-                                <div class="bg-red-400 hover:bg-red-600 rounded">
-                                    <button
-                                        type="button"
-                                        class="px-3 text-sm font-medium"
-                                        onclick="removeFormRow(1)"
-                                    >
-                                        X
-                                    </button>
+    
+                            <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchBeasiswaTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBeasiswaTag(this.value); this.nextElementSibling.classList.add('hidden');}">
+                            <div id="syarat-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                            <div id="tag-counter-beasiswa" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
+                        </div>
+    
+                        <!-- Benefit Beasiswa -->
+                        <div class="relative">
+                            <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
+                            <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2">
+                            </div>
+    
+                            <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
+                            oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
+                            <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                            <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
+                        </div>
+    
+                        <div id="form-container">
+                            <div class="grid grid-cols-12 gap-4 items-center" id="form-row-1">
+                                <!-- Input Syarat Dokumen -->
+                                <div class="col-span-6 relative">
+                                    <label for="dokumen-1" class="block text-sm font-medium text-gray-700 mb-1">Syarat Dokumen</label>
+                                    <input
+                                        type="text"
+                                        id="dokumen-1"
+                                        name="nama_dokumen[]"
+                                        placeholder="Masukkan dokumen"
+                                        class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        oninput="fetchDokumenTags(1)"
+                                        onkeydown="handleDokumenKeydown(event, 1)"
+                                    />
+                                    <div id="syarat-suggestions-dokumen-1"
+                                            class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                                </div>
+                                <!-- Input Unggah Format Dokumen -->
+                                <div class="col-span-5">
+                                    <label for="unggah-1" class="block text-sm font-medium text-gray-700 mb-1">Unggah Format Dokumen</label>
+                                    <input
+                                        type="file"
+                                        id="unggah-1"
+                                        class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                        name="dokumen_file[]"
+                                        onchange="addDokumenFile(this.files[0], 1)"
+                                    />
+                                    <span id="dokumen-name-1" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
+                                </div>
+                                <div class="col-span-1 justify-center flex items-center mt-7">
+                                    <div class="bg-red-400 hover:bg-red-600 rounded">
+                                        <button
+                                            type="button"
+                                            class="px-3 text-sm font-medium"
+                                            onclick="removeFormRow(1)"
+                                        >
+                                            X
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Tombol Tambah Syarat Dokumen -->
+                        <div class="mt-4">
+                            <button
+                                type="button"
+                                id="add-button"
+                                class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                onclick="createFormRow()"
+                            >
+                                <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
+                            </button>
+                        </div>
                     </div>
-                    <!-- Tombol Tambah Syarat Dokumen -->
-                    <div class="mt-4">
-                        <button
-                            type="button"
-                            id="add-button"
-                            class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
-                            onclick="createFormRow()"
-                        >
-                            <span class="text-xl mr-1">+</span> Tambahkan Syarat Dokumen
-                        </button>
+                    <div id="beasiswa-eksternal" class="hidden">
+                        <div>
+                            <label for="link_beasiswa" class="block text-sm font-medium text-gray-700">Link Beasiswa</label>
+                            <input type="text" id="link_beasiswa" name="link_beasiswa" placeholder="link Beasiswa" value="{{old('link_beasiswa')}}"
+                                class="block w-full border @error('link_beasiswa') border-red-500 @enderror rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2">
+                            @error('Link_beasiswa')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                     <br>
                     <p class="@error('poster') border-red-500 @enderror block text-sm font-medium text-gray-700">Poster Beasiswa</p>
@@ -525,6 +603,7 @@
                     <div>
                         <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                     </div>
+                
                 </form>
             </div>
         </div>

@@ -1,4 +1,4 @@
-let formCounter = 1; // jumlah input dokumen
+let dokumenCounter = 1; // jumlah input dokumen
 let selectedDokumen = [];
 let selectedFiles = []; 
 
@@ -49,12 +49,17 @@ document.addEventListener('DOMContentLoaded', function () {
         createHiddenInput();
         form.submit();
     })
-    
-    $(document).mouseup(function (e) {
-        if ($(e.target).closest("#popup > div").length === 0) {
-            hidePopup();
-        }
-    });
+
+    // $(document).mouseup(function (e) {
+    //     if ($(e.target).closest("#popup > div").length === 0) {
+    //         hidePopup();
+    //     }
+    // });
+
+    let selectedRadio = document.querySelector('input[name="tipe_beasiswa"]:checked');
+    if (selectedRadio) {
+        showForm(selectedRadio.value);
+    }
 });
 
 function fetchJenjangTags() {
@@ -507,40 +512,40 @@ function getFileName(url) {
 
 // Membuat form row baru
 function createFormRow() {
-    if (typeof formCounter === 'undefined') {let formCounter = 1;}
+    if (typeof dokumenCounter === 'undefined') {let dokumenCounter = 1;}
     console.log("creating form");
-    formCounter++;
-    console.log(formCounter);
+    dokumenCounter++;
+    console.log(dokumenCounter);
 
     const formContainer = document.getElementById("form-container");
     const newFormRow = document.createElement("div");
     newFormRow.className = "mt-3 grid grid-cols-12 gap-4 items-center";
-    newFormRow.id = `form-row-${formCounter}`;
+    newFormRow.id = `form-row-${dokumenCounter}`;
 
     newFormRow.innerHTML = `
         <div class="col-span-6 relative">
             <input
                 type="text"
-                id="dokumen-${formCounter}"
+                id="dokumen-${dokumenCounter}"
                 name="nama_dokumen[]" 
                 placeholder="Masukkan dokumen"
                 class="syarat_dokumen col-span-2 w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                oninput="fetchDokumenTags(${formCounter})"
-                onkeydown="handleDokumenKeydown(event, ${formCounter})"
+                oninput="fetchDokumenTags(${dokumenCounter})"
+                onkeydown="handleDokumenKeydown(event, ${dokumenCounter})"
             />
-            <div id="syarat-suggestions-dokumen-${formCounter}" 
+            <div id="syarat-suggestions-dokumen-${dokumenCounter}" 
                     class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
         </div>
         <div class="col-span-5">
-            <label for="unggah-${formCounter}" class="block text-sm font-medium text-gray-700 mb-1"></label>
+            <label for="unggah-${dokumenCounter}" class="block text-sm font-medium text-gray-700 mb-1"></label>
             <input
                 type="file"
-                id="unggah-${formCounter}"
+                id="unggah-${dokumenCounter}"
                 class="w-1/3 text-gray-500 file:mr-6 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
                 name="dokumen_file[]" 
-                onchange="addDokumenFile(this.files[0], ${formCounter})"
+                onchange="addDokumenFile(this.files[0], ${dokumenCounter})"
             />
-            <span id="dokumen-name-${formCounter}" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
+            <span id="dokumen-name-${dokumenCounter}" class="w-2/3 text-gray-500 ml-[-15px] bg-white">Belum ada file yang dipilih</span>
         </div>
 
         <div class="col-span-1 justify-center flex items-center">
@@ -548,7 +553,7 @@ function createFormRow() {
                 <button
                     type="button"
                     class="px-3 text-sm font-medium"
-                    onclick="removeFormRow(${formCounter})"
+                    onclick="removeFormRow(${dokumenCounter})"
                 >
                     X
                 </button>
@@ -579,7 +584,7 @@ function removeFormRow(rowId) {
     selectedDokumen = selectedDokumen.filter(ulink => ulink !== link);
 
     console.log(selectedDokumen);
-    formCounter--;
+    dokumenCounter--;
 
     // Update ID dan penomoran baris lainnya
     let rows = document.querySelectorAll('[id^="form-row-"]');
@@ -589,9 +594,29 @@ function removeFormRow(rowId) {
         
         const dokumenInput = row.querySelector('[id^="dokumen-"]');
         if (dokumenInput) dokumenInput.id = `dokumen-${newRowId}`;
+        dokumenInput.addEventListener('input', function(){
+            fetchDokumenTags(newRowId);
+        })
+        dokumenInput.addEventListener('keydown', function(){
+            handleDokumenKeydown(event, newRowId);
+        })
+
+        const syaratSuggestion = row.querySelector('[id^="syarat-suggestions-dokumen-"]');
+        if (syaratSuggestion) syaratSuggestion.id = `syarat-suggestions-dokumen-${newRowId}`;
 
         const dokumenName = row.querySelector('[id^="dokumen-name-"]');
         if (dokumenName) dokumenName.id = `dokumen-name-${newRowId}`;
+
+        const unggah = row.querySelector('[id^="unggah-"]');
+        if (unggah) unggah.id = `unggah-${newRowId}`;
+        unggah.addEventListener('change', function(){
+            addDokumenFile(this.files[0], newRowId);
+        })
+
+        const button = row.querySelector('button[type="button"]');
+        button.addEventListener('click', function(){
+            removeFormRow(newRowId);
+        })
     });
 }
 
@@ -696,6 +721,7 @@ function changePage(page) {
 
 function hidePopup() {
     document.getElementById('popup').classList.add('hidden');
+    // document.getElementById('popup-tipe').classList.add('hidden');
 }
 
 
@@ -732,7 +758,7 @@ function cleanInputFields() {
         console.log(item, index+1);
         removeFormRow(index+1);  // Assuming this function handles creating new rows for documents
     });
-    formCounter = 1;
+    dokumenCounter = 1;
 }
 
 function selectTemplate(templateID) {
@@ -753,19 +779,27 @@ function selectTemplate(templateID) {
                     radio.checked = true;
                 }
             });
-
+            document.getElementsByName('publish_beasiswa').forEach(radio => {
+                if (radio.value == template.publish) {
+                    radio.checked = true;
+                }
+            });
+            console.log(template.publish);
+            
             // Set radio buttons for tipe_beasiswa
             document.getElementsByName('tipe_beasiswa').forEach(radio => {
                 if (radio.value === template.tipe_beasiswa) {
                     radio.checked = true;
                 }
+                showForm(template.tipe_beasiswa);
             });
 
             // Set dates
             document.getElementById('tanggal_mulai').value = template.tanggal_mulai;
             document.getElementById('tanggal_berakhir').value = template.tanggal_berakhir;
             document.getElementById('kuota_beasiswa').value = template.kuota;
-
+            document.getElementById('link_beasiswa').value = template.link_beasiswa.link_beasiswa;
+            console.log(template.link_beasiswa);
             // Process arrays (poster, syarat, dokumen, etc.)
             data.poster.forEach(poster => {
                 selectedFiles.push(poster);
@@ -838,6 +872,7 @@ function createHiddenInput() {
         } else {
             console.warn(`Invalid URL skipped: ${file}`);
         }
+
     });
 
     // dd(selectedFiles);
@@ -862,4 +897,23 @@ function loadBeasiswaData(){
     });
     jenjang.forEach(item => addJenjangTag(item));
     benefit.forEach(item => addBenefitTag(item));
+}
+
+function showForm(tipe_beasiswa) {
+    // Deselect all radio buttons
+    document.querySelectorAll('input[name="tipe_beasiswa"]').forEach((elem) => {
+        elem.checked = false;
+    });
+
+    // Check the corresponding radio button
+    document.getElementById(tipe_beasiswa).checked = true;
+
+    // Show and hide sections based on tipe_beasiswa
+    if (tipe_beasiswa === 'internal') {
+        document.getElementById("beasiswa-internal").classList.remove("hidden");
+        document.getElementById("beasiswa-eksternal").classList.add("hidden");
+    } else if (tipe_beasiswa === 'eksternal' || tipe_beasiswa === 'kipk') {
+        document.getElementById("beasiswa-eksternal").classList.remove("hidden");
+        document.getElementById("beasiswa-internal").classList.add("hidden");
+    }
 }
