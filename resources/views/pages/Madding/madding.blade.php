@@ -11,7 +11,7 @@
         <div class="madding-header pb-4 flex flex-wrap items-start justify-between">
             <div class="w-full md:w-auto">
                 <h1 class="text-2xl font-bold">Madding Beasiswa</h1>
-                <p>Tempat kamu mendapatkan info terbaru mengenai beasiswa :D</p>
+                <p>Tempat kamu mendapatkan info terbaru mengenai beasiswa</p>
             </div>
             <div class="w-full max-[799px]:w-full md:w-auto max-[799px]:mt-4 max-[799px]:mb-2">
                 <a href="{{ route('beasiswa.index') }}" 
@@ -295,7 +295,7 @@
                     Mereka Bisa, Kamu Juga Bisa!
                 </h1>
                 <p>
-                    Beberapa mahasiswa yang berhasil mendapatkan beasiswa bulan ini :D
+                    Beberapa mahasiswa yang berhasil mendapatkan beasiswa bulan ini
                 </p>
             </div>
             <div class="w-full max-[799px]:w-full md:w-auto max-[799px]:mt-4 max-[799px]:mb-2">
@@ -309,7 +309,7 @@
     
         <div class="madding-content grid grid-cols-4 gap-4 max-[1279px]:grid-cols-3 max-[799px]:grid-cols-1 max-[768px]:grid-cols-auto-fit max-[768px]:gap-4" 
              style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-            @forelse ($newestMahasiswaAccepted as $penerima)
+            @forelse ($mahasiswaAccepted as $penerima)
                 <div class="w-full bg-white border-2 border-gray-900 rounded-lg shadow-xl hover:bg-gray-100 max-[768px]:p-6">
                     <div class="flex flex-col items-center p-10 max-[768px]:p-6">
                         <img class="w-24 h-24 mb-3 rounded-full shadow-lg mb-5 max-[768px]:w-20 max-[768px]:h-20" 
@@ -345,7 +345,7 @@
     
         <!-- Pagination Section -->
         <div class="py-5">
-            {{ $newestMahasiswaAccepted->links() }}
+            {{ $mahasiswaAccepted->links() }}
         </div>
     </div>
 </div>
