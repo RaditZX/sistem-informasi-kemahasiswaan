@@ -238,7 +238,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Tombol Tambah Syarat Dokumen -->
                         <div class="mt-4">
                             <button
@@ -295,7 +295,7 @@
     </div>
 
 @else
-    
+
 
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px4 py-6 sm:px-0">
@@ -307,7 +307,6 @@
 
                 <form id="beasiswa-form" action="{{ route('beasiswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <!-- Nama Beasiswa -->
                         <div class="mb-4">
@@ -473,8 +472,8 @@
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                         <br>
-    
-    
+
+
                         <!-- Jenjang Pendidikan -->
                         <div class="relative">
                             <label for="jenjang_pendidikan" class="block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
@@ -486,34 +485,34 @@
                             <div id="jenjang-suggestions" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto "></div>
                             <div id="tag-counter-jenjang" class="mb-2 text-sm text-gray-600">Jumlah jenjang yang dipilih: 0</div>
                         </div>
-    
-    
+
+
                         <!-- Syarat Beasiswa -->
                         <div class="relative">
                             <label for="syarat_beasiswa" class="block text-sm font-medium text-gray-700">Syarat-Syarat Beasiswa</label>
                             <div id="selected-tags-syarat" class="flex flex-wrap gap-2 mb-2">
                             </div>
-    
+
                             <input type="search" id="syarat_beasiswa" name="input_syarat_beasiswa" placeholder="Syarat-syarat Beasiswa"
                             class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                             oninput="fetchBeasiswaTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBeasiswaTag(this.value); this.nextElementSibling.classList.add('hidden');}">
                             <div id="syarat-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
                             <div id="tag-counter-beasiswa" class="mb-2 text-sm text-gray-600">Jumlah syarat yang dipilih: 0</div>
                         </div>
-    
+
                         <!-- Benefit Beasiswa -->
                         <div class="relative">
                             <label for="benefit_beasiswa" class="block text-sm font-medium text-gray-700">Benefit Beasiswa</label>
                             <div id="selected-tags-benefit" class="flex flex-wrap gap-2 mb-2">
                             </div>
-    
+
                             <input type="search" id="benefit_beasiswa" name="input_benefit_beasiswa" placeholder="Benefit Beasiswa"
                             class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2"
                             oninput="fetchBenefitTags()" autocomplete="off" onkeydown="if (event.keyCode === 13) { event.preventDefault(); addBenefitTag(this.value); this.nextElementSibling.classList.add('hidden');}">
                             <div id="benefit-suggestions-beasiswa" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-48 overflow-y-auto"></div>
                             <div id="tag-counter-benefit" class="mb-2 text-sm text-gray-600">Jumlah benefit yang dipilih: 0</div>
                         </div>
-    
+
                         <div id="form-container">
                             <div class="grid grid-cols-12 gap-4 items-center" id="form-row-1">
                                 <!-- Input Syarat Dokumen -->
@@ -603,7 +602,7 @@
                     <div>
                         <button type="submit" style="background-color: #FF8E07" class="block w-full items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  hover:bg-[#D97600] ">Submit</button>
                     </div>
-                
+
                 </form>
             </div>
         </div>

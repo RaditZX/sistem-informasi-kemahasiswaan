@@ -220,7 +220,7 @@
                                                 Tanggal Ditutup</th>
                                             <th
                                                 class="px-6 py-3 font-bold tracking-normal text-center uppercase align-middle bg-transparent border-b letter border-b-solid text-xxs whitespace-nowrap border-b-gray-200 text-slate-400 opacity-70">
-                                                Status/th>
+                                                Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>

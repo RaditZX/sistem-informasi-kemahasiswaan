@@ -54,7 +54,7 @@ Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/list-pengaju-beasiswa', [BeasiswaController::class,'getListPengajuBeasiswa'])->name('beasiswa.list-pengaju-beasiswa');
     Route::get('/beasiswa/create', [BeasiswaController::class, 'create'])->name('beasiswa.create');
     Route::post('/beasiswa/store', [BeasiswaController::class, 'store'])->name('beasiswa.store');
-    Route::delete('/beasiswa/destory', [BeasiswaController::class, 'destroy'])->name('beasiswa.destroy');
+    Route::delete('/beasiswa/destroy/{id}', [BeasiswaController::class, 'destroy'])->name('beasiswa.destroy');
     Route::patch('/beasiswa/update/{id}', [BeasiswaController::class, 'update'])->name('beasiswa.update');
     Route::get('/beasiswa/edit/{id}', [BeasiswaController::class, 'edit'])->name('beasiswa.edit');
     Route::get('/list-beasiswa-staff', [BeasiswaController::class, 'getListBeasiswaForStaff'])->name('beasiswa.list-beasiswa-staff');

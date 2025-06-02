@@ -21,7 +21,11 @@ class DashboardController extends Controller
         $beasiswa = $this->getOngoingBeasiswa();
         $jurusan = Jurusan::all();
 
-        $jmlPenerima = PenerimaBeasiswa::count();
+        $jmlPenerimamhs = PenerimaBeasiswa::count();
+        $jmlPenerimaHistory = DB::table('history_mahasiswa_penerima')->count();
+        $jmlPenerima = $jmlPenerimamhs + $jmlPenerimaHistory;
+
+
 
         return view('pages.Beasiswa.dashboard', compact('data', 'beasiswa', 'pengajuanTahun', 'jurusan', 'jmlPenerima'));
     }
