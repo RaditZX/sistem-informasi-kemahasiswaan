@@ -406,6 +406,66 @@ class BeasiswaController extends Controller
         }
     }
 
+        public function show(string $id)
+    {
+        // Ambil data beasiswa bersama relasi yang dibutuhkan
+        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa'])->findOrFail($id);
+
+        // Ambil data syarat, jenjang, benefit, dokumen, dan poster
+        $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
+        $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
+        $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
+        $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
+        $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
+
+        // Default value untuk status pengajuan dan mahasiswa
+        $checkPengajuan = false;
+        $mhsNIM = null;
+
+        // Cek apakah pengguna sudah login
+        if (Auth::check()) {
+            // Jika sudah login, ambil data user
+            $user = Auth::user();
+
+            // Ambil data mahasiswa berdasarkan user_id
+            $mhsNIM = Mahasiswa::where('user_id', $user->id)->first();
+
+            // Cek apakah mahasiswa sudah mengajukan beasiswa
+            $checkPengajuan = $mhsNIM ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)->exists() : false;
+        }
+
+        // Return view dengan data yang sudah dipersiapkan
+        return view('pages.Beasiswa.detail-beasiswa', [
+            'beasiswa' => $beasiswa,
+            'id' => $id,
+            'syarat' => $syarat,
+            'jenjang' => $jenjang,
+            'benefit' => $benefit,
+            'dokumen' => $dokumen,
+            'poster' => $poster,
+            'isMengajukan' => $checkPengajuan,
+            'isMhs' => $mhsNIM
+        ]);
+    }
+
+    public function edit(string $id)
+    {
+        // Ambil data dari database berdasarkan ID
+        $beasiswa = Beasiswa::with(['syaratBeasiswa', 'jenjangPendidikan', 'benefitBeasiswa', 'syaratDokumen', 'posterBeasiswa', 'linkBeasiswa'])->find($id);
+        $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
+        $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
+        $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
+        $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
+        $link_dokumen = $beasiswa->syaratDokumen->pluck('link_dokumen')->toArray();
+        $link_beasiswa = $beasiswa->linkBeasiswa;
+
+        $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
+
+        // Kirim data ke view
+        return view('pages.Beasiswa.form-beasiswa', compact('beasiswa', 'syarat', 'jenjang', 'dokumen', 'link_dokumen', 'benefit', 'poster', 'link_beasiswa'));
+
+    }
+
 
     /**
      * Update the specified resource in storage.

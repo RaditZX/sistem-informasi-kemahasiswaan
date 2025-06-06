@@ -40,7 +40,7 @@
     <div class="email-container">
         <!-- Header Section -->
         <div class="email-header">
-            <img src="{{ asset('assets/img/logo-polban.png') }}" alt="Logo">
+            <img src="{{ env('APP_URL')/assets/img/logo-polban.png }}" alt="Logo">
         </div>
 
         <!-- Content Section -->

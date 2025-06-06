@@ -89,8 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengumuman-beasiswa', [PenerimaBeasiswaController::class, 'index'])->name('pengumuman-beasiswa.index');
     Route::get('/notifications', [NotificationController::class, 'getNotifData'])->name('notifications.index');
     Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
-
-
+    Route::get('/madding', [MaddingController::class, 'index'])->name('public.madding');
     Route::resource('pengaturan', PengaturanController::class);
     Route::patch('/pengaturan/updatefoto/{user}', [PengaturanController::class, 'updatefoto'])->name('pengaturan.updatefoto');
     Route::patch('/pengaturan/updateprofil/{user}', [PengaturanController::class, 'updateprofil'])->name('pengaturan.updateprofil');
@@ -100,12 +99,14 @@ Route::middleware('auth')->group(function () {
     Route::controller(MaddingController::class)->group(function () {
         Route::get('/madding', [MaddingController::class, 'index'])->name('madding.index');
     });
+    Route::get('/beasiswa/{id}',[BeasiswaController::class,'show'])->name('beasiswa.show');
+Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
+Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
 });
 
 // ========================================================================================
 // PUBLIC ROUTES ==========================================================================
-Route::get('/', [MaddingController::class, 'index'])->name('public.madding');
-Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
-Route::get('/beasiswa/{id}',[BeasiswaController::class,'show'])->name('beasiswa.show');
-Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
-Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
+Route::get('/madding-public', [MaddingController::class, 'indexPublic'])->name('public.madding');
+Route::get('/', function () {
+    return redirect('/login');
+});

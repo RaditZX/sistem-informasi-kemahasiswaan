@@ -1,16 +1,10 @@
 @extends('layouts.main')
 @section('content')
 
-@include('component.navbar', [
-    'path' => "Madding",
-    'id' => null
-])
 
-
-
-<div class="madding-wrapper mx-auto py-6 sm:px-6 lg:px-10 max-[799px]:px-10">
-    <div class="madding-1">
-        <div class="madding-header pb-4 flex flex-wrap items-start justify-between">
+<div style="overflow: auto; max-height: 100vh;" class="madding-wrapper mx-auto py-6 sm:px-6 lg:px-10 max-[799px]:px-10">
+  <div class="madding-1">
+    <div class="madding-header pb-4 flex flex-wrap items-start justify-between">
             <div class="w-full md:w-auto">
                 <h1 class="text-2xl font-bold">Madding Beasiswa</h1>
                 <p>Tempat kamu mendapatkan info terbaru mengenai beasiswa</p>
@@ -107,7 +101,7 @@
                                                         </div>
 
                                                         <p class="mb-4 text-sm font-normal text-gray-900">
-                                                            {{ \Illuminate\Support\Str::words($beasiswa->deskripsi, 100, '...') }}
+                                                            {{ $beasiswa->deskripsi }}
                                                         </p>
 
                                                         @if ($beasiswa->tipe_beasiswa === "kipk")
@@ -219,7 +213,7 @@
                                                         </div>
 
                                                         <p class="mb-4 text-sm font-normal text-gray-900">
-                                                            {{ $beasiswa->short_description }}
+                                                            {{ \Illuminate\Support\Str::words($beasiswa->deskripsi, 100, '...') }}
                                                         </p>
 
                                                         @if ($beasiswa->tipe_beasiswa === "kipk")

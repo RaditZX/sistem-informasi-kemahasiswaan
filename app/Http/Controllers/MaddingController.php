@@ -26,6 +26,21 @@ class MaddingController extends Controller
         return view('pages.Madding.madding', compact('newestBeasiswa', 'upcomingBeasiswa', 'mahasiswaAccepted'));
     }
 
+        public function indexPublic()
+    {
+        $today = Carbon::today();
+
+        $newestBeasiswa = $this->getNewestBeasiswa($today);
+        $upcomingBeasiswa = $this->getUpcomingBeasiswa($today);
+        $mahasiswaAccepted = $this->getAcceptedMahasiswaFromSystem();
+
+        if ($mahasiswaAccepted->isEmpty()) {
+            $mahasiswaAccepted = $this->getAcceptedMahasiswaFromHistory();
+        }
+
+        return view('pages.Madding.madding-public', compact('newestBeasiswa', 'upcomingBeasiswa', 'mahasiswaAccepted'));
+    }
+
     private function getAcceptedMahasiswaFromSystem()
     {
         return PenerimaBeasiswa::join('beasiswa', 'beasiswa.id', '=', 'penerima_beasiswa.beasiswa_id')
@@ -60,11 +75,11 @@ class MaddingController extends Controller
         $query->select(
             DB::raw("COALESCE(users.foto, 'default-profile.png') as foto"), // Sediakan path default image Anda
             DB::raw("COALESCE(users.nama_depan, SPLIT_PART(history_mahasiswa_penerima.nama_mahasiswa, ' ', 1)) as nama_depan"),
-            DB::raw("COALESCE(users.nama_belakang, 
-                        CASE 
-                            WHEN POSITION(' ' IN history_mahasiswa_penerima.nama_mahasiswa) > 0 
-                            THEN SUBSTRING(history_mahasiswa_penerima.nama_mahasiswa FROM POSITION(' ' IN history_mahasiswa_penerima.nama_mahasiswa) + 1) 
-                            ELSE '' 
+            DB::raw("COALESCE(users.nama_belakang,
+                        CASE
+                            WHEN POSITION(' ' IN history_mahasiswa_penerima.nama_mahasiswa) > 0
+                            THEN SUBSTRING(history_mahasiswa_penerima.nama_mahasiswa FROM POSITION(' ' IN history_mahasiswa_penerima.nama_mahasiswa) + 1)
+                            ELSE ''
                         END) as nama_belakang"),
             // Untuk angkatan, jika NULL dan ingin ditampilkan sebagai 'N/A', cast ke VARCHAR
             DB::raw("COALESCE(CAST(mahasiswa.angkatan AS VARCHAR), 'N/A') as angkatan"),
