@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa;
 use App\Models\Prodi;
 use App\Models\Reviewer;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\MailController;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -244,35 +246,39 @@ class AuthController extends Controller
         return view('pages.Auth.change-password', ['token' => $token, 'email' => $request->email]);
     }
 
-    // Memproses reset password
+
+
     public function changePassword(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-            'token' => 'required'
-        ]);
+        try {
+            // Validasi input
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|min:8|confirmed',
+                'token' => 'required'
+            ]);
 
-        // Cek apakah token valid
-        $response = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($request->password),
-                ])->save();
+            // Cek apakah token valid
+            $response = Password::reset(
+                $request->only('email', 'password', 'password_confirmation', 'token'),
+                function ($user) use ($request) {
+                    $user->forceFill([
+                        'password' => Hash::make($request->password),
+                    ])->save();
+                }
+            );
 
-                // Authentikasi pengguna setelah reset
-                return redirect()->route('login')->with('status', 'Password berhasil direset! Silakan login.');
+            if ($response == Password::PASSWORD_RESET) {
+                return redirect()->route('login')->with('success', 'Password berhasil direset! Silakan login.');
             }
-        );
 
-        if ($response == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', 'Password berhasil direset! Silakan login.');
+            // Jika gagal karena token atau email invalid
+            return back()->withErrors(['email' => trans($response)]);
+
+        } catch (Exception $e) {
+            // Tangkap error tak terduga (misalnya DB connection, dll.)
+            return back()->with('error', $e->getMessage());
         }
-
-        // Jika ada error lain, berikan error kembali
-        return back()->withErrors(['email' => trans($response)]);
     }
 
 
