@@ -79,7 +79,7 @@ class PengajuanBeasiswaController extends Controller
 
             DB::commit();
 
-            return redirect()->route('pengajuan.create', ['id' => $id])
+            return redirect()->route('pengajuan.list-pengajuan', ['id' => $id])
                 ->with('success', 'Pengajuan Beasiswa created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -119,30 +119,44 @@ class PengajuanBeasiswaController extends Controller
     /**
      * Update the specified Pengajuan Beasiswa.
      */
-    public function edit(Request $request, string $id)
-    {
-        $dokumen = $this->getBeasiswaDocuments($this->getBeasiswaIdByPengajuan($id));
-        $rules = $this->buildValidationRules($dokumen);
-        $request->validate($rules);
+   public function edit(Request $request, string $id)
+{
+    $dokumen = $this->getBeasiswaDocuments(
+        $this->getBeasiswaIdByPengajuan($id)
+    );
 
-        DB::beginTransaction();
+    // build rules yang lebih fleksibel (nullable bukan required)
+    $rules = $this->buildValidationRules($dokumen);
 
-        try {
-            $dokumenPengajuan = $this->getPengajuanDokumen($id);
-            $this->updateDokumen($request, $dokumen, $dokumenPengajuan);
-
-            DB::commit();
-
-            return redirect()->route('pengajuan.show', ['id' => $id])
-                ->with('success', 'Documents updated successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error("Error updating documents for Pengajuan ID: {$id}", ['exception' => $e]);
-
-            return redirect()->route('pengajuan.show', ['id' => $id])
-                ->with('error', 'Failed to update documents. Please try again later.');
-        }
+    try {
+        $validated = $request->validate($rules);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // kalau mau debug error
+        return back()->withErrors($e->errors())->withInput();
     }
+
+    DB::beginTransaction();
+
+    try {
+        $dokumenPengajuan = $this->getPengajuanDokumen($id);
+        $this->updateDokumen($request, $dokumen, $dokumenPengajuan);
+
+        DB::commit();
+
+        return redirect()
+            ->route('pengajuan.show', ['id' => $id])
+            ->with('success', 'Documents updated successfully.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error("Error updating documents for Pengajuan ID: {$id}", [
+            'exception' => $e,
+        ]);
+
+        return redirect()
+            ->route('pengajuan.show', ['id' => $id])
+            ->with('error', 'Failed to update documents. Please try again later.');
+    }
+}
 
 
 
@@ -453,7 +467,8 @@ class PengajuanBeasiswaController extends Controller
     {
         $rules = [];
         foreach ($dokumen as $index => $item) {
-            $rules['file_' . ($index + 1)] = 'required|file';
+            // ✅ nullable → artinya boleh kosong, kalau ada file baru harus valid
+            $rules['file_' . ($index + 1)] = 'nullable|file|mimes:pdf,jpg,png|max:2048';
         }
         return $rules;
     }

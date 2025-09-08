@@ -26,7 +26,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(BeasiswaSeeder::class);
-        $this->call(MahasiswaSeeder::class);
         $this->call(NotifikasiSeeder::class);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage as LaravelStorage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 
 class FileController extends Controller
@@ -67,27 +69,40 @@ class FileController extends Controller
         return response()->file(storage_path('app/' .  $decodedPath));
     }
 
-
     public function deleteFile(Request $request)
     {
         $request->validate([
             'file_name' => 'required|string',
-            'path' => 'required|string',
+            'path'      => 'required|string',
         ]);
 
         $fileName = $request->input('file_name');
         $path = rtrim($request->input('path'), '/') . '/' . $fileName;
 
-        $bucket = $this->storage;
-        $object = $bucket->object($path);
+        $deletedFrom = [];
 
-        if ($object->exists()) {
-            $object->delete();
-            return response()->json(['message' => 'File deleted successfully.'], 200);
-        } else {
-            return response()->json(['message' => 'File not found.'], 404);
+
+
+        try {
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+                $deletedFrom[] = "public";
+            }
+        } catch (\Exception $e) {
+            Log::error("Gagal hapus file dari Public Storage: {$path}", ['error' => $e->getMessage()]);
         }
+
+        // 3️⃣ Respon hasil
+        if (!empty($deletedFrom)) {
+            return response()->json([
+                'message'     => 'File deleted successfully.',
+                'deleted_from' => $deletedFrom
+            ], 200);
+        }
+
+        return response()->json(['message' => 'File not found.'], 404);
     }
+
 
 
 

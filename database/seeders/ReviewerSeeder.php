@@ -11,6 +11,13 @@ class ReviewerSeeder extends Seeder
     {
         DB::table('reviewer')->insert([
             [
+                'user_id' => 1,
+                'nip' => 'NIP' . rand(1000000000, 9999999999),
+                'role_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'user_id' => 3,
                 'nip' => 'NIP' . rand(1000000000, 9999999999),
                 'role_id' => 1,

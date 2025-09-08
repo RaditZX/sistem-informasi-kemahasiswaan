@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BeasiswaController;
 use App\Models\Beasiswa;
 use App\Models\Jurusan;
+use App\Models\Mahasiswa;
 use App\Models\PenerimaBeasiswa;
 use App\Models\PengajuanBeasiswa;
 use App\Models\Reviewer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Carbon\Carbon;
 
 class PenerimaBeasiswaController extends Controller
 {
@@ -24,7 +25,25 @@ class PenerimaBeasiswaController extends Controller
      */
     public function index(Request $request)
     {
+        $beasiswaUserTipe = []; // Set default value for $beasiswaUserTipe
+        $penerimaBeasiswa = []; // Set default value for $penerimaBeasiswa
+
         $beasiswaController = new BeasiswaController();
+
+        if (Auth::check()) {
+            // Jika pengguna sudah login
+            $user = Auth::user();
+
+            // Ambil data mahasiswa berdasarkan user_id
+            $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
+
+            // Jika ada data mahasiswa, ambil data penerima beasiswa
+            $penerimaBeasiswa = $mahasiswa ? $mahasiswa->penerimaBeasiswa()->with('beasiswa')->get() : [];
+
+            // Menentukan tipe beasiswa pengguna
+            $beasiswaUserTipe =   $beasiswaController->mapBeasiswaUserTipe($penerimaBeasiswa);
+        }
+
         $query = $beasiswaController->buildBeasiswaQuery($request);
 
         // Jalankan query dan paginasi hasilnya
@@ -35,7 +54,12 @@ class PenerimaBeasiswaController extends Controller
         $jurusan = Jurusan::all();
 
         // Kirim data ke view
-        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact('beasiswa', 'jurusan'));
+        return view('pages.Beasiswa.list-pengumumanBeasiswa', compact(
+            'beasiswa',
+            'penerimaBeasiswa',
+            'beasiswaUserTipe',
+            'jurusan'
+        ));
     }
 
 
@@ -62,7 +86,7 @@ class PenerimaBeasiswaController extends Controller
                 $this->importBeasiswaData($file);
             });
 
-            return redirect()->route('beasiswa.import-data-beasiswa')
+            return redirect()->route('pengumuman-beasiswa.index')
                 ->with('success', 'Beasiswa data imported successfully.');
         } catch (\Throwable $e) {
             Log::error('Beasiswa Import Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);

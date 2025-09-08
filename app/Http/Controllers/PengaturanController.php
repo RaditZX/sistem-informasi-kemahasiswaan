@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;
-use App\Models\Pengaturan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Mahasiswa;
 use App\Models\Reviewer;
-use App\Models\Role;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class PengaturanController extends Controller
 {
@@ -82,51 +84,80 @@ class PengaturanController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+
     public function updatefoto(Request $request, string $id)
     {
-        // Ensure the user is authenticated
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect('login');
         }
 
-        // Validate the uploaded file
-        $request->validate([
-            'new_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate file type and size
-        ]);
-
-        // Check if a new image is uploaded
-        if ($request->hasFile('new_img')) {
-            // Create a new Request object for uploading the file
-            $newRequest = new Request();
-
-            // Set the uploaded file into the new request object
-            $newRequest->files->set('file', $request->file('new_img'));
-
-            // Set the path for storing the image (you can customize the path as needed)
-            $newRequest->merge(['path' => 'foto']);
-
-            // Call the existing uploadFileLocal method to handle the file upload
-            $fileController = new FileController();
-            $response = $fileController->uploadFileLocal($newRequest);
-
-            // Get the response data from the JsonResponse
-            $responseData = $response->getData(true);
-
-            // Check if the URL was returned successfully
-            if (isset($responseData['url'])) {
-                User::where('id', $id)
-                    ->update([
-                        'foto' => $responseData['url']
-                    ]);
-
-                return redirect()->route('pengaturan.index')->with('success', 'Profile updated successfully');
-            } else {
-                return redirect()->route('pengaturan.index')->with('error', 'Failed to upload the image');
+        // 1) Cek error upload level PHP (file terlalu besar menurut php.ini)
+        if (isset($_FILES['new_img']) && is_array($_FILES['new_img'])) {
+            $err = $_FILES['new_img']['error'] ?? UPLOAD_ERR_OK;
+            if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) {
+                $serverMax = ini_get('upload_max_filesize'); // mis. "2M"
+                return redirect()->route('pengaturan.index')
+                    ->with('error', "Ukuran file melebihi batas server ({$serverMax}). Silakan pilih file yang lebih kecil atau ubah konfigurasi server.");
             }
         }
 
-        return redirect()->route('pengaturan.index')->with('error', 'Failed to update profile photo');
+        // 2) Validasi Laravel (max dalam KB)
+        $maxKb = 2048;            // 2048 KB = 2 MB
+        $maxMb = $maxKb / 1024;   // 2
+
+        $rules = [
+            'new_img' => "required|image|mimes:jpeg,png,jpg,gif,svg|max:{$maxKb}"
+        ];
+
+        $messages = [
+            'new_img.required' => 'Silakan pilih gambar.',
+            'new_img.image'    => 'File harus berupa gambar.',
+            'new_img.mimes'    => 'Format gambar harus jpeg, png, jpg, gif, atau svg.',
+            'new_img.max'      => "Ukuran file terlalu besar. Maksimum {$maxKb} KB (~{$maxMb} MB)."
+        ];
+
+        try {
+            $validated = $request->validate($rules, $messages);
+        } catch (ValidationException $e) {
+            // Kembalikan error validasi agar tampil di form
+            return redirect()->route('pengaturan.index')
+                ->with('error', $e->getMessage());
+        }
+
+        // 3) Upload & update (bungkus dengan try/catch untuk safety)
+        try {
+            if (! $request->hasFile('new_img')) {
+                // kemungkinan file tidak ikut terupload (server limit) — tangani ulang
+                return redirect()->route('pengaturan.index')
+                    ->with('error', 'Tidak ada file terunggah. Pastikan ukuran file tidak melebihi batas.');
+            }
+
+            $newRequest = new Request();
+            $newRequest->files->set('file', $request->file('new_img'));
+            $newRequest->merge(['path' => 'foto']);
+
+            $fileController = new FileController();
+            $response = $fileController->uploadFileLocal($newRequest);
+
+            $responseData = $response->getData(true);
+
+            if (isset($responseData['url'])) {
+                \App\Models\User::where('id', $id)->update(['foto' => $responseData['url']]);
+
+                return redirect()->route('pengaturan.index')
+                    ->with('success', 'Profile updated successfully');
+            }
+
+            return redirect()->route('pengaturan.index')
+                ->with('error', 'Gagal mengunggah gambar. Silakan coba lagi.');
+        } catch (\Exception $e) {
+            Log::error("Error updating profile photo for user {$id}", ['exception' => $e->getMessage()]);
+            return redirect()->route('pengaturan.index')
+                ->with('error', $e->getMessage());
+        }
     }
+
 
     public function updateprofil(Request $request, string $id)
     {

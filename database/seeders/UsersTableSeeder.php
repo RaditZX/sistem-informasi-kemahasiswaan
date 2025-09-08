@@ -20,25 +20,14 @@ class UsersTableSeeder extends Seeder
                 'id'=>1,
                 'nama_depan' => 'John',
                 'nama_belakang' => 'Doe',
-                'email' => 'john.doe@polban.ac.id',
+                'email' => 'admin@polban.ac.id',
                 'jenis_kelamin' => 'Pria',
                 'foto' => 'example.jpg',
                 'password' => bcrypt('password123'),
                 'emailVerif' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-            [
-                'id'=>2,
-                'nama_depan' => 'Jane',
-                'nama_belakang' => 'Smith',
-                'email' => 'jane.smith@polban.ac.id',
-                'jenis_kelamin' => 'Pria',
-                'foto' => 'example.jpg',
-                'password' => bcrypt('password123'),
-                'emailVerif' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id'=>3,
@@ -51,6 +40,7 @@ class UsersTableSeeder extends Seeder
                 'emailVerif' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id'=>4,
@@ -63,6 +53,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id'=>5,
@@ -75,6 +66,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id'=>6,
@@ -87,6 +79,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id' => 7,
@@ -99,6 +92,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id' => 8,
@@ -111,6 +105,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id' => 9,
@@ -123,6 +118,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id' => 10,
@@ -135,6 +131,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id' => 11,
@@ -147,6 +144,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id' => 12,
@@ -159,6 +157,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
 
             [
@@ -173,6 +172,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id'=>14,
@@ -185,6 +185,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'isActive' => true
             ],
             [
                 'id'=>15,
@@ -197,66 +198,7 @@ class UsersTableSeeder extends Seeder
                 'foto' => 'example.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-            [
-                'id'=>16,
-                'nama_depan' => 'Tresnardi',
-                'nama_belakang' => 'Fathu Rhamdan',
-                'email' => 'tresnardi.fathu.tif23@polban.ac.id',
-                'password' => bcrypt('password123'),
-                'emailVerif' => true,
-                'jenis_kelamin' => 'Pria',
-                'foto' => 'example.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id'=>17,
-                'nama_depan' => 'Daffa',
-                'nama_belakang' => 'Al Ghifari',
-                'email' => 'daffa.al.tif23@polban.ac.id',
-                'password' => bcrypt('password123'),
-                'emailVerif' => true,
-                'jenis_kelamin' => 'Pria',
-                'foto' => 'example.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id'=>18,
-                'nama_depan' => 'Daiva',
-                'nama_belakang' => 'Raditya Pradipa',
-                'email' => 'daiva.raditya.tif23@polban.ac.id',
-                'jenis_kelamin' => 'Pria',
-                'password' => bcrypt('password123'),
-                'emailVerif' => true,
-                'foto' => 'example.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id'=>19,
-                'nama_depan' => 'Muhammad',
-                'nama_belakang' => 'Raihan Pratama',
-                'email' => 'muhammad.raihan.tif23@polban.ac.id',
-                'jenis_kelamin' => 'Pria',
-                'password' => bcrypt('password123'),
-                'emailVerif' => true,
-                'foto' => 'example.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id'=>20,
-                'nama_depan' => 'R',
-                'nama_belakang' => 'Muhammad Farrel Walid Imtiyaaz',
-                'email' => 'r.muhammad.tif23@polban.ac.id',
-                'jenis_kelamin' => 'Pria',
-                'password' => bcrypt('password123'),
-                'emailVerif' => true,
-                'foto' => 'example.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'isActive' => true
             ],
         ]);
 

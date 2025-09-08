@@ -154,7 +154,18 @@
                     </div>
                 @endforeach
             </div>
+                @if ($dataPengajuan->komentar && $dataReviewer != NULL)
+            <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <h3 class="text-sm font-semibold text-gray-700 mb-2">Komentar Terakhir</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    {{ $dataPengajuan->komentar }}
+                </p>
+            </div>
+        @endif
+
         </section>
+
+
 
         @if ($dataReviewer != NULL)
             <form action="{{ route('pengajuan.update-progress', $dataPengajuan->id) }}" method="POST" class="my-8 px-4">
@@ -163,7 +174,7 @@
 
                 @if ($dataPengajuan->status != 11)
                 <div>
-                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Your message</label>
+                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Komentar</label>
                     <textarea id="message" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Tambahkan komentar disini..." name="reviewerComment"></textarea>
                 </div>
                 <div class="mt-4 flex items-center justify-end space-x-2">
@@ -216,9 +227,11 @@
 
                 <div class="flex flex-col items-center justify-center">
                     <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Perbaiki data pengajuan?</label>
-                    <a href="{{ url('/pengajuan-beasiswa/edit/') . $dataPengajuan->id }}" class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
-                        Edit
+                    <a href="{{ url('/pengajuan-beasiswa/edit/' . $dataPengajuan->id) }}"
+                    class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
+                    Edit
                     </a>
+
                 </div>
             @endif
             <div class="flex flex-col items-center justify-end">

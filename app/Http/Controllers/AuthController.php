@@ -55,6 +55,10 @@ class AuthController extends Controller
             // Cari pengguna berdasarkan email
             $user = User::where('email', $email)->firstOrFail();
 
+            if (!$user->isActive) {
+                throw new \Exception('Akun belum teraktivasi, silakan selesaikan proses registrasi.');
+            }
+
             // Verifikasi password
             if (!Hash::check($password, $user->password)) {
                 throw new \Exception('Password salah.');
@@ -94,7 +98,6 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-
         $request->validate([
             'email' => [
                 'required',
@@ -109,25 +112,40 @@ class AuthController extends Controller
 
         $email = $request->input('email');
         $password = $request->input('password');
-        try {
-            // Cek apakah email sudah terdaftar
-            if (User::where('email', $email)->exists()) {
-                return redirect('/register')->with('error', 'Email telah terdaftar pada sistem.');
-            }
 
-            // Buat user baru
-            $user = User::create([
-                'id' => User::max('id') + 1,
-                'email' => $email,
-                'password' => bcrypt($password),
-                'emailVerif' => false,
-            ]);
+        try {
+            $user = User::where('email', $email)->first();
+
+            if ($user) {
+                // Jika user sudah ada
+                if (! $user->isActive) {
+                    // Update password user yang belum aktif
+                    $user->update([
+                        'password' => bcrypt($password),
+                    ]);
+                } else {
+                    return redirect('/register')->with('error', 'Email telah terdaftar pada sistem.');
+                }
+            } else {
+                // Jika user belum ada → buat baru
+                $user = User::create([
+                    'id' => User::max('id') + 1, // hati-hati kalau id auto increment
+                    'email' => $email,
+                    'password' => bcrypt($password),
+                    'emailVerif' => false,
+                ]);
+            }
 
             // Kirim email verifikasi
             $emailController = new MailController();
-            $emailController->sendMail(new Request($this->mailController->verifikasiEmailMessage($user->id)), false, true);
+            $emailController->sendMail(
+                new Request($this->mailController->verifikasiEmailMessage($user->id)),
+                false,
+                true
+            );
 
             return redirect()->route('auth.register-information', ['id' => $user->id]);
+
         } catch (\Exception $e) {
             return redirect('/register')->with('error', $e->getMessage());
         }
@@ -176,10 +194,11 @@ class AuthController extends Controller
                 'nama_depan' => $request->nama_depan,
                 'nama_belakang' => $request->nama_belakang,
                 'jenis_kelamin' => $request->jenis_kelamin,
+                'isActive' => true
             ]);
 
             // Mengarahkan ke halaman login setelah sukses
-            return redirect('/login');
+            return redirect('/login')->with('success','Akun berhasil terdaftar, silahkan cek email anda untuk verifikasi email');
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Mendapatkan pesan kesalahan validasi
             $errors = implode(' ', $e->errors()['nim'] ?? []); // You can target a specific field like 'nim' or just display all errors

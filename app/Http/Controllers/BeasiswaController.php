@@ -51,7 +51,7 @@ class BeasiswaController extends Controller
 
         // Query untuk mengambil data beasiswa
         $query = $this->buildBeasiswaQuery($request);
-        $beasiswa = $query->leftjoin('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->paginate(8);
+        $beasiswa = $query->leftjoin('poster_beasiswa as pb', 'pb.beasiswa_id', '=', 'beasiswa.id')->orderBy('beasiswa.created_at', 'asc')->paginate(8);
 
         // Ambil data jurusan
         $jurusan = Jurusan::all();
@@ -105,7 +105,7 @@ class BeasiswaController extends Controller
         return $query;
     }
 
-    private function mapBeasiswaUserTipe($penerimaBeasiswa)
+    public function mapBeasiswaUserTipe($penerimaBeasiswa)
     {
         return $penerimaBeasiswa->map(function ($item) {
             $jenis = $item->beasiswa->jenis_beasiswa;
@@ -138,6 +138,41 @@ class BeasiswaController extends Controller
     {
         $beasiswa = Beasiswa::findOrFail($id);
         $jurusan = Jurusan::all();
+         // Ambil data syarat, jenjang, benefit, dokumen, dan poster
+        $syarat = $beasiswa->syaratBeasiswa->pluck('syarat')->toArray();
+        $jenjang = $beasiswa->jenjangPendidikan->pluck('jenjang')->toArray();
+        $benefit = $beasiswa->benefitBeasiswa->pluck('benefit')->toArray();
+        $dokumen = $beasiswa->syaratDokumen->pluck('dokumen')->toArray();
+        $poster = $beasiswa->posterBeasiswa->pluck('link_poster')->toArray();
+
+        // Default value untuk status pengajuan dan mahasiswa
+        $checkPengajuan = false;
+        $mhsNIM = null;
+
+        // Cek apakah pengguna sudah login
+        if (Auth::check()) {
+            // Jika sudah login, ambil data user
+            $user = Auth::user();
+
+            // Ambil data mahasiswa berdasarkan user_id
+            $mhsNIM = Mahasiswa::where('user_id', $user->id)->first();
+
+            // Cek apakah mahasiswa sudah mengajukan beasiswa
+            $checkPengajuan = $mhsNIM ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)->exists() : false;
+        }
+
+        // Return view dengan data yang sudah dipersiapkan
+        return view('pages.Beasiswa.detail-beasiswa', [
+            'beasiswa' => $beasiswa,
+            'id' => $id,
+            'syarat' => $syarat,
+            'jenjang' => $jenjang,
+            'benefit' => $benefit,
+            'dokumen' => $dokumen,
+            'poster' => $poster,
+            'isMengajukan' => $checkPengajuan,
+            'isMhs' => $mhsNIM
+        ]);
         return view('pages.Beasiswa.detail-beasiswa-eksternal', compact('beasiswa', 'jurusan'));
     }
 

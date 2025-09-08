@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->enum('jenis_kelamin', ['Pria', 'Wanita'])->nullable();
             $table->string('email_verification_token')->nullable();
-            $table->string('foto')->nullable();
+            $table->text('foto')->nullable();
             $table->string('password'); // Menambahkan kolom password
             $table->boolean('emailVerif')->default(false); // Menambahkan kolom emailVerif dengan nilai default false
+            $table->boolean('isActive')->default(false);
             $table->timestamps();
         });
 

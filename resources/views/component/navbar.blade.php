@@ -16,6 +16,31 @@
         background-color: white;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+
+    .btn-logout {
+        background-color: #d33 !important; /* merah */
+        color: white !important;
+        border-radius: 6px;
+        padding: 8px 16px;
+        border: none;
+        margin-right: 1rem;
+    }
+
+    .btn-logout:hover {
+        background-color: #b71c1c !important;
+    }
+
+    .btn-cancel {
+        background-color: #3085d6 !important; /* biru */
+        color: white !important;
+        border-radius: 6px;
+        padding: 8px 16px;
+        border: none;
+    }
+
+    .btn-cancel:hover {
+        background-color: #2563eb !important;
+    }
 </style>
 <aside
     class="max-w-62.5 h-screen ease-nav-brand z-990 fixed inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent">
@@ -216,7 +241,7 @@
                 </button>
             </form>
         </li>
-        
+
         @else
         <!-- Login Button -->
         <li class="mt-0.5 w-full">
@@ -282,7 +307,7 @@
                             <!-- fixed-plugin-button-nav  -->
                         </a>
                     </li>
-                    
+
                     <!-- notifications -->
                     <li class="relative flex items-center pr-2">
                         <p class="hidden transform-dropdown-show"></p>
@@ -291,12 +316,12 @@
                             <i class="cursor-pointer fa fa-bell"></i>
                             <!-- Tampilkan titik merah jika ada notifikasi yang belum dibaca -->
                             @if(isset($notificationData) && $notificationData->where('read', false)->count() > 0)
-                            
+
                                 <span class="absolute right-0 top-0 w-2 h-2 bg-red-500 rounded-full"></span>
                                 @if(isset($notificationData) && $notificationData->where('read', true)->count() > 0)
-                            
+
                                 <span></span>
-                            
+
                                 @endif
                             @endif
                         </a>
@@ -344,6 +369,31 @@
             </div>
         </div>
     </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('logout-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Yakin logout?',
+                text: "Anda akan keluar dari sesi ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, logout',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    confirmButton: 'btn-logout',
+                    cancelButton: 'btn-cancel'
+                },
+                buttonsStyling: false // supaya pakai CSS kita sendiri
+            })
+            .then((result) => {
+                            if (result.isConfirmed) {
+                                this.submit();
+                            }
+                        });
+                    });
+    </script>
 
     <script>
         // Ambil semua tautan navigasi
@@ -402,29 +452,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             const dropdownTrigger = document.querySelector('[dropdown-trigger]');
             const dropdownMenu = document.querySelector('[dropdown-menu]');
-            
+
             if (dropdownTrigger && dropdownMenu) {
                 // Function to handle dropdown visibility
                 function toggleDropdown(event) {
                     event.stopPropagation();
-                    
+
                     const isExpanded = dropdownTrigger.getAttribute('aria-expanded') === 'true';
-                    
+
                     // Toggle dropdown state
                     dropdownTrigger.setAttribute('aria-expanded', !isExpanded);
                     dropdownMenu.style.opacity = isExpanded ? '0' : '1';
                     dropdownMenu.style.pointerEvents = isExpanded ? 'none' : 'auto';
-                    
+
                     // Position the dropdown properly
                     if (!isExpanded) {
                         const triggerRect = dropdownTrigger.getBoundingClientRect();
                         dropdownMenu.style.right = '0';
                     }
                 }
-                
+
                 // Add click event listener to the trigger
                 dropdownTrigger.addEventListener('click', toggleDropdown);
-                
+
                 // Close dropdown when clicking outside
                 document.addEventListener('click', function(event) {
                     if (!dropdownTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
@@ -434,17 +484,17 @@
                     }
                 });
             }
-            
+
             // Improved markAsRead function
             window.markAsRead = function(element) {
                 const notificationId = element.closest('li').getAttribute('data-id');
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                
+
                 // Normalize the URL path to handle multiple slashes
                 const baseUrl = window.location.origin;
                 const normalizedPath = '/notifications/mark-as-read/' + notificationId;
                 const fullUrl = baseUrl + normalizedPath;
-                
+
                 fetch(fullUrl, {
                     method: 'POST',
                     headers: {
@@ -461,14 +511,14 @@
                         if (redDot) {
                             redDot.remove();
                         }
-                        
+
                         // Check and remove bell icon dot if no unread notifications
                         const unreadDots = document.querySelectorAll('li span.bg-red-500');
                         const bellIconDot = document.querySelector('a[dropdown-trigger] > span.bg-red-500');
                         if (unreadDots.length === 0 && bellIconDot) {
                             bellIconDot.remove();
                         }
-                        
+
                         // Refresh notification list
                         updateNotificationContent();
                     }
@@ -477,7 +527,7 @@
                     console.error('Error updating notification:', error);
                 });
             };
-            
+
             // Function to update notification content
             function updateNotificationContent() {
                 const notificationContents = document.querySelectorAll('.notification-content');

@@ -20,13 +20,25 @@
         <!-- Attached Files -->
         <div id="fileList" class="w-full mt-4 text-sm text-gray-600">
             <p class="text-center" id="noFilesMessage">Tidak ada file yang terlampir.</p>
+            <p class="text-center mt-2">
+                Silahkan lihat contoh template berikut
+                <a href="{{ asset('assets/files/example.xlsx') }}" target="_blank" class="text-blue-600 underline">
+                    Example.xslsx
+                </a>
+            </p>
+            <p class="text-center mt-2">
+                Pastikan nama beasiswa valid dan telah terdaftar pada sistem
+            </p>
         </div>
 
         <!-- Buttons -->
         <div class="flex flex-row-reverse gap-4 text-center w-full mt-6">
-            <button type="button" class="border border-orange-500 rounded-lg w-28 h-12 hover:bg-orange-500 hover:text-white text-orange-500">
-                Cancel
-            </button>
+            <a href="{{ route('pengumuman-beasiswa.index') }}">
+                <button type="button"
+                    class="border border-orange-500 rounded-lg w-28 h-12 hover:bg-orange-500 hover:text-white text-orange-500">
+                    Cancel
+                </button>
+            </a>
             <button type="submit" class="bg-orange-500 rounded-lg w-28 h-12 text-white hover:bg-orange-600">
                 Import File
             </button>

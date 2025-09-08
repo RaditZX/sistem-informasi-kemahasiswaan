@@ -26,7 +26,8 @@ class User extends Authenticatable
         'user_img',  // Add this for image uploads
         'password',
         'emailVerif',
-        'id'
+        'id',
+        'isActive'
     ];
 
     /**
