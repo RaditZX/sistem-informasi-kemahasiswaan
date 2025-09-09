@@ -200,6 +200,19 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
                 'isActive' => true
             ],
+            [
+                'id'=>16,
+                'nama_depan' => 'Mahasiswa',
+                'nama_belakang' => 'JTK',
+                'email' => 'mahasiswa.jtk@polban.ac.id',
+                'password' => bcrypt('password123'),
+                'emailVerif' => true,
+                'jenis_kelamin' => 'Pria',
+                'foto' => 'example.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+                'isActive' => true
+            ],
         ]);
 
     }

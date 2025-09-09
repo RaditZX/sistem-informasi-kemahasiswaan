@@ -320,18 +320,26 @@ class BeasiswaController extends Controller
         if (isset($nama_dokumen)) {
             $index = 0;
             foreach ($nama_dokumen as $dokumen) {
-                $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
+                if (!empty($dokumen)) {
+                    $existingDokumen = SyaratDokumen::where('dokumen', $dokumen)->first();
 
+                    if (!$existingDokumen) {
+                        // Cek apakah ada URL file yang cocok di indeks ini
+                        if (isset($dokumenUrls[$index])) {
+                            $existingDokumen = SyaratDokumen::create([
+                                'dokumen' => $dokumen,
+                                'link_dokumen' => $dokumenUrls[$index],
+                            ]);
+                        }
+                    }
 
-                if(!$existingDokumen){
-                    $existingDokumen = SyaratDokumen::create([
-                        'dokumen' => $dokumen,
-                        'link_dokumen' => $dokumenUrls[$index],
-                    ]);
-                    $index++;
+                    // Pastikan $existingDokumen benar-benar ada sebelum di-attach
+                    if ($existingDokumen) {
+                        $beasiswa->syaratDokumen()->attach($existingDokumen->id);
+                    }
+                    
+                    $index++; // Pindahkan increment index ke luar blok if
                 }
-
-                $beasiswa->syaratDokumen()->attach($existingDokumen->id);
             }
         }
     }
@@ -395,8 +403,8 @@ class BeasiswaController extends Controller
 
     public function store(Request $request)
     {
+        $validatedData = $this->validateData($request);
         try {
-            $validatedData = $this->validateData($request);
             if ($validatedData instanceof RedirectResponse){
                 return $validatedData;
             }
@@ -413,19 +421,29 @@ class BeasiswaController extends Controller
                     $fileUrls[] = $this->validateURL($existingposters);
                 }
 
-
-                $this->storeDokumen($validatedData['nama_dokumen'], $dokumenUrls, $beasiswa);
+                
+                // $this->storeDokumen($validatedData['nama_dokumen'], $dokumenUrls, $beasiswa);
+                if (isset($validatedData['nama_dokumen'])) {
+                    $this->storeDokumen($validatedData['nama_dokumen'], $dokumenUrls, $beasiswa);
+                }
 
                 // Simpan syarat-syarat beasiswa
                 // $this->storeAttributes($beasiswa, $validatedData['syarat_beasiswa'], 'SyaratBeasiswa', 'syaratBeasiswa', 'syarat');
-                $this->storeSyaratBeasiswa($beasiswa, $validatedData['syarat_beasiswa']);
+                // $this->storeSyaratBeasiswa($beasiswa, $validatedData['syarat_beasiswa']);
+                if (isset($validatedData['syarat_beasiswa'])) {
+                    $this->storeSyaratBeasiswa($beasiswa, $validatedData['syarat_beasiswa']);
+                }
 
                 // Simpan benefit beasiswa
                 // $this->storeAttributes($beasiswa, $validatedData['benefit_beasiswa'], 'BenefitBeasiswa', 'benefitBeasiswa', 'benefit');
-                $this->storeBenefitBeasiswa($beasiswa, $validatedData['benefit_beasiswa']);
-
+                if (isset($validatedData['benefit_beasiswa'])) {
+                    $this->storeBenefitBeasiswa($beasiswa, $validatedData['benefit_beasiswa']);
+                }
                 // Simpan jenjang pendidikan
-                $this->storeJenjang($validatedData['jenjang_pendidikan'], $beasiswa);
+                // $this->storeJenjang($validatedData['jenjang_pendidikan'], $beasiswa);
+                if (isset($validatedData['jenjang_pendidikan'])) {
+                    $this->storeJenjang($validatedData['jenjang_pendidikan'], $beasiswa);
+                }
             }
 
             // upload file
@@ -663,9 +681,9 @@ class BeasiswaController extends Controller
     public function update(Request $request, string $id)
     {
         // dd($request);
+        $validatedData = $this->validateEditData($request);
         try {
             // dd($request->all());
-            $validatedData = $this->validateEditData($request);
             if ($validatedData instanceof RedirectResponse){
                 return $validatedData;
             }
@@ -963,7 +981,11 @@ class BeasiswaController extends Controller
         'tanggal_berakhir.date' => 'Tanggal berakhir harus berupa tanggal yang valid.',
         'tanggal_berakhir.after' => 'Tanggal berakhir harus setelah tanggal mulai.',
         'poster.required' => 'Poster Beasiswa wajib ada.',
-        'poster.max' => 'Poster Beasiswa tidak boleh lebih dari 3.'
+        'poster.max' => 'Poster Beasiswa tidak boleh lebih dari 3.',
+        'syarat_beasiswa.required_if' => 'Syarat beasiswa wajib diisi untuk beasiswa internal.',
+        'nama_dokumen.required_if' => 'Nama dokumen wajib diisi untuk beasiswa internal.',
+        'benefit_beasiswa.required_if' => 'Benefit beasiswa wajib diisi untuk beasiswa internal.',
+        'jenjang_pendidikan.required_if' => 'Jenjang pendidikan wajib diisi untuk beasiswa internal.'
     ];
 
     private $validation_rules = [
@@ -975,13 +997,13 @@ class BeasiswaController extends Controller
         'sumber_beasiswa' => 'required|string|max:255',
         'tanggal_mulai' => 'required|date|before:tanggal_berakhir',
         'tanggal_berakhir' => 'required|date|after:tanggal_mulai',
-        'syarat_beasiswa' => 'array',
+        'syarat_beasiswa' => 'required_if:tipe_beasiswa,internal|array',
         'syarat_beasiswa.*' => 'string|nullable',
-        'nama_dokumen' => 'array',
+        'nama_dokumen' => 'required_if:tipe_beasiswa,internal|array',
         'nama_dokumen.*' => 'nullable|string',
-        'benefit_beasiswa' => 'array',
+        'benefit_beasiswa' => 'required_if:tipe_beasiswa,internal|array',
         'benefit_beasiswa.*' => 'string|max:255|nullable',
-        'jenjang_pendidikan' => 'array',
+        'jenjang_pendidikan' => 'required_if:tipe_beasiswa,internal|array',
         'jenjang_pendidikan.*' => 'string|max:100|nullable',
         'poster' => 'required|array|max:3',
         'poster.*' => 'required|file|mimes:jpeg,png,jpg',
