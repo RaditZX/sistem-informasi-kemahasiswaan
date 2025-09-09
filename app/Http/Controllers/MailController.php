@@ -48,7 +48,7 @@ class MailController extends Controller
     }
 
 
-    public function mahasiswaPengajuanMessage(string $nim, int $id)
+    public function mahasiswaPengajuanMessage(string $nim, string $id)
     {
         $bs = new BeasiswaController();
         $beasiswaData = $bs->getBeasiswaDataBaseOnBeasiswaId($id);
@@ -66,7 +66,7 @@ class MailController extends Controller
         ];
     }
 
-    public function reviewerPengajuanMessage(string $nim, int $id)
+    public function reviewerPengajuanMessage(string $nim, string $id)
     {
         $bs = new BeasiswaController();
         $beasiswaData = $bs->getBeasiswaDataBaseOnBeasiswaId($id);

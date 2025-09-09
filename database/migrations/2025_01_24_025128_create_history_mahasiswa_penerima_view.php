@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('history_mahasiswa_penerima', function (Blueprint $table) {
-            $table->id(); // Auto-incrementing ID for the primary key
+            $table->uuid('id')->primary(); // UUID as primary key; // Auto-incrementing ID for the primary key
             $table->string('nim'); // NIM (student identification)
             $table->string('nama_mahasiswa'); // Nama Mahasiswa (student name)
             $table->string('nama_prodi'); // Nama Prodi (program name)

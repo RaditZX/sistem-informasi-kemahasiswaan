@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('beasiswa', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary(); // UUID as primary key
             $table->string('nama_beasiswa');
             $table->text('deskripsi');
             $table->enum('tipe_beasiswa',['kipk','internal','eksternal']);
@@ -29,7 +29,7 @@ return new class extends Migration
 
         // Table untuk syarat_beasiswa (pivot table)
         Schema::create('syarat_beasiswa', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary(); // UUID as primary key
             $table->string('syarat');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -37,7 +37,7 @@ return new class extends Migration
 
         // Table untuk benefit_beasiswa (pivot table)
         Schema::create('benefit_beasiswa', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary(); // UUID as primary key
             $table->string('benefit');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -45,7 +45,7 @@ return new class extends Migration
 
         // Table untuk syarat_dokumen (pivot table)
         Schema::create('syarat_dokumen', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary(); // UUID as primary key
             $table->string('dokumen');
             $table->text('link_dokumen');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -53,7 +53,7 @@ return new class extends Migration
         });
 
         Schema::create('poster_beasiswa', function (Blueprint $table) {
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->uuid('beasiswa_id');
             $table->text('link_poster');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -63,8 +63,7 @@ return new class extends Migration
 
         // Table untuk jenjang_pendidikan ()
         Schema::create('jenjang_pendidikan', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->uuid('beasiswa_id');
             $table->string('jenjang');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -74,8 +73,8 @@ return new class extends Migration
 
         // Tabel pivot untuk beasiswa dan benefit_beasiswa
         Schema::create('beasiswa_benefit', function (Blueprint $table) {
-            $table->unsignedBigInteger('beasiswa_id');
-            $table->unsignedBigInteger('benefit_beasiswa_id');
+            $table->uuid('beasiswa_id');
+            $table->uuid('benefit_beasiswa_id');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
@@ -85,8 +84,8 @@ return new class extends Migration
 
         // Tabel pivot untuk beasiswa dan syarat_dokumen
         Schema::create('beasiswa_syarat_dokumen', function (Blueprint $table) {
-            $table->unsignedBigInteger('beasiswa_id');
-            $table->unsignedBigInteger('syarat_dokumen_id');
+            $table->uuid('beasiswa_id');
+            $table->uuid('syarat_dokumen_id');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
@@ -96,8 +95,8 @@ return new class extends Migration
 
         // Tabel pivot untuk beasiswa dan syarat_beasiswa
         Schema::create('beasiswa_syarat_beasiswa', function (Blueprint $table) {
-            $table->unsignedBigInteger('beasiswa_id');
-            $table->unsignedBigInteger('syarat_beasiswa_id');
+            $table->uuid('beasiswa_id');
+            $table->uuid('syarat_beasiswa_id');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 
@@ -107,8 +106,8 @@ return new class extends Migration
 
         // Weak Table untuk link beasiswwa
         Schema::create('link_beasiswa', function (Blueprint $table){
-            $table->id();
-            $table->unsignedBigInteger('beasiswa_id')->unique();
+            $table->uuid('id')->primary(); // UUID as primary key
+            $table->uuid('beasiswa_id');
             $table->string('link_beasiswa');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));

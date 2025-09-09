@@ -84,9 +84,9 @@ class PengajuanBeasiswaController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error creating Pengajuan Beasiswa: {$e->getMessage()}", ['exception' => $e]);
-
+            dd($e->getMessage());
             return redirect()->route('pengajuan.create', ['id' => $id])
-                ->with('error', 'Failed to create Beasiswa. Please try again.');
+                ->with('error', 'Failed to create Beasiswa. Please try again.'. $e->getMessage());
         }
     }
 
@@ -197,12 +197,13 @@ class PengajuanBeasiswaController extends Controller
             ->select(
                 'beasiswa.*',
                 'users.nama_depan',
+                'users.nama_belakang',
                 'pengajuan_beasiswa.id',
                 'pengajuan_beasiswa.nim',
                 'pengajuan_beasiswa.status',
                 'pengajuan_beasiswa.komentar',
                 'pengajuan_beasiswa.tanggal_pengajuan',
-                'kode_status.isi_status'
+                'kode_status.isi_status',
             )
             ->where('pengajuan_beasiswa.id', $id)
             ->first();
@@ -507,7 +508,7 @@ class PengajuanBeasiswaController extends Controller
         ]);
     }
 
-    private function processDokumenUpload(Request $request, array $dokumen, int $pengajuanId)
+    private function processDokumenUpload(Request $request, array $dokumen, string $pengajuanId)
     {
 
         $fileController = new FileController();

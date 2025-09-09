@@ -17,7 +17,6 @@ class BeasiswaSeeder extends Seeder
 
         // Beasiswa LPDP
         $beasiswa1 = Beasiswa::create([
-            'id' => 1,
             'nama_beasiswa' => 'Beasiswa LPDP',
             'deskripsi' => 'Beasiswa Lembaga Pengelola Dana Pendidikan (LPDP)...',
             'tipe_beasiswa' => 'eksternal',
@@ -56,7 +55,6 @@ class BeasiswaSeeder extends Seeder
 
         // Beasiswa Bidikmisi
         $beasiswa2 = Beasiswa::create([
-            'id' => 2,
             'nama_beasiswa' => 'Beasiswa Bidikmisi',
             'deskripsi' => 'Beasiswa untuk mahasiswa kurang mampu namun berprestasi.',
             'tipe_beasiswa' => 'internal',
@@ -95,7 +93,6 @@ class BeasiswaSeeder extends Seeder
 
         // Beasiswa Prestasi Nasional
         $beasiswa3 = Beasiswa::create([
-            'id' => 3,
             'nama_beasiswa' => 'Beasiswa Prestasi Nasional',
             'deskripsi' => 'Beasiswa untuk mahasiswa dengan prestasi akademik dan non-akademik terbaik.',
             'tipe_beasiswa' => 'eksternal',

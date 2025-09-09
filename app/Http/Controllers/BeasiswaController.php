@@ -25,7 +25,7 @@ use Illuminate\Support\Str;
 
 class BeasiswaController extends Controller
 {
-    public function getBeasiswaDataBaseOnBeasiswaId(int $id){
+    public function getBeasiswaDataBaseOnBeasiswaId(string $id){
         return Beasiswa::findOrFail($id);
 
     }
@@ -107,7 +107,7 @@ class BeasiswaController extends Controller
 
     public function mapBeasiswaUserTipe($penerimaBeasiswa)
     {
-        return $penerimaBeasiswa->map(function ($item) {
+        return collect($penerimaBeasiswa)->map(function ($item) {
             $jenis = $item->beasiswa->jenis_beasiswa;
             $createdAt = $item->created_at;
 
@@ -262,10 +262,8 @@ class BeasiswaController extends Controller
 
     private function storeBeasiswa(array $data)
     {
-        $lastId = DB::table('beasiswa')->max('id');
         // Simpan data beasiswa ke database dan dapatkan objek Beasiswa
         $beasiswa = Beasiswa::create([
-            'id'=> $lastId ? $lastId + 1 : 1,
             'nama_beasiswa' => $data['nama_beasiswa'],
             'deskripsi' => $data['deskripsi'],
             'jenis_beasiswa' => $data['jenis_beasiswa'],
@@ -337,7 +335,7 @@ class BeasiswaController extends Controller
                     if ($existingDokumen) {
                         $beasiswa->syaratDokumen()->attach($existingDokumen->id);
                     }
-                    
+
                     $index++; // Pindahkan increment index ke luar blok if
                 }
             }
@@ -421,7 +419,7 @@ class BeasiswaController extends Controller
                     $fileUrls[] = $this->validateURL($existingposters);
                 }
 
-                
+
                 // $this->storeDokumen($validatedData['nama_dokumen'], $dokumenUrls, $beasiswa);
                 if (isset($validatedData['nama_dokumen'])) {
                     $this->storeDokumen($validatedData['nama_dokumen'], $dokumenUrls, $beasiswa);
@@ -495,11 +493,8 @@ class BeasiswaController extends Controller
 
         $fileUrls = $this->handleFileUpload($request, 'poster', 'poster');
         $dokumenUrls = $this->handleFileUpload($request, 'dokumen_file', 'dokumen');
-
-        $lastId = DB::table('beasiswa')->max('id');
         // Simpan data beasiswa ke database dan dapatkan objek Beasiswa
         $beasiswa = Beasiswa::create([
-            'id'=> $lastId ? $lastId + 1 : 1,
             'nama_beasiswa' => $validatedData['nama_beasiswa'],
             'deskripsi' => $validatedData['deskripsi'],
             'jenis_beasiswa' => $validatedData['jenis_beasiswa'],

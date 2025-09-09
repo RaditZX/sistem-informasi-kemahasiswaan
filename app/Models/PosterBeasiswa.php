@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class PosterBeasiswa extends Model
 {
@@ -12,7 +13,6 @@ class PosterBeasiswa extends Model
     protected $table = 'poster_beasiswa';
 
     protected $fillable = ['beasiswa_id', 'link_poster'];
-
     protected $primaryKey = ['beasiswa_id', 'link_poster'];
     public $incrementing = false;
 

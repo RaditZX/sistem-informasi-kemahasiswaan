@@ -18,9 +18,9 @@ return new class extends Migration
         });
 
         Schema::create('pengajuan_beasiswa', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary(); // UUID as primary key;
             $table->string("nim",9);
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->uuid('beasiswa_id');
             $table->date('tanggal_pengajuan');
             $table->foreignId('status')->constrained('kode_status');
             $table->text('komentar')->nullable();
@@ -32,9 +32,8 @@ return new class extends Migration
         });
 
         Schema::create('dokumen', function(Blueprint $table){
-            $table->id();
             $table->string('kode_dokumen')->primary();
-            $table->unsignedBigInteger("id_pengajuan_beasiswa");
+            $table->uuid("id_pengajuan_beasiswa");
             $table->string("nama_dokumen");
             $table->text("link_dokumen");
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

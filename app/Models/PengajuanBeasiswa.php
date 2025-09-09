@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class PengajuanBeasiswa extends Model
 {
@@ -14,6 +15,19 @@ class PengajuanBeasiswa extends Model
 
     // Tentukan kolom yang bisa diisi secara massal
     protected $fillable = ['beasiswa_id','nim','tanggal_pengajuan','status', 'komentar'];
+
+    protected $keyType = 'string'; // UUID disimpan sebagai string
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
 
 
     public function Beasiswa()

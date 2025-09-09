@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penerima_beasiswa', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary(); // UUID as primary key;
             $table->string('nim',9);
-            $table->unsignedBigInteger('beasiswa_id');
+            $table->uuid('beasiswa_id');
             $table->timestamps();
 
             $table->foreign('beasiswa_id')->references('id')->on('beasiswa')->onDelete('cascade');

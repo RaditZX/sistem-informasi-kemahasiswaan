@@ -12,6 +12,8 @@ class Notifikasi extends Model
     // Jika nama tabel berbeda dari nama model, tentukan nama tabelnya
     protected $table = 'notifikasi';
 
+
+
     // Tentukan kolom mana saja yang dapat diisi (mass assignable)
     protected $fillable = [
         'user_id',

@@ -13,9 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('notifikasi', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // UUID as primary key;
             $table->integer("user_id");
-            $table->integer("id_pengajuan_beasiswa");
+            $table->uuid("id_pengajuan_beasiswa");
             $table->integer("status");
             $table->boolean("read")->default(false); // Menambahkan kolom read
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
@@ -28,7 +28,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): voids
+    public function down(): void
     {
         Schema::dropIfExists('notifikasi');
     }

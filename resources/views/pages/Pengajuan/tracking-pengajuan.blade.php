@@ -99,13 +99,10 @@
                                 <div class="ml-4 min-w-0 flex-1">
                                     <div class="text-sm font-medium text-gray-900">{{ $step->isi_status }}</div>
                                     @if($dataPengajuan->status == 11)
-                                        @if($index == ($dataPengajuan->status - 1))
-                                            <div class="text-xs text-red-600 mt-1 font-medium">Ditolak</div>
-                                        @elseif($index < ($dataPengajuan->status - 2))
-                                            <div class="text-xs text-green-600 mt-1">Completed</div>
-                                        @else
-                                            <div class="text-xs text-gray-500 mt-1">Pending</div>
-                                        @endif
+
+                                        <div class="text-xs text-red-600 mt-1 font-medium">Ditolak</div>
+
+
                                     @elseif(in_array($dataPengajuan->status, [3, 5, 7, 9]))
                                         @if($index == ($dataPengajuan->status -1))
                                             <div class="text-xs text-yellow-600 mt-1 font-medium">Direvisi</div>
