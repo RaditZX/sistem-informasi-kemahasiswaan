@@ -34,6 +34,10 @@ class PenerimaBeasiswaController extends Controller
             // Jika pengguna sudah login
             $user = Auth::user();
 
+            $isStaff = Reviewer::where('user_id', $user->id)
+                    ->where('role_id', 1)
+                    ->exists();
+
             // Ambil data mahasiswa berdasarkan user_id
             $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
 
@@ -58,7 +62,8 @@ class PenerimaBeasiswaController extends Controller
             'beasiswa',
             'penerimaBeasiswa',
             'beasiswaUserTipe',
-            'jurusan'
+            'jurusan',
+            'isStaff'
         ));
     }
 

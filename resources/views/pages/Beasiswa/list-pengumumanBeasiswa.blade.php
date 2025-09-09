@@ -1,7 +1,7 @@
 @extends('layouts.filter')
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'Daftar Beasiswa', 'id' => null])
+    @include('component.navbar', ['path' => 'Pengumuman Beasiswa', 'id' => null])
 
     <!-- Hero Section -->
     <div class="bg-gradient-to-br from-orange-600 via-yellow-700 to-yellow-700 text-white">
@@ -48,6 +48,14 @@
                     <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                         {{ count($beasiswa) }} Program
                     </span>
+                    @if($isStaff)
+                    <a href="{{ route('beasiswa.import-data-beasiswa') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold text-sm rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-orange-500 focus:ring-opacity-30 min-w-[140px]">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                        </svg>
+                        <span>Import Data</span>
+                    </a>
+                    @endif
                 </div>
 
                 <div class="flex items-center space-x-3">

@@ -35,21 +35,44 @@ class FileController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = rtrim($request->path, '/');
+        $path = trim($request->path, '/'); // hapus slash di awal/akhir
+        $isPublic = $path === 'poster';    // poster disimpan ke public
 
-        // Simpan file ke lokasi private (tidak bisa diakses langsung)
-        $storedPath = $file->storeAs('private/' . $path, $file->getClientOriginalName());
+        // Tentukan folder tujuan (public / private)
+        $storagePath = ($isPublic ? 'public/' : 'private/') . $path;
 
-        // Enkripsi path untuk keamanan
+        // Simpan file dengan nama asli
+        $storedPath = $file->storeAs($storagePath, $file->getClientOriginalName());
+
+        // Enkripsi path agar tidak bisa ditebak
         $encryptedPath = encrypt($storedPath);
 
-        // Buat URL untuk mengakses file melalui route getFile
-        $url = route('getFile', ['path' => $encryptedPath]);
+        // Tentukan URL berdasarkan lokasi penyimpanan
+        $routeName = $isPublic ? 'getFilePublic' : 'getFile';
+        $url = route($routeName, ['path' => $encryptedPath]);
 
         return response()->json([
             'message' => 'File uploaded successfully',
-            'url' => $url,
+            'url'     => $url,
+            'isPublic'=> $isPublic,
         ]);
+    }
+
+
+    public function getFilePublic(Request $request, $path)
+    {
+        $decodedPath = decrypt($path);
+
+        // Pastikan hanya file dari folder public/ yang boleh diakses
+        if (!str_starts_with($decodedPath, 'public/')) {
+            abort(403, 'Unauthorized access to private file');
+        }
+
+        if (!LaravelStorage::exists($decodedPath)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->file(storage_path('app/' . $decodedPath));
     }
 
 
