@@ -70,7 +70,7 @@
                                             <div class="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center animate-pulse">
                                                 <i class="fas fa-clock text-white text-sm"></i>
                                             </div>
-                                        @elseif($index < $dataPengajuan->status - 2)
+                                        @elseif($index < $dataPengajuan->status - 1)
                                             <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
                                                 <i class="fas fa-check text-white text-sm"></i>
                                             </div>

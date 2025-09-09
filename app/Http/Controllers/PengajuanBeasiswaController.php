@@ -66,7 +66,7 @@ class PengajuanBeasiswaController extends Controller
 
         if ($this->hasExistingSubmission($mhs->nim)) {
             return redirect()->route('pengajuan.create', ['id' => $id])
-                ->with('failed', 'Tidak Bisa Mengajukan Beasiswa Lagi.');
+                ->with('error', 'Tidak Bisa Mengajukan Beasiswa Lagi.');
         }
 
         DB::beginTransaction();
@@ -495,7 +495,7 @@ class PengajuanBeasiswaController extends Controller
 
     private function hasExistingSubmission(string $nim): bool
     {
-        return PengajuanBeasiswa::where('nim', $nim)->exists();
+        return PengajuanBeasiswa::where('nim', $nim)->where('status', '!=', 11)->exists();
     }
 
     private function createPengajuanBeasiswa(string $nim, string $beasiswaId)

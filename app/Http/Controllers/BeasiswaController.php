@@ -631,7 +631,12 @@ class BeasiswaController extends Controller
             $mhsNIM = Mahasiswa::where('user_id', $user->id)->first();
 
             // Cek apakah mahasiswa sudah mengajukan beasiswa
-            $checkPengajuan = $mhsNIM ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)->exists() : false;
+            $checkPengajuan = $mhsNIM
+                            ? PengajuanBeasiswa::where('nim', $mhsNIM->nim)
+                                            ->where('status', '!=', 11)
+                                            ->exists()
+                            : false;
+
         }
 
         // Return view dengan data yang sudah dipersiapkan
