@@ -161,7 +161,7 @@
                                 <div class="bg-white/20 backdrop-blur rounded-xl p-4">
                                     <p class="text-sm font-medium mb-1">Sisa Waktu</p>
                                     <p class="text-2xl font-bold">
-                                        {{ \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($beasiswa->tanggal_berakhir)) }} Hari
+                                        {{ ceil(\Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($beasiswa->tanggal_berakhir))) }} Hari
                                     </p>
                                 </div>
                             </div>
