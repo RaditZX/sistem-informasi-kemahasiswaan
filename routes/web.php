@@ -106,7 +106,9 @@ Route::middleware('auth')->group(function () {
 // PUBLIC ROUTES ==========================================================================
 Route::get('/madding', [MaddingController::class, 'index'])->name('public.madding');
 Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
-Route::get('/beasiswa/{id}',[BeasiswaController::class,'show'])->name('beasiswa.show');
+Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])
+     ->where('id', '[0-9]+') // <-- Tambahkan baris ini
+     ->name('beasiswa.show');
 Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
 Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
 Route::redirect('/', '/madding');

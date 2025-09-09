@@ -119,44 +119,44 @@ class PengajuanBeasiswaController extends Controller
     /**
      * Update the specified Pengajuan Beasiswa.
      */
-   public function edit(Request $request, string $id)
-{
-    $dokumen = $this->getBeasiswaDocuments(
-        $this->getBeasiswaIdByPengajuan($id)
-    );
+    public function edit(Request $request, string $id)
+    {
+        $dokumen = $this->getBeasiswaDocuments(
+            $this->getBeasiswaIdByPengajuan($id)
+        );
 
-    // build rules yang lebih fleksibel (nullable bukan required)
-    $rules = $this->buildValidationRules($dokumen);
+        // build rules yang lebih fleksibel (nullable bukan required)
+        $rules = $this->buildValidationRules($dokumen);
 
-    try {
-        $validated = $request->validate($rules);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        // kalau mau debug error
-        return back()->withErrors($e->errors())->withInput();
+        try {
+            $validated = $request->validate($rules);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // kalau mau debug error
+            return back()->withErrors($e->errors())->withInput();
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $dokumenPengajuan = $this->getPengajuanDokumen($id);
+            $this->updateDokumen($request, $dokumen, $dokumenPengajuan);
+
+            DB::commit();
+
+            return redirect()
+                ->route('pengajuan.show', ['id' => $id])
+                ->with('success', 'Documents updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error updating documents for Pengajuan ID: {$id}", [
+                'exception' => $e,
+            ]);
+
+            return redirect()
+                ->route('pengajuan.show', ['id' => $id])
+                ->with('error', 'Failed to update documents. Please try again later.');
+        }
     }
-
-    DB::beginTransaction();
-
-    try {
-        $dokumenPengajuan = $this->getPengajuanDokumen($id);
-        $this->updateDokumen($request, $dokumen, $dokumenPengajuan);
-
-        DB::commit();
-
-        return redirect()
-            ->route('pengajuan.show', ['id' => $id])
-            ->with('success', 'Documents updated successfully.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error("Error updating documents for Pengajuan ID: {$id}", [
-            'exception' => $e,
-        ]);
-
-        return redirect()
-            ->route('pengajuan.show', ['id' => $id])
-            ->with('error', 'Failed to update documents. Please try again later.');
-    }
-}
 
 
 
@@ -410,15 +410,13 @@ class PengajuanBeasiswaController extends Controller
             ->get();
     }
 
+    // =================================================================
+    // == FUNGSI YANG DIPERBARUI ADA DI BAWAH INI ==
+    // =================================================================
     private function getStaffPengajuan($roleId)
     {
-        $statusCode = match ($roleId) {
-            1 => [1, 2, 3],
-            3 => [6, 7],
-            default => [8, 9],
-        };
-
-        return PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
+        // 1. Mulai membangun query dasar tanpa filter status
+        $query = PengajuanBeasiswa::join('beasiswa', 'pengajuan_beasiswa.beasiswa_id', '=', 'beasiswa.id')
             ->join('mahasiswa', 'pengajuan_beasiswa.nim', '=', 'mahasiswa.nim')
             ->join('users', 'mahasiswa.user_id', '=', 'users.id')
             ->select(
@@ -427,10 +425,26 @@ class PengajuanBeasiswaController extends Controller
                 'pengajuan_beasiswa.status',
                 'pengajuan_beasiswa.tanggal_pengajuan',
                 'pengajuan_beasiswa.id as id_pengajuan'
-            )
-            ->whereIn('pengajuan_beasiswa.status', $statusCode)
-            ->get();
+            );
+
+        // 2. Tambahkan kondisi: terapkan filter status HANYA JIKA roleId BUKAN 4 (WD3)
+        if ($roleId != 4) {
+            $statusCode = match ($roleId) {
+                1 => [1, 2, 3],       // Staff Kemahasiswaan
+                3 => [6, 7],           // Koordinator Layanan Eksternal
+                default => [8, 9],     // Role lain (selain 1, 3, dan 4)
+            };
+            $query->whereIn('pengajuan_beasiswa.status', $statusCode);
+        }
+        // Jika role_id adalah 4, kondisi di atas akan dilewati,
+        // sehingga tidak ada filter 'whereIn' yang diterapkan.
+
+        // 3. Eksekusi query dan kembalikan hasilnya
+        return $query->get();
     }
+    // =================================================================
+    // == AKHIR DARI FUNGSI YANG DIPERBARUI ==
+    // =================================================================
 
     private function getMahasiswaByUserId(int $userId)
     {

@@ -17,7 +17,7 @@ class MahasiswaSeeder extends Seeder
         DB::table('mahasiswa')->insert([
             [
                 'user_id' => 16,
-                'nim' => '231511062',
+                'nim' => '231511099',
                 'semester' => 3,
                 'no_hp' => '08812345678',
                 'tgl_lahir' => '2001-07-20',
@@ -25,40 +25,7 @@ class MahasiswaSeeder extends Seeder
                 'angkatan' => 2023,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-            [
-                'user_id' => 17,
-                'nim' => '987654321',
-                'semester' => 3,
-                'no_hp' => '213313123',
-                'tgl_lahir' => '2001-07-20',
-                'prodi_id' => 24,
-                'angkatan' => 2023,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'user_id' => 19,
-                'nim' => '982344321',
-                'semester' => 3,
-                'no_hp' => '23213123',
-                'tgl_lahir' => '2001-07-20',
-                'prodi_id' => 24,
-                'angkatan' => 2023,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'user_id' => 20,
-                'nim' => '987324321',
-                'semester' => 3,
-                'no_hp' => '213122123',
-                'tgl_lahir' => '2001-07-20',
-                'prodi_id' => 24,
-                'angkatan' => 2023,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            ]
         ]);
     }
 }

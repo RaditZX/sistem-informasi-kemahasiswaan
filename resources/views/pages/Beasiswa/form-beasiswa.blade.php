@@ -2,7 +2,23 @@
 
 @section('content')
     @include('component.navbar',['path'=>"Tambah Beasiswa",'id'=>null])
+@if ($errors->any())
+    <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded" role="alert">
+        <strong class="font-bold">Terjadi Kesalahan!</strong>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
+@if (session('success'))
+    <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded" role="alert">
+        <strong class="font-bold">Sukses!</strong>
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+@endif
 @if ($beasiswa != null)
     <div class="max-w-10xl mx-auto py-6 sm:px-6 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
@@ -270,6 +286,9 @@
                                 <input type="file" id="poster_beasiswa" name="input_poster[]" class="hidden" accept="image/*" multiple onchange="displayFileNamesAndPreview()">
                             </label>
                             @error('poster')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            @error('poster.*')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -585,6 +604,9 @@
                             <input type="file" id="poster_beasiswa" name="poster[]" class="hidden" accept="image/*" multiple onchange="displayFileNamesAndPreview()">
                         </label>
                         @error('poster')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        @error('poster.*')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
