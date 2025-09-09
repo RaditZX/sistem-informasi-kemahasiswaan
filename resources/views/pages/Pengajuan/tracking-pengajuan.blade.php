@@ -1,303 +1,349 @@
 @extends('layouts.main')
 @section('content')
-@include('component.navbar', [
-    'path' => "Tracking Beasiswa > " . $dataPengajuan->nama_beasiswa,
-    'id' => null
-])
+@include('component.navbar', ['path' => 'Tracking Beasiswa', 'id' => $dataPengajuan->nama_beasiswa])
 
-    <div class="wrapper pb-5">
-        <!-- Timeline Section -->
-        <section class="timeline mx-auto py-6 sm:px-6 lg:px-8">
-            <ol class="flex justify-between items-center w-full relative">
+<!-- Header Section -->
+<div class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="py-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ $dataPengajuan->nim . ' ' }}-{{ ' ' . $dataPengajuan->nama_depan . ' ' . $dataPengajuan->nama_belakang }} - {{ $dataPengajuan->nama_beasiswa }}</h1>
+                    <p class="text-gray-600 mt-1">Application Status Tracking</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    @if($dataPengajuan->status == 10)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <i class="fas fa-check-circle mr-1.5"></i>
+                            Approved
+                        </span>
+                    @elseif($dataPengajuan->status == 11)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                            <i class="fas fa-times-circle mr-1.5"></i>
+                            Rejected
+                        </span>
+                    @else
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                            <i class="fas fa-clock mr-1.5"></i>
+                            In Progress
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+
+            <!-- Progress Timeline -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Application Progress</h2>
+
                 @php
-                    $idStatuses = $dataStatus->pluck('id_status'); // Extract 'id_status' values from the collection
-                    $idStatusesArray = $idStatuses->toArray(); // Convert the collection to an array
-                    $whatIndex = array_search($dataPengajuan->status, $idStatusesArray);
+                    $idStatuses = $dataStatus->pluck('id_status');
+                    $idStatusesArray = $idStatuses->toArray();
+                    $currentIndex = array_search($dataPengajuan->status, $idStatusesArray);
+                    $displayStatuses = [0, 1, 3, 5, 7, 9]; // Only show main statuses
                 @endphp
 
-                <!-- Timeline Steps -->
-                @foreach ($dataStatus as $index => $step)
-                    @if (in_array($index, [0, 1, 3, 5, 7, 9]))
-                        <li class="flex flex-col items-center w-full relative">
-                            @if ($dataPengajuan->status == 10)
-                                <!-- Completed Step -->
-                                <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 bg-green-500">
-                                    <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                    </svg>
-                                </span>
-                                <div class="absolute top-1/2 right-0 w-full h-1 bg-green-500 transform -translate-y-4 z-0" style="top: 40px"></div>
-                            @elseif ($dataPengajuan->status == 11)
-                                <!-- Completed Step -->
-                                <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 bg-red-500">
-                                    <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                    </svg>
-                                </span>
-                                <div class="absolute top-1/2 right-0 w-full h-1 bg-red-500 transform -translate-y-4 z-0" style="top: 40px"></div>
-                            @else
-                                @if ($index == $dataPengajuan->status-1)
-                                    <!-- Completed Step -->
-                                    <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 bg-yellow-500">
-                                        <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                        </svg>
-                                    </span>
-                                    <div class="absolute top-1/2 right-0 w-full h-1 bg-yellow-500 transform -translate-y-4 z-0" style="top: 40px"></div>
-                                @elseif ($index < $dataPengajuan->status-1)
-                                    <!-- Completed Step -->
-                                    <span class="flex items-center justify-center w-10 h-10 text-white rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4 {{ ($index == $dataPengajuan->status-2) ? 'bg-yellow-500' : 'bg-green-500' }}">
-                                        <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                        </svg>
-                                    </span>
-                                    <div class="absolute top-1/2 right-0 w-full h-1 {{ ($index == $dataPengajuan->status-2)  ? 'bg-yellow-500' : 'bg-green-500' }} transform -translate-y-4 z-0" style="top: 40px"></div>
-                                @else
-                                    <!-- Upcoming or In-Progress Steps -->
-                                    <span class="flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full lg:h-12 lg:w-12 shrink-0 z-10 mb-4">
-                                        <svg class="w-4 h-4 lg:w-5 lg:h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                        </svg>
-                                    </span>
-                                    <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-300 dark:bg-gray-700 transform -translate-y-4 z-0" style="top: 40px"></div>
+                <div class="relative">
+                    @foreach($dataStatus as $index => $step)
+                        @if(in_array($index + 1, $displayStatuses))
+                            <div class="flex items-start mb-8 last:mb-0 relative">
+                                <!-- Timeline dot -->
+                                <div class="flex-shrink-0 relative z-10">
+                                    @if($dataPengajuan->status == 10)
+                                        <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                                            <i class="fas fa-check text-white text-sm"></i>
+                                        </div>
+                                    @elseif($dataPengajuan->status == 11)
+                                        <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center">
+                                            <i class="fas fa-times text-white text-sm"></i>
+                                        </div>
+                                    @else
+                                        @if($index == $dataPengajuan->status - 1)
+                                            <div class="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center animate-pulse">
+                                                <i class="fas fa-clock text-white text-sm"></i>
+                                            </div>
+                                        @elseif($index < $dataPengajuan->status - 2)
+                                            <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                                                <i class="fas fa-check text-white text-sm"></i>
+                                            </div>
+                                        @else
+                                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                                            </div>
+                                        @endif
+                                    @endif
+                                </div>
+
+                                <!-- Timeline line -->
+                                @if(!$loop->last)
+                                    <div class="absolute left-5 top-10 w-0.5 h-16
+                                        @if($dataPengajuan->status == 10 || $dataPengajuan->status == 11 || $index < $dataPengajuan->status - 1)
+                                            bg-green-300
+                                        @elseif($index == $dataPengajuan->status - 1)
+                                            bg-blue-300
+                                        @else
+                                            bg-gray-200
+                                        @endif">
+                                    </div>
                                 @endif
-                            @endif
-                            <div>
-                                <!-- Step Text with Fixed Max Height and Clipping Overflow -->
-                                <p class="text-center text-sm text-gray-700 px-2 max-w-[8rem] min-h-[4rem] line-clamp-3 overflow-hidden">
-                                    {{ $step->isi_status }}
-                                </p>
-                            </div>
-                        </li>
-                    @endif
-                @endforeach
-            </ol>
-        </section>
 
-        <!-- Timer Section -->
-        <section class="timer my-8">
-            <h1 class="text-center text-xl font-semibold mb-4">ESTIMASI</h1>
-            <div class="timer-block">
-                <div class="mx-auto w-1/2 grid grid-cols-4 justify-items-center items-center mb-4">
-                    <p>Hari</p>
-                    <p>Jam</p>
-                    <p>Menit</p>
-                    <p>Detik</p>
-                </div>
-                <div class="mx-auto w-1/2 grid grid-cols-4 justify-items-center items-center">
-                    <h3 id="days">0</h3>
-                    <h3 id="hours">0</h3>
-                    <h3 id="minutes">0</h3>
-                    <h3 id="seconds">0</h3>
-                </div>
-            </div>
-        </section>
-
-        @if (($dataReviewer == NULL))
-            @if ($dataPengajuan->status == 3 || $dataPengajuan->status == 5 || $dataPengajuan->status == 7 || $dataPengajuan->status == 9)
-            <section class="reminderAlert px-4">
-                <div class="flex items-center p-4 mb-4 text-sm border border-yellow-300 rounded-lg bg-yellow-300  dark:border-yellow-800" role="alert">
-                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                    </svg>
-                    <span class="sr-only">Info</span>
-                    <div>
-                    <span class="font-medium">Revisi Data Pengajuan!</span> Cek komentar untuk mengetahui lebih lanjut
-                    </div>
-                </div>
-            </section>
-            @endif
-        @endif
-
-        <!-- Scholarship Section -->
-        <section class="beasiswa my-8 px-4">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-center bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                <div class="beasiswa-images md:col-span-2 flex justify-center">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEik4McHhDC2otgAFVVxX1_9KI4xqY0KLdkThGiFYjsfN720_z_kIvi2TARm24mA68XO1CbMBSILOHFfy0HIQVO9Hn1qXFxSVfTC54ZaoHKLi6Yj-fd6Lm02syaeQ_Q3nkaGu4LpM6JSk-MwEEzzYqjZMbMNDyQiP8InBNz7sFn00DMJXQQBakiNtx8qBw/s1080/Beasiswa-Creativa-Feed.png"
-                        alt="Beasiswa LKPD" class="rounded-xl w-full h-auto max-w-sm object-cover">
-                </div>
-                <div class="beasiswa-content md:col-span-3 mt-6 md:mt-0">
-                    <h1 class="text-2xl font-semibold mb-4 text-gray-900">{{ $dataPengajuan->nama_beasiswa }}</h1>
-                    <p class="text-gray-700 leading-relaxed">
-                        {{ $dataPengajuan->deskripsi }}
-                    </p>
-                </div>
-            </div>
-        </section>
-        @php
-        $n = 0;
-    @endphp
-        <!-- Accordion Section -->
-        <section class="dokumen my-8 px-4">
-            <h1 class="text-xl font-semibold mb-4">Dokumen yang di ajukan</h1>
-            <div class="space-y-4">
-                @foreach ($documents as $document)
-                    <div class="accordion-item rounded-xl shadow-md overflow-hidden">
-                        <button class="accordion-button flex items-center justify-between w-full p-4 text-left text-gray-900 font-medium focus:outline-none" onclick="toggleAccordion(this)">
-                            <span class="flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                {{ $document->dokumen }}
-                            </span>
-                            <svg class="accordion-icon w-5 h-5 text-gray-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="accordion-content hidden p-4 bg-gray-50 transition-all duration-200 max-h-0 overflow-hidden">
-                            <p class="text-sm text-gray-500 mb-4">Preview for {{ $document->dokumen }}:</p>
-                            <embed src="{{ $dataDokumenPengajuan[$n]->link_dokumen }}" width="100%" height="500" type="application/pdf">
-                            @php
-                                $n += 1;
-                            @endphp
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-                @if ($dataPengajuan->komentar && $dataReviewer != NULL)
-            <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <h3 class="text-sm font-semibold text-gray-700 mb-2">Komentar Terakhir</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                    {{ $dataPengajuan->komentar }}
-                </p>
-            </div>
-        @endif
-
-        </section>
-
-
-
-        @if ($dataReviewer != NULL)
-            <form action="{{ route('pengajuan.update-progress', $dataPengajuan->id) }}" method="POST" class="my-8 px-4">
-                @csrf
-                @method('PATCH')
-
-                @if ($dataPengajuan->status != 11)
-                <div>
-                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Komentar</label>
-                    <textarea id="message" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Tambahkan komentar disini..." name="reviewerComment"></textarea>
-                </div>
-                <div class="mt-4 flex items-center justify-end space-x-2">
-                    <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="reject">Tolak</button>
-                    <button type="submit" class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="revise">Revisi</button>
-                    <button type="submit" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5" name="action" value="approve">Terima</button>
-                </div>
-                @endif
-
-                <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
-                <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
-            </form>
-        @elseif (($dataPengajuan->status <= 1) && ($dataReviewer == NULL))
-            <div class="flex justify-center items-center">
-                <form action="{{ route('pengajuan.batalkan-pengajuan', $dataPengajuan->id)  }}" method="POST" class="my-8 px-4" onsubmit="return confirm('Are you sure you want to delete this?');">
-                    @csrf
-                    @method('DELETE')
-                    <div class="flex flex-col items-center justify-end">
-                        <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Ingin membatalkan pengajuan?</label>
-                        <button type="submit" class="btn btn-danger text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Batalkan</button>
-                    </div>
-                </form>
-                <div class="flex flex-col items-center justify-center">
-                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Ingin mengubah data pengajuan?</label>
-                    <a href="{{ route('pengajuan.show', $dataPengajuan->id)  }}" class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
-                        Edit
-                    </a>
-                </div>
-            </div>
-        @else
-            @if (($dataPengajuan->status == 3 || $dataPengajuan->status == 5 || $dataPengajuan->status == 7 || $dataPengajuan->status == 9) )
-                <div class="px-4">
-                    <h1 class="text-xl font-semibold mb-4">Komentar Revisi</h1>
-                    <p>
-                        @if ($dataPengajuan->komentar)
-                        <section class="reminderAlert">
-                            <div class="flex items-center p-4 mb-4 text-sm border border-yellow-300 rounded-lg  dark:border-yellow-800" role="alert">
-                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                </svg>
-                                <span class="sr-only">Info</span>
-                                <div>
-                                  <p>{{ $dataPengajuan->komentar }}</p>
+                                <!-- Content -->
+                                <div class="ml-4 min-w-0 flex-1">
+                                    <div class="text-sm font-medium text-gray-900">{{ $step->isi_status }}</div>
+                                    @if($dataPengajuan->status == 11)
+                                        @if($index == ($dataPengajuan->status - 1))
+                                            <div class="text-xs text-red-600 mt-1 font-medium">Ditolak</div>
+                                        @elseif($index < ($dataPengajuan->status - 2))
+                                            <div class="text-xs text-green-600 mt-1">Completed</div>
+                                        @else
+                                            <div class="text-xs text-gray-500 mt-1">Pending</div>
+                                        @endif
+                                    @elseif(in_array($dataPengajuan->status, [3, 5, 7, 9]))
+                                        @if($index == ($dataPengajuan->status -1))
+                                            <div class="text-xs text-yellow-600 mt-1 font-medium">Direvisi</div>
+                                        @elseif($index < ($dataPengajuan->status - 2))
+                                            <div class="text-xs text-green-600 mt-1">Completed</div>
+                                        @else
+                                            <div class="text-xs text-gray-500 mt-1">Pending</div>
+                                        @endif
+                                    @else
+                                        @if($index == $dataPengajuan->status - 1)
+                                            <div class="text-xs text-blue-600 mt-1 font-medium">Current Step</div>
+                                        @elseif($index < $dataPengajuan->status - 1)
+                                            <div class="text-xs text-green-600 mt-1">Completed</div>
+                                        @else
+                                            <div class="text-xs text-gray-500 mt-1">Pending</div>
+                                        @endif
+                                    @endif
                                 </div>
                             </div>
-                        </section>
                         @endif
-                    </p>
+                    @endforeach
                 </div>
+            </div>
 
-                <div class="flex flex-col items-center justify-center">
-                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Perbaiki data pengajuan?</label>
-                    <a href="{{ url('/pengajuan-beasiswa/edit/' . $dataPengajuan->id) }}"
-                    class="btn btn-warning rounded-lg bg-yellow-400 hover:bg-yellow-600 focus:ring-4 px-5 py-2.5">
-                    Edit
-                    </a>
-
+            <!-- Revision Alert -->
+            @if($dataReviewer == null && in_array($dataPengajuan->status, [3, 5, 7, 9]))
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-exclamation-triangle text-amber-500 mt-1 mr-3"></i>
+                        <div>
+                            <h3 class="text-sm font-medium text-amber-800">Revision Required</h3>
+                            <p class="text-sm text-amber-700 mt-1">Please check the comments section for revision details.</p>
+                        </div>
+                    </div>
                 </div>
             @endif
-            <div class="flex flex-col items-center justify-end">
-                <p><b>Pengajuan hanya dapat dibatalkan jika masih dalam proses "Diajukan"!</b></p>
+
+            <!-- Documents Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Submitted Documents</h2>
+                <div class="space-y-3">
+                    @php $docIndex = 0; @endphp
+                    @foreach($documents as $document)
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <button class="accordion-toggle w-full px-4 py-3 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                                    onclick="toggleDocument({{ $loop->index }})">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-pdf text-red-500 mr-3"></i>
+                                    <span class="text-sm font-medium text-gray-900">{{ $document->dokumen }}</span>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-400 transform transition-transform document-chevron-{{ $loop->index }}"></i>
+                            </button>
+                            <div class="document-content-{{ $loop->index }} hidden border-t border-gray-200 bg-gray-50 p-4">
+                                <div class="rounded-lg overflow-hidden bg-white">
+                                    <embed src="{{ $dataDokumenPengajuan[$docIndex]->link_dokumen }}"
+                                           width="100%" height="500" type="application/pdf" class="border-0">
+                                </div>
+                            </div>
+                        </div>
+                        @php $docIndex++; @endphp
+                    @endforeach
+                </div>
             </div>
-        @endif
+
+            <!-- Comments Section -->
+            @if($dataPengajuan->komentar && $dataReviewer != null)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Latest Comments</h3>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-gray-700 text-sm leading-relaxed">{{ $dataPengajuan->komentar }}</p>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+
+            <!-- Time Estimation -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">Time Remaining</h3>
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-gray-900" id="days">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wide">Days</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-gray-900" id="hours">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wide">Hours</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-gray-900" id="minutes">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wide">Minutes</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-gray-900" id="seconds">0</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wide">Seconds</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scholarship Info -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="aspect-w-16 aspect-h-9">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEik4McHhDC2otgAFVVxX1_9KI4xqY0KLdkThGiFYjsfN720_z_kIvi2TARm24mA68XO1CbMBSILOHFfy0HIQVO9Hn1qXFxSVfTC54ZaoHKLi6Yj-fd6Lm02syaeQ_Q3nkaGu4LpM6JSk-MwEEzzYqjZMbMNDyQiP8InBNz7sFn00DMJXQQBakiNtx8qBw/s1080/Beasiswa-Creativa-Feed.png"
+                         alt="Beasiswa" class="w-full h-48 object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-semibold text-gray-900 mb-2">{{ $dataPengajuan->nama_beasiswa }}</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">{{ $dataPengajuan->deskripsi }}</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            @if($dataReviewer != null)
+                <!-- Reviewer Actions -->
+                @if($dataPengajuan->status != 11)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Reviewer Actions</h3>
+                        <form action="{{ route('pengajuan.update-progress', $dataPengajuan->id) }}" method="POST" class="space-y-4">
+                            @csrf
+                            @method('PATCH')
+                            <div>
+                                <label for="reviewerComment" class="block text-sm font-medium text-gray-700 mb-2">Comments</label>
+                                <textarea name="reviewerComment" id="reviewerComment" rows="4"
+                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                         placeholder="Add your comments here..."></textarea>
+                            </div>
+                            <div class="flex flex-col space-y-2">
+                                <button type="submit" name="action" value="approve"
+                                        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors">
+                                    <i class="fas fa-check mr-2"></i>Approve
+                                </button>
+                                <button type="submit" name="action" value="revise"
+                                        class="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors">
+                                    <i class="fas fa-edit mr-2"></i>Request Revision
+                                </button>
+                                <button type="submit" name="action" value="reject"
+                                        class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors">
+                                    <i class="fas fa-times mr-2"></i>Reject
+                                </button>
+                            </div>
+                            <input type="hidden" name="role_id" value="{{ $dataReviewer->role_id }}">
+                            <input type="hidden" name="pengajuan_status" value="{{ $dataPengajuan->status }}">
+                        </form>
+                    </div>
+                @endif
+            @else
+                <!-- Applicant Actions -->
+                @if($dataPengajuan->status <= 1)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
+                        <a href="{{ route('pengajuan.show', $dataPengajuan->id) }}"
+                           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors inline-flex items-center justify-center">
+                            <i class="fas fa-edit mr-2"></i>Edit Application
+                        </a>
+                        <form action="{{ route('pengajuan.batalkan-pengajuan', $dataPengajuan->id) }}" method="POST"
+                              onsubmit="return confirm('Are you sure you want to cancel this application?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors">
+                                <i class="fas fa-trash mr-2"></i>Cancel Application
+                            </button>
+                        </form>
+                    </div>
+                @elseif(in_array($dataPengajuan->status, [3, 5, 7, 9]))
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Revision Required</h3>
+                        @if($dataPengajuan->komentar)
+                            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                                <h4 class="text-sm font-medium text-amber-800 mb-2">Revision Comments:</h4>
+                                <p class="text-sm text-amber-700">{{ $dataPengajuan->komentar }}</p>
+                            </div>
+                        @endif
+                        <a href="{{ url('/pengajuan-beasiswa/edit/' . $dataPengajuan->id) }}"
+                           class="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors inline-flex items-center justify-center">
+                            <i class="fas fa-edit mr-2"></i>Fix Application
+                        </a>
+                    </div>
+                @else
+                    <div class="bg-gray-50 rounded-xl border border-gray-200 p-6 text-center">
+                        <i class="fas fa-info-circle text-gray-400 text-2xl mb-3"></i>
+                        <p class="text-gray-600 text-sm">Application can only be cancelled during "Submitted" status.</p>
+                    </div>
+                @endif
+            @endif
+        </div>
     </div>
-@endsection
+</div>
 
 <script>
-    function toggleAccordion(element) {
-        const content = element.nextElementSibling;
-        const icon = element.querySelector('.accordion-icon');
+// Countdown Timer
+const waktuSisa = {
+    days: {{ $waktuSisa['days'] }},
+    hours: {{ $waktuSisa['hours'] }},
+    minutes: {{ $waktuSisa['minutes'] }},
+    seconds: {{ $waktuSisa['seconds'] }}
+};
 
-        // Toggle visibility
-        if (content.classList.contains('hidden')) {
-            content.classList.remove('hidden');
-            content.style.maxHeight = content.scrollHeight + 'px';
-        } else {
-            content.classList.add('hidden');
-            content.style.maxHeight = '0';
+function startCountdown() {
+    let { days, hours, minutes, seconds } = waktuSisa;
+
+    const timerInterval = setInterval(() => {
+        if (seconds > 0) {
+            seconds--;
+        } else if (minutes > 0) {
+            minutes--;
+            seconds = 59;
+        } else if (hours > 0) {
+            hours--;
+            minutes = 59;
+            seconds = 59;
+        } else if (days > 0) {
+            days--;
+            hours = 23;
+            minutes = 59;
+            seconds = 59;
         }
 
-        // Rotate icon
-        icon.classList.toggle('rotate-180');
-    }
+        document.getElementById('days').innerText = days;
+        document.getElementById('hours').innerText = hours;
+        document.getElementById('minutes').innerText = minutes;
+        document.getElementById('seconds').innerText = seconds;
+    }, 1000);
+}
+
+// Document Accordion Toggle
+function toggleDocument(index) {
+    const content = document.querySelector(`.document-content-${index}`);
+    const chevron = document.querySelector(`.document-chevron-${index}`);
+
+    content.classList.toggle('hidden');
+    chevron.classList.toggle('rotate-180');
+}
+
+// Start countdown on page load
+window.addEventListener('load', startCountdown);
 </script>
 
-<script>
-    // Data from backend
-    const waktuSisa = {
-        days: {{ $waktuSisa['days'] }},
-        hours: {{ $waktuSisa['hours'] }},
-        minutes: {{ $waktuSisa['minutes'] }},
-        seconds: {{ $waktuSisa['seconds'] }}
-    };
-
-    function startCountdown() {
-        let { days, hours, minutes, seconds } = waktuSisa;
-
-        const timerInterval = setInterval(() => {
-            // Countdown logic
-            if (seconds > 0) {
-                seconds--;
-            } else if (minutes > 0) {
-                minutes--;
-                seconds = 59;
-            } else if (hours > 0) {
-                hours--;
-                minutes = 59;
-                seconds = 59;
-            } else if (days > 0) {
-                days--;
-                hours = 23;
-                minutes = 59;
-                seconds = 59;
-            }
-
-            // Update DOM
-            document.getElementById('days').innerText = days;
-            document.getElementById('hours').innerText = hours;
-            document.getElementById('minutes').innerText = minutes;
-            document.getElementById('seconds').innerText = seconds;
-        }, 1000); // Update every second
-    }
-
-    // Start the timer when the page loads
-    window.onload = startCountdown;
-</script>
+@endsection
