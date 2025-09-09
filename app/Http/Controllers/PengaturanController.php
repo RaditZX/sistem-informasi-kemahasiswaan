@@ -77,7 +77,8 @@ class PengaturanController extends Controller
             'nim', // Kirimkan NIM jika ada
             'nip', // Kirimkan NIP jika ada
             'beasiswa',// Kirimkan data beasiswa jika user adalah mahasiswa
-            'mahasiswa'
+            'mahasiswa',
+            'user'
         ));
     }
 
@@ -181,7 +182,7 @@ class PengaturanController extends Controller
                     'nama_depan' => 'required|string|max:255',
                     'nama_belakang' => 'required|string|max:255',
                     'jk' => 'required|string|in:Pria,Wanita',
-                    'nim' => 'required|string|max:20',
+                    'nim' => 'nullable|string|max:20',
                     'no_hp' => 'nullable|string|max:15',
                 ]);
 
@@ -211,6 +212,7 @@ class PengaturanController extends Controller
                     'nama_depan' => 'required|string|max:255',
                     'nama_belakang' => 'required|string|max:255',
                     'jk' => 'required|string|in:Pria,Wanita',
+                    'email' => 'required|string|email|unique:users,email',
                 ]);
 
                 // Cari user berdasarkan ID
@@ -221,6 +223,7 @@ class PengaturanController extends Controller
                     'nama_depan' => $request->input('nama_depan', $user->nama_depan),
                     'nama_belakang' => $request->input('nama_belakang', $user->nama_belakang),
                     'jenis_kelamin' => $request->input('jk', $user->jenis_kelamin),
+                    'email' => $request->input('email', $user->email)
                 ]);
 
                 return redirect()->route('pengaturan.index')->with('success', 'Profil reviewer berhasil diperbarui.');

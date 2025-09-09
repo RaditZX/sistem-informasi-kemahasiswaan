@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('content')
-    @include('component.navbar', ['path' => 'Daftar Pengajuan Beasiswa', 'id' => null])
+@include('component.navbar', ['path' => 'Daftar Pengajuan Beasiswa', 'id' => null])
 
     <!-- Controls Bar -->
     <div class="bg-white border-b border-gray-100">
