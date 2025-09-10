@@ -218,6 +218,18 @@
                                     <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                     </svg>
+                                    <!-- CHANGED: Always accessible link -->
+                                    @if($ba->tipe_beasiswa === "kipk")
+                                        <a href="{{ route('beasiswa.detail-beasiswa-kipk',['id'=> $ba->id]) }}"
+                                        class="absolute inset-0">
+                                    @elseif($ba->tipe_beasiswa === "eksternal")
+                                        <a href="{{ route('beasiswa.detail-beasiswa-eksternal',['id'=> $ba->id]) }}"
+                                        class="absolute inset-0">
+                                    @else
+                                        <a href="{{ route('beasiswa.show',['id'=> $ba->id]) }}"
+                                        class="absolute inset-0">
+                                    @endif
+                                    </a>
                                 </button>
                             </div>
 
