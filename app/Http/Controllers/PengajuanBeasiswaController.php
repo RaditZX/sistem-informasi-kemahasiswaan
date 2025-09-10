@@ -541,7 +541,7 @@ class PengajuanBeasiswaController extends Controller
 
     private function getPengajuanDokumen(string $pengajuanId)
     {
-        return PengajuanDokumen::where('id_pengajuan_beasiswa', $pengajuanId)->orderBy('id', 'asc')->get();
+        return PengajuanDokumen::where('id_pengajuan_beasiswa', $pengajuanId)->orderBy('kode_dokumen', 'asc')->get();
     }
 
     private function updateDokumen(Request $request, array $dokumen, $dokumenPengajuan)
