@@ -45,12 +45,8 @@ Route::middleware(['auth', 'check.role:mahasiswa'])->group(function () {
         Route::patch('/pengajuan/edit/{id}',[PengajuanBeasiswaController::class, 'edit'])->name('pengajuan.edit');
     });
     Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
-    Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])
-     ->where('beasiswa', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')// <-- Tambahkan baris ini
-     ->name('beasiswa.show');
-    Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
-    Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
 });
+
 
 Route::middleware(['auth', 'check.role:reviewer'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -104,6 +100,11 @@ Route::middleware('auth')->group(function () {
     Route::controller(MaddingController::class)->group(function () {
         Route::get('/madding', [MaddingController::class, 'index'])->name('madding.index');
     });
+    Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])
+     ->where('beasiswa', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')// <-- Tambahkan baris ini
+     ->name('beasiswa.show');
+    Route::get('/detail-beasiswa-kipk/{id}', [BeasiswaController::class, 'getDetailBeasiswaKipk'])->name('beasiswa.detail-beasiswa-kipk');
+    Route::get('/detail-beasiswa-eksternal/{id}', [BeasiswaController::class, 'getDetailBeasiswaEksternal'])->name('beasiswa.detail-beasiswa-eksternal');
 });
 
 Route::get('/file/public/{path}', [FileController::class, 'getFilePublic'])->name('getFilePublic');
